@@ -2,6 +2,7 @@
 name: catalog-authoring
 description: OSCAL catalog and profile authoring workflow from asset import to parameter editing and markdown deployment using trestle MCP. Use when user requests OSCAL catalog operations, NIST SP800-53 deployment, parameter editing, CSV template generation, or compliance control customization.
 argument-hint: Optional catalog/profile name or NIST baseline (e.g., "nist-800-53-low")
+license: Complete terms in LICENSE.txt
 ---
 
 # OSCAL Agile Authoring

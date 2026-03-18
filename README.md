@@ -154,3 +154,7 @@ claude --plugin-dir ./
 uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring -h
 uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring install -h
 ```
+
+## License
+
+Unless otherwise noted, files in this repository are licensed under the root LICENSE. Some skill directories include their own LICENSE.txt, which governs files in that directory.

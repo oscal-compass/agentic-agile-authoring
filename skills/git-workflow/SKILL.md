@@ -2,6 +2,7 @@
 name: git-workflow
 description: OSCAL compliance document versioning with Git branching strategy for change tracking and pull request reviews. Use when user explicitly requests Git version control, PR creation, or change tracking for compliance documents.
 argument-hint: Optional project identifier for branch naming (e.g., "nist-800-53")
+license: Complete terms in LICENSE.txt
 ---
 
 # Git Workflow for OSCAL Compliance Documents
