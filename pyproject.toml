@@ -5,8 +5,14 @@ build-backend = "hatchling.build"
 [project]
 name = "agentic-agile-authoring"
 version = "0.1.0"
-description = "Installer for agentic-agile-authoring Roo Code modes and skills"
-requires-python = ">=3.11"
+description = "Agile content authoring workflows powered by AI agent skills and modes"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+    {name = "OSCAL Compass", email = "oscal-compass-oversight@googlegroups.com"}
+]
 dependencies = ["ruamel.yaml"]
 
 [project.scripts]

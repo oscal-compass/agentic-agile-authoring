@@ -1,48 +1,83 @@
 # Agentic Agile Authoring
 
-Agent skills and modes for agile document/content authoring workflows.
+Agent skills and modes for OSCAL-based compliance authoring workflows — from NIST catalog customization through component definition to assessment result generation.
 
 ## Overview
 
 This repo defines reusable **skills** (prompts + instructions) that run on two platforms:
 
-| Platform | Agent definition | Skill/command entry |
-|----------|-----------------|---------------------|
-| **Claude Code** | `.claude/agents/*.md` | `.claude/commands/*.md` |
-| **Roo Code** | `.roomodes` (mode list) | `.roo/rules-<slug>/` (per-mode rules) |
-
-Shared platform-agnostic skill logic lives in `skills/`.
+| Platform | Agent definition | Skill location |
+|----------|-----------------|----------------|
+| **Claude Code** | `agents/claude/agentic-agile-authoring.md` | `skills/` |
+| **Roo Code** | `agents/roo/agentic-agile-authoring/roo.yaml` | `.roo/skills[-agentic-agile-authoring]/` |
 
 ## Skills
 
 | Skill | Description |
 |-------|-------------|
-| `outline` | Generate a structured outline from a topic or brief |
-| `draft` | Write a first draft from an outline or brief |
-| `review` | Critique content and produce actionable feedback |
-| `revise` | Apply review feedback to improve a draft |
+| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs |
+| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` |
+| `assessment` | Evaluate control compliance from component definitions and validation scan results |
+| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) |
 
-## Agents / Modes
+## Agent / Mode
 
-| Name | Role |
-|------|------|
-| `planner` | Breaks down authoring goals into outlines and tasks |
-| `author` | Writes and revises content |
-| `reviewer` | Evaluates content quality and consistency |
+A single agent **`agentic-agile-authoring`** covers the full OSCAL authoring lifecycle and delegates to the skills above.
 
-## Usage
+## Roo Code
 
-### Claude Code
+### Auto install (recommended)
 
-Subagents are invoked via the `Agent` tool or referenced in prompts. Slash commands are available as `/outline`, `/draft`, `/review`, `/revise`.
+```bash
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring install
+```
 
-### Roo Code
+Skills are installed to `.roo/skills-agentic-agile-authoring/` by default.
+To install into the shared `.roo/skills/` directory instead (accessible to all modes):
 
-Switch to a custom mode (`planner`, `author`, `reviewer`) via the mode selector. Each mode has tailored rules and tool permissions.
+```bash
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring install --skills-scope common
+```
 
-## Adding a new skill
+### Uninstall
 
-1. Write the core prompt in `skills/<skill-name>/prompt.md`
-2. Add a Claude command at `.claude/commands/<skill-name>.md`
-3. Add a Roo rule file at `.roo/rules-<mode-slug>/<skill-name>.md` for relevant modes
-4. Document it in this README
+```bash
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring uninstall
+
+# If installed with --skills-scope common:
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring uninstall --skills-scope common
+```
+
+### Manual install
+
+```bash
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring download
+```
+
+Then follow the printed instructions to copy skills and import mode YAMLs into Roo Code.
+
+### Install outputs
+
+`.roo/skills-agentic-agile-authoring/` (or `.roo/skills/`) and `.roo/rules-*/` are created by the installer and gitignored.
+
+## Claude Code
+
+### Plugin install (once published)
+
+```
+/plugin marketplace add oscal-compass/agentic-agile-authoring
+/plugin install agentic-agile-authoring@agentic-agile-authoring
+```
+
+### Local development
+
+```bash
+claude --plugin-dir ./
+```
+
+## Help
+
+```bash
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring -h
+uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring install -h
+```
