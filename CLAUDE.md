@@ -2,56 +2,101 @@
 
 This repo is a **Claude Code plugin** and **Roo Code mode collection** for agile content authoring workflows.
 
-## Repo structure
+## Architecture
 
 ```
+skills/               Native Claude Code agent skills (source of truth for Claude plugin)
+  outline/
+    SKILL.md          name, description, argument-hint frontmatter + instructions
+  task-breakdown/
+    SKILL.md
+  draft/
+    SKILL.md
+  revise/
+    SKILL.md
+  review/
+    SKILL.md
+
+agents/
+  claude/             Claude Code persona agents (planner, author, reviewer)
+    planner.md        Thin persona agent — delegates to skills
+    author.md
+    reviewer.md
+  roo/                Roo Code modes
+    <slug>/
+      roo.yaml        Mode config (slug, name, groups, source, customInstructions)
+      rules/          Thin workflow rules — reference skills by installed path
+
 .claude-plugin/
-  plugin.json          Claude Code plugin manifest
-agents/                Claude Code subagents (plugin-level)
-commands/              Claude Code slash commands (plugin-level)
-skills/                Platform-agnostic skill definitions (source of truth)
-.roomodes              Roo Code custom mode list (JSON)
-.roo/
-  rules-<slug>/        Per-mode rule files for Roo Code
-dist/                  Roo Code importable mode YAMLs
+  plugin.json         Claude Code plugin manifest (references ./skills/)
+  marketplace.json    Claude Code marketplace catalog
+
+src/
+  agentic_agile_authoring/
+    cli.py            install / uninstall / download commands
+pyproject.toml        Python package config with force-include mappings
+```
+
+## Editing guide
+
+| What to change | File to edit | Build needed? |
+|---|---|---|
+| Skill logic | `skills/<name>/SKILL.md` | No — edit directly |
+| Claude agent persona | `agents/claude/<name>.md` | No |
+| Roo mode config | `agents/roo/<slug>/roo.yaml` | No |
+| Roo mode workflow rules | `agents/roo/<slug>/rules/01-workflow.md` | No |
+
+### Validate skills
+
+```bash
+.venv/bin/python scripts/build.py
+```
+
+Checks that every `skills/<name>/SKILL.md` exists and has required frontmatter (`name`, `description`).
+
+### SKILL.md frontmatter reference
+
+```yaml
+---
+name: skill-name          # Used as /skill-name slash command (required)
+description: ...          # When to use it — Claude auto-invokes based on this (required)
+argument-hint: <hint>     # Shown in autocomplete (optional)
+---
 ```
 
 ## Claude Code usage
 
-Install as plugin (once published to a marketplace):
+Install as plugin (once published):
 ```
-/plugin install <owner>/agentic-agile-authoring
+/plugin marketplace add yana1205/agentic-agile-authoring
+/plugin install agentic-agile-authoring@agentic-agile-authoring
 ```
 
-After install, commands are namespaced:
-- `/agentic-agile-authoring:outline`
-- `/agentic-agile-authoring:draft`
-- `/agentic-agile-authoring:review`
-- `/agentic-agile-authoring:revise`
-
-Local development testing:
+Local development testing (CLI only):
 ```
 claude --plugin-dir ./
 ```
 
+Skills are available as `/outline`, `/task-breakdown`, `/draft`, `/revise`, `/review`.
+
 ## Roo Code usage
 
-Import a mode via Roo's Settings → Modes → Import:
-- `dist/planner.yaml`
-- `dist/author.yaml`
-- `dist/reviewer.yaml`
+**Auto install** (recommended):
+```bash
+uvx --from git+https://github.com/yana1205/agentic-agile-authoring agentic-agile-authoring install
+```
 
-## Authoring conventions
+Installs to:
+- `.roo/skills-agentic-agile-authoring/` — skill files
+- `.roo/rules-<slug>/` — mode workflow rules
 
-- **Skills are prompt-first.** Core logic goes in `skills/<name>/prompt.md` before being adapted for each platform.
-- Keep platform-specific files thin — they should reference intent from `skills/`, not duplicate it.
-- Subagent files (`agents/`) need YAML frontmatter with `name` and `description`.
-- Roo mode slugs must be lowercase kebab-case and match between `.roomodes` and `.roo/rules-<slug>/`.
+**Manual install** (GUI):
+```bash
+uvx --from git+https://github.com/yana1205/agentic-agile-authoring agentic-agile-authoring download
+```
+Then follow the printed instructions to copy skills and import mode YAMLs.
 
-## When developing skills
+## Install outputs (gitignored)
 
-1. Draft in `skills/<name>/prompt.md` first
-2. Propagate to `commands/<name>.md` (Claude) and relevant `.roo/rules-*/` files (Roo)
-3. Test Claude plugin locally: `claude --plugin-dir ./`
-4. Test Roo modes: import from `dist/` or copy `.roo/rules-*/` directly
-5. Regenerate `dist/*.yaml` after editing `.roomodes` or `.roo/rules-*/`
+`.roo/skills-*/` and `.roo/rules-*/` are created by the installer and gitignored.
+For local Roo development in this repo, run the installer in the repo root.

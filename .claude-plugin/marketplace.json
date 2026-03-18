@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "agentic-agile-authoring",
-      "source": "./",
+      "source": "./agents/claude",
       "description": "Agent skills and modes for agile content authoring workflows."
     }
   ]
