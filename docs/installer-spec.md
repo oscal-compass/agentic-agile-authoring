@@ -65,7 +65,7 @@ Output:
 ```
 my-resources/
   modes/
-    agentic-agile-authoring.yaml    # Import via Roo Settings → Modes → Import
+    agentic-agile-authoring.yaml    # Import via Roo Settings -> Modes -> Import
   skills-agentic-agile-authoring/   # Copy manually under .roo/
 ```
 
@@ -103,7 +103,7 @@ agents/claude/         agent persona
 | Command | Purpose |
 |---|---|
 | `/catalog-authoring` | OSCAL catalog and profile operations |
-| `/component-definition` | Component definition authoring, CSV → JSON |
+| `/component-definition` | Component definition authoring, CSV -> JSON |
 | `/assessment` | Compliance assessment result generation |
 | `/git-workflow` | Git branch management for compliance documents |
 
@@ -124,7 +124,7 @@ claude --plugin-dir ./
 | | Roo Code | Claude Code |
 |---|---|---|
 | Distribution unit | Python package | Git repository (plugin) |
-| Install | `uvx --from ... install` | `/plugin marketplace add` → `/plugin install` |
+| Install | `uvx --from ... install` | `/plugin marketplace add` -> `/plugin install` |
 | Uninstall | `uvx --from ... uninstall` | `/plugin uninstall` |
 | Update | Re-run the same install command (idempotent) | Update via marketplace |
 | Skill invocation | Switch mode, then natural language | Slash command or natural language |
