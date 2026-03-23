@@ -2,6 +2,8 @@
 
 AI agent skills and modes for OSCAL-based compliance authoring — from NIST catalog customization through component definition to assessment result generation.
 
+The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
+
 ## Demo
 
 <a href="https://github.com/oscal-compass/agentic-agile-authoring#demo">
@@ -92,3 +94,14 @@ A single agent **`agentic-agile-authoring`** covers the full OSCAL authoring lif
 ## License
 
 Unless otherwise noted, files in this repository are licensed under the Apache License 2.0. Some skill directories include their own LICENSE.txt, which governs files in that directory.
+
+---
+
+We are a Cloud Native Computing Foundation sandbox project.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://www.cncf.io/wp-content/uploads/2022/07/cncf-white-logo.svg">
+  <img src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-color-bg.svg" width=300 />
+</picture>
+
+The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see [Trademark Usage](https://www.linuxfoundation.org/legal/trademark-usage).
