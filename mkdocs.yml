@@ -1,0 +1,45 @@
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+site_name: Agentic Agile Authoring
+site_url: https://oscal-compass.github.io/agentic-agile-authoring
+repo_url: https://github.com/oscal-compass/agentic-agile-authoring
+plugins:
+  - search
+  - awesome-pages
+theme:
+  name: material
+  custom_dir: custom_theme/
+  palette:
+    - scheme: slate
+      primary: black
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: black
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  logo: img/oscal-compass-icon-1200x1200.png
+  favicon: img/oscal-compass-icon-1200x1200.png
+  font:
+    text: Sen
+    code: Azeret Mono
+  features:
+    - navigation.footer
+    - navigation.tabs
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/oscal-compass/agentic-agile-authoring
+extra_css:
+  - css/extra.css
+nav:
+  - Home: index.md
+  - Skills: skills.md
+  - Installation: installer-spec.md
+  - Development: development.md
