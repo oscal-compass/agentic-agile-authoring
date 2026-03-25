@@ -1,7 +1,11 @@
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 site_name: Agentic Agile Authoring
 site_url: https://oscal-compass.github.io/agentic-agile-authoring
 repo_url: https://github.com/oscal-compass/agentic-agile-authoring
@@ -32,6 +36,8 @@ theme:
   features:
     - navigation.footer
     - navigation.tabs
+extra_javascript:
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
 extra:
   social:
     - icon: fontawesome/brands/github
@@ -40,6 +46,7 @@ extra_css:
   - css/extra.css
 nav:
   - Home: index.md
+  - Architecture: architecture.md
   - Skills: skills.md
   - Installation: installer-spec.md
   - Development: development.md
