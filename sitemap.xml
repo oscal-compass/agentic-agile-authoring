@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://oscal-compass.github.io/agentic-agile-authoring/</loc>
+         <lastmod>2026-03-25</lastmod>
+    </url>
+    <url>
+         <loc>https://oscal-compass.github.io/agentic-agile-authoring/architecture/</loc>
+         <lastmod>2026-03-25</lastmod>
+    </url>
+    <url>
+         <loc>https://oscal-compass.github.io/agentic-agile-authoring/development/</loc>
+         <lastmod>2026-03-25</lastmod>
+    </url>
+    <url>
+         <loc>https://oscal-compass.github.io/agentic-agile-authoring/installer-spec/</loc>
+         <lastmod>2026-03-25</lastmod>
+    </url>
+    <url>
+         <loc>https://oscal-compass.github.io/agentic-agile-authoring/skills/</loc>
+         <lastmod>2026-03-25</lastmod>
+    </url>
+</urlset>
