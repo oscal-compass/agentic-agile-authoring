@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ag-au-skills"
+version = "0.1.0"
+description = "thin wrapper over Microsoft APM: install portable skills into agent harnesses + wire their MCP deps"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+# Exact-pin apm-cli (verified against 0.28.0; bumps are gated on the §5.1 integration spikes).
+dependencies = ["apm-cli==0.28.0", "pyyaml>=6.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+ag-au-skills = "ag_au_skills.cli:main"
+
+# Flat, single-project layout: one pyproject, package listed here.
+[tool.hatch.build.targets.wheel]
+packages = ["ag_au_skills"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib"
+markers = [
+    "integration: pinned-apm integration spikes (require the `apm` CLI on PATH or APM_BIN)",
+]
