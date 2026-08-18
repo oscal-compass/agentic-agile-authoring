@@ -153,7 +153,7 @@ Note (verified @ 0.28.0): the historically-documented `auto_create=False` skill-
 | default (no selector) | all skill packages under `skills/` |
 | `--skill a,b` | explicit pick |
 | `--exclude x,y` | (all) − {x,y} |
-| `--scenario name` | the `skills:` set declared in `scenarios/name/steps.md` |
+| `--scenario name` | the `skills:` set declared in `scenarios/name/README.md` |
 
 The resolved set is validated against the source (typos error out), then each skill is handed to
 the appropriate backend (§3.1 for APM targets, §3.3 for MyHarness).
@@ -221,41 +221,33 @@ Version bumps of `apm-cli` are gated behind the §5 integration spikes.
 
 ## 4. Scenario
 
-A scenario is a **conformance run**: a walkthrough exercising N skills, with checkpoints that
-assert the run produced the right kind of result on a given (harness, model).
+A scenario is an **end-to-end walkthrough** exercising N skills, in natural language — the payload
+demo, expressed so anyone can reproduce it.
 
 ### 4.1 Layout
 
+A scenario is a **single `README.md`** plus any assets it references (e.g. a demo video):
+
 ```
 scenarios/<scenario-name>/
-  steps.md        walkthrough: prompts to give the agent, in order (+ frontmatter)
-  expected.md     checkpoints: what must be true at key points
+  README.md       frontmatter (skills:) + demo video + install → prompts (in order) → uninstall
+  …               any referenced assets
 ```
 
-- **1 scenario : N skills** (not 1:1). `steps.md` frontmatter declares the skill set (also used
-  by `--scenario` install, §3.2):
+- **1 scenario : N skills** (not 1:1). The `README.md` frontmatter declares the skill set (also
+  used by `--scenario` install, §3.2); it self-documents install and uninstall:
 
 ```yaml
 ---
 name: catalog-to-assessment
 skills: [catalog-authoring, component-definition, assessment]
-verified:
-  - harness: claude-code
-    model: claude-opus-4-8
-    date: 2026-08-18
 ---
 ```
 
-### 4.2 Checkpoints (`expected.md`)
-
-Each checkpoint names a location in the run and a match mode:
-
-- **exact** — must hold precisely (e.g. `trestle validate` prints `VALID`; file P exists).
-- **approx** — "roughly this kind of output", judged by a reader/agent, not word-for-word.
-
-Because LLMs are non-deterministic, scenarios are **acceptance-style** (validate
-artifacts/behavior), not byte-snapshot. `verified` records which (harness, model) combos have
-passed — one combo is acceptable now; the full matrix is a future goal.
+The README's prose walks the reader through the prompts to give the agent, in order, and what each
+produces (e.g. an OSCAL `catalog.json` that `trestle validate` accepts). There is no separate
+checkpoint file — the walkthrough itself is the spec; a run "passes" when it reproduces the
+described artifacts.
 
 ## 5. Verification & Validation
 
@@ -280,11 +272,11 @@ during design (see `.insights/installer-node-vs-python.md`), run in CI and re-ru
 
 ### 5.2 Validation — "did we build the right thing?" (acceptance)
 
-Two instruments, both acceptance-style (§4.2):
+Two instruments:
 
-1. **Scenario conformance runs (§4)** validate the *authoring capability* — a real (harness,
-   model) drives an N-skill scenario and the `expected.md` checkpoints must hold (e.g. produced
-   OSCAL passes `trestle validate`). Recorded per scenario in `verified:`.
+1. **Scenario walkthroughs (§4)** validate the *authoring capability* — a real (harness, model)
+   follows an N-skill scenario `README.md` and reproduces the described artifacts (e.g. produced
+   OSCAL passes `trestle validate`).
 2. **Installer acceptance** = the §5.1 spikes at requirement level: skills land in each harness's
    native dir; MCP servers appear in native config; non-destructive uninstall; prune-when-unreferenced.
 
@@ -292,7 +284,7 @@ Two instruments, both acceptance-style (§4.2):
 
 ```
 skills/<name>/               skill package: SKILL.md + apm.yml [+ scripts/refs/assets]
-scenarios/<name>/            steps.md + expected.md (conformance runs)
+scenarios/<name>/            README.md (frontmatter skills: + walkthrough) [+ assets]
 tools/                       `ag-au-skills` — thin wrapper over apm-cli (Python)
   pyproject.toml             deps: apm-cli==<pin>, pyyaml
   ag_au_skills/

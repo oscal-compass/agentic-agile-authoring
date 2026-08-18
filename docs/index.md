@@ -38,10 +38,10 @@ subset selection, uninstall/prune, and the custom-harness path.
 ## Demo → scenario
 
 The full authoring lifecycle — tailoring a NIST SP 800-53 catalog, mapping controls to a
-Kubernetes component, and generating an assessment result — is captured as a runnable
-conformance scenario, `catalog-to-assessment`. Install its three skills, give the agent each
-prompt in the scenario's `steps.md`, and the `expected.md` checkpoints define a passing run
-(e.g. the generated `catalog.json` passes `trestle validate`).
+Kubernetes component, and generating an assessment result — is captured as a runnable walkthrough,
+`catalog-to-assessment`. Its `scenarios/catalog-to-assessment/README.md` carries a demo video, the
+install steps, the prompts to give the agent in order, and uninstall (e.g. the generated
+`catalog.json` passes `trestle validate`).
 
 ## Skills
 

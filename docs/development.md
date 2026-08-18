@@ -9,10 +9,10 @@ skills/                     Skill packages (single source of truth for every har
     apm.yml                 APM package manifest (name, version, dependencies.mcp)
     *.md / *.py             Supporting resources referenced by the skill
 
-scenarios/                  End-to-end conformance runs
+scenarios/                  End-to-end walkthroughs
   <scenario-name>/
-    steps.md                Prompts (in order) + frontmatter (skills:, verified:)
-    expected.md             Checkpoints ([exact] / [approx])
+    README.md               Frontmatter (skills:) + demo video + install → prompts → uninstall
+    …                       Any referenced assets
 
 tools/                      `ag-au-skills` — thin installer CLI over Microsoft APM (Python)
   pyproject.toml            deps: apm-cli==<pin>, pyyaml
@@ -82,7 +82,7 @@ ag-au-skills --help
 
 What the wrapper owns (everything else is APM's — resolution, deployment, lockfile, prune):
 
-- **Selection** — `--skill`, `--exclude a,b`, `--scenario <name>` (reads `steps.md` `skills:`).
+- **Selection** — `--skill`, `--exclude a,b`, `--scenario <name>` (reads the scenario `README.md` `skills:`).
 - **UX + prereq policy** — synthesize the APM project context for a standalone skill install;
   check the baseline `uv`.
 - **MyHarness deployer** — reuse APM's target-agnostic `APMPackage.from_apm_yml` →

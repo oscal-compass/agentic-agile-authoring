@@ -99,14 +99,14 @@ def parse_frontmatter(text: str) -> dict:
 
 
 def scenario_skills(source_root: Path, scenario: str) -> list[str]:
-    """The skill set a scenario exercises, from ``scenarios/<name>/steps.md`` frontmatter."""
-    steps = source_root / "scenarios" / scenario / "steps.md"
-    if not steps.exists():
-        raise ValueError(f"scenario not found: {scenario} (expected {steps})")
-    fm = parse_frontmatter(steps.read_text(encoding="utf-8"))
+    """The skill set a scenario exercises, from ``scenarios/<name>/README.md`` frontmatter."""
+    readme = source_root / "scenarios" / scenario / "README.md"
+    if not readme.exists():
+        raise ValueError(f"scenario not found: {scenario} (expected {readme})")
+    fm = parse_frontmatter(readme.read_text(encoding="utf-8"))
     skills = fm.get("skills")
     if not isinstance(skills, list) or not all(isinstance(s, str) for s in skills):
         raise ValueError(
-            f"scenario {scenario}: steps.md frontmatter has no valid 'skills:' list"
+            f"scenario {scenario}: README.md frontmatter has no valid 'skills:' list"
         )
     return skills

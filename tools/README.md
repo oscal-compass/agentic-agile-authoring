@@ -9,7 +9,7 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
 
 ## What the wrapper adds
 
-1. **Selection over a skills source** — `--scenario <name>` (reads `scenarios/<name>/steps.md`),
+1. **Selection over a skills source** — `--scenario <name>` (reads `scenarios/<name>/README.md`),
    `--exclude`, `--skill a,b`, or all skills. APM has no concept of our scenarios. The source is
    the **skills bundled inside this package** by default (so the CLI works from any directory
    without a checkout); `--source <repo>` installs from an external skills repo instead.

@@ -12,8 +12,8 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
   [`apm.yml`](docs/design-spec.md#23-mcp-dependency-declaration-dependenciesmcp) package manifest
   and optional `scripts/`/`references/`/`assets/`. A skill that needs an MCP server declares it in
   `apm.yml` (`dependencies.mcp`).
-- **Scenarios** (`scenarios/`) — end-to-end use cases that exercise N skills and double as
-  **conformance runs** (checkpoints that must hold on a given harness + model).
+- **Scenarios** (`scenarios/`) — end-to-end walkthroughs that exercise N skills, each a single
+  `scenarios/<name>/README.md` (prompts + install/uninstall + a demo video).
 - **`tools/`** — `ag-au-skills`, a thin installer CLI. It is a small wrapper over
   [**Microsoft APM**](https://github.com/microsoft/apm) (`apm-cli`), which does the heavy lifting:
   copy the skill into each harness's native dir **and** wire its declared MCP servers into that
@@ -55,15 +55,10 @@ uvx ag-au-skills uninstall --skill assessment --target claude
 
 ## Demo → scenario
 
-https://github.com/user-attachments/assets/628ebb15-f9cc-4cef-88de-86f026bce499
-
-The demo — tailoring a NIST SP 800-53 catalog, mapping controls to a Kubernetes component, and
-generating an assessment result, all in natural language — is captured as a runnable conformance
-scenario: **[`scenarios/catalog-to-assessment/`](scenarios/catalog-to-assessment/steps.md)**.
-Install those three skills, then give the agent each prompt in
-[`steps.md`](scenarios/catalog-to-assessment/steps.md); the
-[`expected.md`](scenarios/catalog-to-assessment/expected.md) checkpoints define a passing run
-(e.g. the generated `catalog.json` passes `trestle validate`).
+Tailoring a NIST SP 800-53 catalog, mapping controls to a Kubernetes component, and generating an
+assessment result — all in natural language — is captured as a runnable walkthrough with a demo
+video: **[`scenarios/catalog-to-assessment/`](scenarios/catalog-to-assessment/README.md)**. That
+README carries the install steps, the prompts to give the agent in order, and uninstall.
 
 ## Skills
 

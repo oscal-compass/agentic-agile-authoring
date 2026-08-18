@@ -38,7 +38,7 @@ that harness's native MCP config, with a lockfile and non-destructive uninstall/
 wrapper adds only what APM lacks:
 
 - **Selection** — `--skill` / `--exclude` / `--scenario <name>` resolve to a set of skill packages
-  (`--scenario` reads the `skills:` set from `scenarios/<name>/steps.md`); APM has no concept of
+  (`--scenario` reads the `skills:` set from `scenarios/<name>/README.md`); APM has no concept of
   our scenarios.
 - **Stable UX + prereq policy** — hides APM's project mechanics and checks the baseline `uv`.
 - **Custom-harness (MyHarness) deployment** — APM's target set is closed, so for a custom harness
@@ -74,11 +74,11 @@ component → assessment) but are invoked independently; a scenario carries any 
 
 ## Scenarios
 
-A scenario (`scenarios/<name>/`) is an end-to-end walkthrough over N skills that doubles as a
-**conformance run**. `steps.md` holds the prompts (with frontmatter declaring the skill set and
-the verified harness/model combos); `expected.md` holds checkpoints in `[exact]`/`[approx]`
-form. Because harnesses are non-deterministic, scenarios validate artifacts and behavior
-(acceptance-style), not a byte-for-byte transcript. See `catalog-to-assessment` for the first
+A scenario (`scenarios/<name>/`) is an end-to-end walkthrough over N skills, captured as a single
+`README.md`: frontmatter declaring the skill set (used by `--scenario`), a demo video, the install
+steps, the prompts to give the agent in order (with what each produces), and uninstall. The
+walkthrough itself is the spec; a run "passes" when it reproduces the described artifacts (e.g. the
+generated `catalog.json` passes `trestle validate`). See `catalog-to-assessment` for the first
 scenario, and the [Design Spec](design-spec.md) §4 for the model.
 
 ## Trestle MCP tools (per-skill dependency reference)

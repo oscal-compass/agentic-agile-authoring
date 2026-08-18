@@ -57,8 +57,9 @@ target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decis
 - **`skills/<name>/apm.yml`** — the APM package manifest (`name`, `version`, and `dependencies.mcp`
   where the skill needs an MCP server — `catalog-authoring`/`component-definition` declare
   `trestle`). Do NOT add a `target:` field (APM rejects unknown target tokens at parse time).
-- **`scenarios/<name>/`** — `steps.md` (prompts + frontmatter `skills:` / `verified:`) and
-  `expected.md` (`[exact]`/`[approx]` checkpoints). A scenario is a conformance run over N skills.
+- **`scenarios/<name>/`** — a single `README.md` (frontmatter `skills:` + the walkthrough:
+  prompts, install/uninstall, demo video) plus any referenced assets. A scenario is an end-to-end
+  walkthrough over N skills; `--scenario` reads its `skills:` frontmatter.
 - **`tools/`** — the `ag-au-skills` wrapper (Python). Modules: `cli.py`, `policy.py` (selection +
   prereq checks), `backends/apm_cli.py` (subprocess to pinned `apm` for supported targets),
   `targets/myharness.py` (library reuse of APM + our deployer). This is the code with tests.

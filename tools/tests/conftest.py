@@ -64,16 +64,15 @@ def source_repo(tmp_path: Path) -> Path:
 
     scen = root / "scenarios" / "catalog-to-assessment"
     scen.mkdir(parents=True)
-    (scen / "steps.md").write_text(
+    (scen / "README.md").write_text(
         textwrap.dedent(
             """\
             ---
             name: catalog-to-assessment
             skills: [catalog-authoring, component-definition, assessment]
-            verified: []
             ---
 
-            # steps
+            # Scenario
             """
         ),
         encoding="utf-8",
