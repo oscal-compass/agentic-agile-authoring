@@ -5,3 +5,5 @@ __pycache__/
 build/
 dist/
 .venv/
+# only ever created inside the built wheel (force-include); ignore any in-tree build residue.
+ag_au_skills/_bundled/

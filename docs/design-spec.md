@@ -144,8 +144,18 @@ target root (`.claude/` or `~/.claude/`) must be pre-created or the skill silent
 | `--exclude x,y` | (all) − {x,y} |
 | `--scenario name` | the `skills:` set declared in `scenarios/name/steps.md` |
 
-The resolved set is validated against the repo (typos error out), then each skill is handed to
+The resolved set is validated against the source (typos error out), then each skill is handed to
 the appropriate backend (§3.1 for APM targets, §3.3 for MyHarness).
+
+**Source of the skills (decided, D5).** By default the selection is resolved against the skills
+**bundled inside the installed package** (`ag_au_skills/_bundled/{skills,scenarios}`, copied from
+this repo's top-level dirs at wheel-build time). So `ag-au-skills install …` works from **any
+directory** with no local checkout — the tool carries its own skills as package data. The repo's
+top-level `skills/`/`scenarios/` remain the single source of truth (no committed duplicate; an
+editable/dev install falls back to the repo checkout). `--source <repo>` overrides the default to
+install from an external skills repo (a remote `owner/repo` shorthand that git-clones first is a
+future add — §8.5). This does **not** revive the retired monolith/publish-wheel of authoring
+logic; the bespoke surface is still just the thin wrapper, now shipping the skills alongside it.
 
 ### 3.3 MyHarness — reuse APM's core, own only deployment
 
@@ -323,6 +333,28 @@ Notes:
 ## 9. Decision log
 
 Short ADR-style records of load-bearing choices. Most recent first.
+
+### D5 — Bundle the skills into the installer package (default source)
+
+- **Status:** Accepted (2026-08-18). Refines D4; does **not** reverse it.
+- **Context:** With `--source` defaulting to the current directory, `ag-au-skills` only worked from
+  a checkout of this repo — the user expected a tool they could run from **any** directory and have
+  it place "its" skills. Options: (a) require running from the repo root; (b) a remote `owner/repo`
+  shorthand that git-clones first (§8.5, deferred — adds a git prereq + clone lifecycle); (c) bundle
+  the skills into the package as data.
+- **Decision:** Ship the repo's `skills/` + `scenarios/` inside the wheel at build time
+  (`ag_au_skills/_bundled/`, via hatchling `force-include`), and make `--source` **optional**,
+  defaulting to that bundle. `--source <repo>` still installs from an external skills repo. Runtime
+  resolution: bundled dir if present, else the repo checkout the package lives in (editable/dev).
+- **Consequences:** (+) works from any cwd, no checkout, matches user expectation; single source of
+  truth stays the repo's top-level dirs (build copies them — no committed duplicate); the wrapper
+  stays skill-set-agnostic (external `--source` still honored). (−) skills now ride in the wheel, so
+  a skill change means a rebuild to refresh the bundle (dev/editable installs read the live repo, so
+  this only bites published artifacts); bundle can drift from an old installed wheel (acceptable —
+  same as any packaged data). This is **not** the retired monolith/plugin: authoring logic isn't
+  re-coupled; the tool merely carries skills as data.
+- **Not chosen:** repo-root-only (too restrictive); remote shorthand as the *only* path (heavier;
+  still planned as an addition, §8.5).
 
 ### D4 — Adopt Microsoft APM (`apm-cli`) as the installer backend
 

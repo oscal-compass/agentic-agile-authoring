@@ -26,6 +26,7 @@ Three concerns, all pure/deterministic so they're unit-testable without touching
 
 from __future__ import annotations
 
+import importlib.resources as importlib_resources
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -42,6 +43,44 @@ from .selection import (
 
 class PolicyError(ValueError):
     """A selection / manifest / prerequisite violation the user must fix."""
+
+
+# --- default source (bundled skills) -----------------------------------------
+
+# Skills + scenarios ship inside the wheel under this package-data dir, so the CLI works from any
+# directory without a local checkout. Single source of truth stays the repo's top-level `skills/`
+# and `scenarios/`; the build copies them here (see tools/pyproject.toml force-include). In an
+# editable/dev install this dir is absent, so we fall back to the repo checkout the package lives
+# in. A user-supplied ``--source`` always overrides this (install from any external skills repo).
+_BUNDLED_DIRNAME = "_bundled"
+
+
+def default_source_root() -> Path:
+    """The skills source used when ``--source`` is omitted: the bundled copy, else the dev repo.
+
+    Resolution order:
+
+    1. **bundled** — ``ag_au_skills/_bundled/`` shipped in the wheel (works from any cwd);
+    2. **dev/editable** — the repo checkout this package lives in (``…/tools/ag_au_skills`` →
+       repo root), used before a wheel build has copied the bundle in.
+
+    Raises :class:`PolicyError` if neither is found (tell the user to pass ``--source``).
+    """
+    try:
+        pkg_root = Path(str(importlib_resources.files("ag_au_skills")))
+        bundled = pkg_root / _BUNDLED_DIRNAME
+        if (bundled / "skills").is_dir():
+            return bundled
+    except (ModuleNotFoundError, TypeError, ValueError):
+        pass
+
+    repo = Path(__file__).resolve().parents[2]
+    if (repo / "skills").is_dir():
+        return repo
+
+    raise PolicyError(
+        "no bundled skills found and not running from a repo checkout — pass --source <repo>"
+    )
 
 
 # --- selection ---------------------------------------------------------------

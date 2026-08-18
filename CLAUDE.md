@@ -64,14 +64,19 @@ target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decis
   `targets/myharness.py` (library reuse of APM + our deployer). This is the code with tests.
 - **`.mcp.json`** — the canonical `trestle` server definition (reference for the skill manifests).
 
-### Installation flow (no build-time bundling)
+### Installation flow
 
 `ag-au-skills install --target <t>` resolves a skill selection, then for each skill: if `<t>` is
 an APM-known target (claude, opencode, …) it delegates to the pinned `apm` (which copies the skill
 + wires MCP + updates `apm.lock.yaml`); if `<t>` is MyHarness it uses APM as a library to get the
 resolved skill + normalized MCP, then deploys itself. `uninstall`/prune go through APM for
-supported targets (a shared MCP server is dropped only when no remaining skill needs it). No wheel,
-no plugin — skills are installed from a local checkout of this repo.
+supported targets (a shared MCP server is dropped only when no remaining skill needs it).
+
+Skills come from the copy **bundled inside the wheel** (`ag_au_skills/_bundled/`, built from the
+repo's top-level `skills/`/`scenarios/`) so the CLI works from any directory with no checkout;
+`--source <repo>` overrides to install from an external skills repo. (The old monolith/plugin/
+publish-wheel is still retired — this is the thin wrapper carrying its own skills as data, decision
+**D5**.)
 
 ### Adding a new skill
 

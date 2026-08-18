@@ -16,9 +16,29 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from ag_au_skills import policy
+
+
+# --- default source (bundled / dev fallback) ---------------------------------
+
+
+def test_default_source_root_prefers_bundled(monkeypatch, tmp_path):
+    # simulate a wheel install: ag_au_skills/_bundled/skills exists next to the package.
+    pkg = tmp_path / "ag_au_skills"
+    (pkg / policy._BUNDLED_DIRNAME / "skills" / "x").mkdir(parents=True)
+    monkeypatch.setattr(policy.importlib_resources, "files", lambda _pkg: pkg)
+    assert policy.default_source_root() == pkg / policy._BUNDLED_DIRNAME
+
+
+def test_default_source_root_dev_fallback(monkeypatch):
+    # no bundle → fall back to the repo checkout the package lives in (this repo).
+    monkeypatch.setattr(policy.importlib_resources, "files", lambda _pkg: Path("/nonexistent"))
+    root = policy.default_source_root()
+    assert (root / "skills").is_dir()
 
 
 # --- selection ---------------------------------------------------------------

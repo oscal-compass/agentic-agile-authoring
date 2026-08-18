@@ -72,7 +72,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     inst = sub.add_parser("install", help="install a skill selection into a harness (+ wire MCP)")
-    inst.add_argument("--source", default=".", help="local repo with skills/ + scenarios/ (default: .)")
+    inst.add_argument("--source", default=None, help="skills repo to install from (default: the skills bundled in this package)")
     inst.add_argument("--skill", "-s", action="append", default=[], help="explicit skills (comma-ok, repeatable)")
     inst.add_argument("--scenario", help="skill set declared by scenarios/<name>/steps.md")
     inst.add_argument("--exclude", action="append", default=[], help="all skills minus these (comma-ok, repeatable)")
@@ -81,7 +81,7 @@ def build_parser() -> argparse.ArgumentParser:
     unin = sub.add_parser("uninstall", help="remove skills from a harness (+ prune unused MCP)")
     unin.add_argument("--skill", "-s", action="append", default=[], help="skills to remove (comma-ok, repeatable)")
     unin.add_argument("--all", action="store_true", help="remove the whole selectable skill set")
-    unin.add_argument("--source", default=".", help="local repo with skills/ (for --all; default: .)")
+    unin.add_argument("--source", default=None, help="skills repo the selection is drawn from for --all (default: the bundled skills)")
     _add_common(unin)
     return ap
 
@@ -98,8 +98,13 @@ def _emit_prereqs(report: policy.PrereqReport) -> None:
         )
 
 
+def _resolve_source(args: argparse.Namespace) -> Path:
+    """The skills source: an explicit ``--source`` if given, else the bundled/dev default."""
+    return Path(args.source).resolve() if args.source else policy.default_source_root()
+
+
 def _install(args: argparse.Namespace) -> int:
-    source = Path(args.source).resolve()
+    source = _resolve_source(args)
     skills = policy.resolve_selection(
         source,
         picks=_split_csv(args.skill),
@@ -151,8 +156,7 @@ def _uninstall(args: argparse.Namespace) -> int:
         raise policy.PolicyError("uninstall needs --skill <a,b> or --all")
 
     if args.all:
-        source = Path(args.source).resolve()
-        picks = policy.resolve_selection(source)
+        picks = policy.resolve_selection(_resolve_source(args))
 
     if args.target == MYHARNESS:
         res = myharness.uninstall(picks, root=_myharness_root(args), dry_run=args.dry_run)
