@@ -2,12 +2,24 @@
 
 ## Overview
 
-| Skill | Description |
-|-------|-------------|
-| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs |
-| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` |
-| `assessment` | Evaluate control compliance from component definitions and validation scan results |
-| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) |
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
+| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
+| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
+| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
+
+Each skill is **invoked independently** by the harness from its `description` — there is no
+fixed cross-skill ordering baked into an orchestrator. They compose naturally (a catalog feeds
+a component definition, which feeds an assessment), and a [scenario](architecture.md#scenarios)
+expresses a particular end-to-end ordering when one is needed.
+
+**MCP dependency**: each skill carries an `apm.yml` package manifest; a skill that needs an MCP
+server declares it there under `dependencies.mcp`. On install, the installer (Microsoft APM, via
+the `ag-au-skills` wrapper) wires the declared server into the target harness's native MCP config,
+and on uninstall prunes it only when no remaining installed skill needs it — see
+[Architecture](architecture.md#installation--mcp-wiring). `assessment` and `git-workflow` declare
+no `dependencies.mcp`.
 
 ---
 
