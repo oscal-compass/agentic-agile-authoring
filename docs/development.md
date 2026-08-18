@@ -9,8 +9,8 @@ skills/                     Skill packages (single source of truth for every har
     apm.yml                 APM package manifest (name, version, dependencies.mcp)
     *.md / *.py             Supporting resources referenced by the skill
 
-scenarios/                  End-to-end walkthroughs
-  <scenario-name>/
+demos/                  End-to-end walkthroughs
+  <demo-name>/
     README.md               Frontmatter (skills:) + demo video + install → prompts → uninstall
     …                       Any referenced assets
 
@@ -62,7 +62,7 @@ dependencies:
 Do **not** add a `target:` field to a skill's `apm.yml` (an unknown target token is the one thing
 APM rejects at parse time, which would break custom-harness reuse).
 
-4. Optionally add or extend a scenario in `scenarios/` that exercises the skill.
+4. Optionally add or extend a demo in `demos/` that exercises the skill.
 5. Run `python scripts/add_license_headers.py`.
 
 No build step is needed for skills. They are invoked directly; there is no orchestrator to update.
@@ -82,7 +82,7 @@ ag-au-skills --help
 
 What the wrapper owns (everything else is APM's — resolution, deployment, lockfile, prune):
 
-- **Selection** — `--skill`, `--exclude a,b`, `--scenario <name>` (reads the scenario `README.md` `skills:`).
+- **Selection** — `--skill`, `--exclude a,b`, `--demo <name>` (reads the demo `README.md` `skills:`).
 - **UX + prereq policy** — synthesize the APM project context for a standalone skill install;
   check the baseline `uv`.
 - **MyHarness deployer** — reuse APM's target-agnostic `APMPackage.from_apm_yml` →
@@ -90,7 +90,7 @@ What the wrapper owns (everything else is APM's — resolution, deployment, lock
   merge `~/.myharness/mcp.json`.
 
 ```bash
-ag-au-skills install --scenario catalog-to-assessment --target claude
+ag-au-skills install --demo catalog-to-assessment --target claude
 ag-au-skills install --exclude git-workflow --target opencode
 ag-au-skills uninstall --skill assessment --target claude
 ```

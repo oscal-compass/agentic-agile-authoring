@@ -28,21 +28,21 @@ def test_exclude_subtracts_from_all():
     ]
 
 
-def test_scenario_resolves_to_its_skill_set():
-    scenario = ["catalog-authoring", "component-definition", "assessment"]
-    assert resolve_skill_list(ALL, scenario=scenario) == scenario
+def test_demo_resolves_to_its_skill_set():
+    demo = ["catalog-authoring", "component-definition", "assessment"]
+    assert resolve_skill_list(ALL, demo=demo) == demo
 
 
-def test_scenario_with_exclude():
-    scenario = ["catalog-authoring", "component-definition", "assessment"]
-    assert resolve_skill_list(ALL, scenario=scenario, exclude=["assessment"]) == [
+def test_demo_with_exclude():
+    demo = ["catalog-authoring", "component-definition", "assessment"]
+    assert resolve_skill_list(ALL, demo=demo, exclude=["assessment"]) == [
         "catalog-authoring",
         "component-definition",
     ]
 
 
-def test_picks_win_over_scenario_and_all():
-    assert resolve_skill_list(ALL, picks=["catalog-authoring"], scenario=["assessment"]) == [
+def test_picks_win_over_demo_and_all():
+    assert resolve_skill_list(ALL, picks=["catalog-authoring"], demo=["assessment"]) == [
         "catalog-authoring"
     ]
 

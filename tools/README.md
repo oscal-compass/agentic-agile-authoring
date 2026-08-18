@@ -9,8 +9,8 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
 
 ## What the wrapper adds
 
-1. **Selection over a skills source** — `--scenario <name>` (reads `scenarios/<name>/README.md`),
-   `--exclude`, `--skill a,b`, or all skills. APM has no concept of our scenarios. The source is
+1. **Selection over a skills source** — `--demo <name>` (reads `demos/<name>/README.md`),
+   `--exclude`, `--skill a,b`, or all skills. APM has no concept of our demos. The source is
    the **skills bundled inside this package** by default (so the CLI works from any directory
    without a checkout); `--source <repo>` installs from an external skills repo instead.
 2. **Stable UX** — hides APM's project mechanics (resolves the selection to local skill paths and
@@ -37,15 +37,15 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
 
 ```bash
 # Skills come from the copy bundled in this package — run from ANY directory, no checkout needed:
-ag-au-skills install   [--scenario <name> | --exclude a,b | --skill a,b] --target {claude|opencode|myharness}
+ag-au-skills install   [--demo <name> | --exclude a,b | --skill a,b] --target {claude|opencode|myharness}
 ag-au-skills uninstall [--skill a,b | --all] --target {claude|opencode|myharness}
 
 #   --project <dir>   where to install (default: cwd); --global for user scope (~/.claude/…)
 #   --source  <repo>  install from an external skills repo instead of the bundled skills
 ```
 
-The skills + scenarios are packaged into the wheel (`ag_au_skills/_bundled/`) at build time from
-the repo's top-level `skills/`/`scenarios/` — those stay the single source of truth (no committed
+The skills + demos are packaged into the wheel (`ag_au_skills/_bundled/`) at build time from
+the repo's top-level `skills/`/`demos/` — those stay the single source of truth (no committed
 duplicate; an editable/dev install falls back to the repo checkout).
 
 ## Prerequisites

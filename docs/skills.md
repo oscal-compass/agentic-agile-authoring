@@ -11,7 +11,7 @@
 
 Each skill is **invoked independently** by the harness from its `description` — there is no
 fixed cross-skill ordering baked into an orchestrator. They compose naturally (a catalog feeds
-a component definition, which feeds an assessment), and a [scenario](architecture.md#scenarios)
+a component definition, which feeds an assessment), and a [demo](architecture.md#demos)
 expresses a particular end-to-end ordering when one is needed.
 
 **MCP dependency**: each skill carries an `apm.yml` package manifest; a skill that needs an MCP

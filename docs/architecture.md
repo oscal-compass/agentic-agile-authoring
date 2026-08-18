@@ -8,7 +8,7 @@
 authoring — from NIST catalog customization through component definition to assessment result
 generation. Each skill is a unit of authoring know-how that a coding agent (Claude Code, Roo
 Code, opencode, …) loads and follows; there is no single orchestrator persona. Orchestration
-across skills is expressed by **scenarios** (see below).
+across skills is expressed by **demos** (see below).
 
 A skill handles authoring work through direct file editing, content-authoring assistance, and —
 where needed — OSCAL tooling via the [Trestle MCP Server](https://github.com/oscal-compass/compliance-trestle-mcp).
@@ -37,9 +37,9 @@ skill package into each harness's native dir **and** wires the skill's declared 
 that harness's native MCP config, with a lockfile and non-destructive uninstall/prune. The
 wrapper adds only what APM lacks:
 
-- **Selection** — `--skill` / `--exclude` / `--scenario <name>` resolve to a set of skill packages
-  (`--scenario` reads the `skills:` set from `scenarios/<name>/README.md`); APM has no concept of
-  our scenarios.
+- **Selection** — `--skill` / `--exclude` / `--demo <name>` resolve to a set of skill packages
+  (`--demo` reads the `skills:` set from `demos/<name>/README.md`); APM has no concept of
+  our demos.
 - **Stable UX + prereq policy** — hides APM's project mechanics and checks the baseline `uv`.
 - **Custom-harness (MyHarness) deployment** — APM's target set is closed, so for a custom harness
   the wrapper reuses APM's target-agnostic resolve/normalize as a library and does the deployment
@@ -63,7 +63,7 @@ See the [decision log](design-spec.md#9-decision-log) (D4) for why we adopt APM.
 ## Skills
 
 The four skills cover the OSCAL compliance authoring lifecycle. They compose (catalog →
-component → assessment) but are invoked independently; a scenario carries any ordering.
+component → assessment) but are invoked independently; a demo carries any ordering.
 
 | Skill | Input | Output | MCP dep |
 |-------|-------|--------|---------|
@@ -72,14 +72,14 @@ component → assessment) but are invoked independently; a scenario carries any 
 | `assessment` | Component definition + scan results | Compliance assessment table (Markdown / OSCAL) | — |
 | `git-workflow` | Compliance documents in workspace | Baseline branch, review PR | — |
 
-## Scenarios
+## Demos
 
-A scenario (`scenarios/<name>/`) is an end-to-end walkthrough over N skills, captured as a single
-`README.md`: frontmatter declaring the skill set (used by `--scenario`), a demo video, the install
+A demo (`demos/<name>/`) is an end-to-end walkthrough over N skills, captured as a single
+`README.md`: frontmatter declaring the skill set (used by `--demo`), a demo video, the install
 steps, the prompts to give the agent in order (with what each produces), and uninstall. The
 walkthrough itself is the spec; a run "passes" when it reproduces the described artifacts (e.g. the
 generated `catalog.json` passes `trestle validate`). See `catalog-to-assessment` for the first
-scenario, and the [Design Spec](design-spec.md) §4 for the model.
+demo, and the [Design Spec](design-spec.md) §4 for the model.
 
 ## Trestle MCP tools (per-skill dependency reference)
 

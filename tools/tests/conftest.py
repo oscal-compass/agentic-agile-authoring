@@ -49,7 +49,7 @@ def source_repo(tmp_path: Path) -> Path:
 
     * ``catalog-authoring`` + ``component-definition`` share a ``trestle`` stdio MCP,
     * ``assessment`` has no MCP,
-    * plus a ``catalog-to-assessment`` scenario declaring the three.
+    * plus a ``catalog-to-assessment`` demo declaring the three.
     """
     root = tmp_path / "repo"
     skills = root / "skills"
@@ -62,9 +62,9 @@ def source_repo(tmp_path: Path) -> Path:
     _write_skill(skills, "component-definition", mcp=trestle)
     _write_skill(skills, "assessment")
 
-    scen = root / "scenarios" / "catalog-to-assessment"
-    scen.mkdir(parents=True)
-    (scen / "README.md").write_text(
+    demo = root / "demos" / "catalog-to-assessment"
+    demo.mkdir(parents=True)
+    (demo / "README.md").write_text(
         textwrap.dedent(
             """\
             ---
@@ -72,7 +72,7 @@ def source_repo(tmp_path: Path) -> Path:
             skills: [catalog-authoring, component-definition, assessment]
             ---
 
-            # Scenario
+            # Demo
             """
         ),
         encoding="utf-8",

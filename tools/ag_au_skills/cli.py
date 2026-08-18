@@ -14,7 +14,7 @@
 
 """``ag-au-skills`` CLI: a thin wrapper over Microsoft APM (design-spec §3).
 
-    ag-au-skills install   --target {claude|opencode|myharness} [--scenario|--skill|--exclude] …
+    ag-au-skills install   --target {claude|opencode|myharness} [--demo|--skill|--exclude] …
     ag-au-skills uninstall --target {claude|opencode|myharness}  --skill a,b | --all
 
 Flow: resolve a skill selection over *this repo* (policy) → hand it to the right backend
@@ -79,7 +79,7 @@ def build_parser() -> argparse.ArgumentParser:
     inst = sub.add_parser("install", help="install a skill selection into a harness (+ wire MCP)")
     inst.add_argument("--source", default=None, help="skills repo to install from (default: the skills bundled in this package)")
     inst.add_argument("--skill", "-s", action="append", default=[], help="explicit skills (comma-ok, repeatable)")
-    inst.add_argument("--scenario", help="skill set declared by scenarios/<name>/README.md")
+    inst.add_argument("--demo", help="skill set declared by demos/<name>/README.md")
     inst.add_argument("--exclude", action="append", default=[], help="all skills minus these (comma-ok, repeatable)")
     _add_common(inst)
 
@@ -113,7 +113,7 @@ def _install(args: argparse.Namespace) -> int:
     skills = policy.resolve_selection(
         source,
         picks=_split_csv(args.skill),
-        scenario=args.scenario,
+        demo=args.demo,
         exclude=_split_csv(args.exclude),
     )
     skill_dirs = [policy.skill_dir(source, n) for n in skills]

@@ -3,7 +3,7 @@ name: catalog-to-assessment
 skills: [catalog-authoring, component-definition, assessment]
 ---
 
-# Scenario: catalog → component → assessment
+# Demo: catalog → component → assessment
 
 The full OSCAL authoring lifecycle end-to-end, in natural language: tailor a NIST SP 800-53
 catalog, map its controls to a Kubernetes component, and generate an assessment result — driven
@@ -18,10 +18,10 @@ Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`; also runs 
 
 ```bash
 # skills + MCP wiring, one step — into Claude Code:
-uvx ag-au-skills install --scenario catalog-to-assessment --target claude
+uvx ag-au-skills install --demo catalog-to-assessment --target claude
 
 # …or into OpenCode:
-uvx ag-au-skills install --scenario catalog-to-assessment --target opencode
+uvx ag-au-skills install --demo catalog-to-assessment --target opencode
 ```
 
 This copies `catalog-authoring`, `component-definition`, and `assessment` into the harness's
@@ -72,6 +72,6 @@ user-authored skills and user-defined MCP servers are never touched.
 # remove one skill:
 uvx ag-au-skills uninstall --skill assessment --target claude
 
-# remove the whole scenario set:
+# remove the whole demo set:
 uvx ag-au-skills uninstall --skill catalog-authoring,component-definition,assessment --target claude
 ```

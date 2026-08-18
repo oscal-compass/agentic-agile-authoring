@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Selection: resolve ``--skill`` / ``--exclude`` / ``--scenario`` into an explicit skill list."""
+"""Selection: resolve ``--skill`` / ``--exclude`` / ``--demo`` into an explicit skill list."""
 
 from __future__ import annotations
 
@@ -32,19 +32,19 @@ def resolve_skill_list(
     all_skills: list[str],
     *,
     picks: list[str] | None = None,
-    scenario: list[str] | None = None,
+    demo: list[str] | None = None,
     exclude: list[str] | None = None,
 ) -> list[str]:
     """Resolve a selection into an explicit, de-duplicated, order-preserving skill list.
 
-    Base is the most specific selector present (picks > scenario > all); then ``exclude`` is
+    Base is the most specific selector present (picks > demo > all); then ``exclude`` is
     subtracted.
     """
     exclude_set = set(exclude or [])
     if picks:
         base = picks
-    elif scenario is not None:
-        base = scenario
+    elif demo is not None:
+        base = demo
     else:
         base = all_skills
     seen: set[str] = set()
@@ -61,7 +61,7 @@ def unknown_names(
     all_skills: list[str],
     *,
     picks: list[str] | None = None,
-    scenario: list[str] | None = None,
+    demo: list[str] | None = None,
     exclude: list[str] | None = None,
 ) -> list[str]:
     """Names referenced by a selection that don't exist in the source repo (a typo guard).
@@ -72,7 +72,7 @@ def unknown_names(
     if not all_skills:
         return []
     known = set(all_skills)
-    referenced = set((picks or []) + (scenario or []) + (exclude or []))
+    referenced = set((picks or []) + (demo or []) + (exclude or []))
     return sorted(n for n in referenced if n not in known)
 
 
@@ -98,15 +98,15 @@ def parse_frontmatter(text: str) -> dict:
     return doc if isinstance(doc, dict) else {}
 
 
-def scenario_skills(source_root: Path, scenario: str) -> list[str]:
-    """The skill set a scenario exercises, from ``scenarios/<name>/README.md`` frontmatter."""
-    readme = source_root / "scenarios" / scenario / "README.md"
+def demo_skills(source_root: Path, demo: str) -> list[str]:
+    """The skill set a demo exercises, from ``demos/<name>/README.md`` frontmatter."""
+    readme = source_root / "demos" / demo / "README.md"
     if not readme.exists():
-        raise ValueError(f"scenario not found: {scenario} (expected {readme})")
+        raise ValueError(f"demo not found: {demo} (expected {readme})")
     fm = parse_frontmatter(readme.read_text(encoding="utf-8"))
     skills = fm.get("skills")
     if not isinstance(skills, list) or not all(isinstance(s, str) for s in skills):
         raise ValueError(
-            f"scenario {scenario}: README.md frontmatter has no valid 'skills:' list"
+            f"demo {demo}: README.md frontmatter has no valid 'skills:' list"
         )
     return skills

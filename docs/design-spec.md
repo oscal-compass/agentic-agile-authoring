@@ -1,7 +1,7 @@
-# Design Spec — Skills, Scenarios, and Installation
+# Design Spec — Skills, Demos, and Installation
 
 > **Status:** Approved; implementation in progress (rev.4, 2026-08-18). Supersedes the removed
-> `docs/installer-spec.md`. This restructure covers **structure + the first scenario
+> `docs/installer-spec.md`. This restructure covers **structure + the first demo
 > (`catalog-to-assessment`) + the `ag-au-skills` installer**; POA&M authoring is the next task.
 >
 > **Strategy (decided):** *Adopt, don't invent.* We are **not** building a package manager or a
@@ -24,8 +24,8 @@ harness we call **MyHarness**, …). Three first-class objects:
 
 - **Skill** — a unit of authoring know-how: `SKILL.md` + an `apm.yml` package manifest +
   optional `scripts/`/`references/`/`assets/`. Single source of truth in `skills/`, harness-independent.
-- **Scenario** — an end-to-end use case exercising **N skills**, doubling as a **conformance
-  run** (§4). Lives in `scenarios/`.
+- **Demo** — an end-to-end **walkthrough** exercising **N skills** (§4), captured as a single
+  `README.md`. Lives in `demos/`.
 - **MCP dependency** — a skill declares (in `apm.yml`) that it needs an MCP server (e.g.
   `trestle`); the installer resolves it and wires it into the selected harness's native MCP
   config (§3).
@@ -90,8 +90,8 @@ Skills with no MCP need simply omit `dependencies.mcp`.
 dependency graphs, lockfiles, MCP normalization, or ownership — APM owns all of that. It adds
 three things APM alone doesn't give us:
 
-1. **Selection** over *this repo* (`--scenario`, `--exclude`, all-skills) — APM has no concept of
-   our scenarios; the wrapper resolves a selection to a set of local skill packages.
+1. **Selection** over *this repo* (`--demo`, `--exclude`, all-skills) — APM has no concept of
+   our demos; the wrapper resolves a selection to a set of local skill packages.
 2. **A stable UX** that hides APM's project mechanics (a standalone skill install needs an APM
    project context; the wrapper synthesizes it) and enforces our prerequisite policy (§3.5).
 3. **MyHarness deployment** — APM's target set is closed (§3.3), so the wrapper deploys to
@@ -153,16 +153,16 @@ Note (verified @ 0.28.0): the historically-documented `auto_create=False` skill-
 | default (no selector) | all skill packages under `skills/` |
 | `--skill a,b` | explicit pick |
 | `--exclude x,y` | (all) − {x,y} |
-| `--scenario name` | the `skills:` set declared in `scenarios/name/README.md` |
+| `--demo name` | the `skills:` set declared in `demos/name/README.md` |
 
 The resolved set is validated against the source (typos error out), then each skill is handed to
 the appropriate backend (§3.1 for APM targets, §3.3 for MyHarness).
 
 **Source of the skills (decided, D5).** By default the selection is resolved against the skills
-**bundled inside the installed package** (`ag_au_skills/_bundled/{skills,scenarios}`, copied from
+**bundled inside the installed package** (`ag_au_skills/_bundled/{skills,demos}`, copied from
 this repo's top-level dirs at wheel-build time). So `ag-au-skills install …` works from **any
 directory** with no local checkout — the tool carries its own skills as package data. The repo's
-top-level `skills/`/`scenarios/` remain the single source of truth (no committed duplicate; an
+top-level `skills/`/`demos/` remain the single source of truth (no committed duplicate; an
 editable/dev install falls back to the repo checkout). `--source <repo>` overrides the default to
 install from an external skills repo (a remote `owner/repo` shorthand that git-clones first is a
 future add — §8.5). This does **not** revive the retired monolith/publish-wheel of authoring
@@ -219,23 +219,23 @@ Version bumps of `apm-cli` are gated behind the §5 integration spikes.
   needs `npx` or `docker`, those must already be installed; the wrapper validates presence and
   emits a useful error but does **not** auto-install system dependencies.
 
-## 4. Scenario
+## 4. Demo
 
-A scenario is an **end-to-end walkthrough** exercising N skills, in natural language — the payload
+A demo is an **end-to-end walkthrough** exercising N skills, in natural language — the payload
 demo, expressed so anyone can reproduce it.
 
 ### 4.1 Layout
 
-A scenario is a **single `README.md`** plus any assets it references (e.g. a demo video):
+A demo is a **single `README.md`** plus any assets it references (e.g. a demo video):
 
 ```
-scenarios/<scenario-name>/
+demos/<demo-name>/
   README.md       frontmatter (skills:) + demo video + install → prompts (in order) → uninstall
   …               any referenced assets
 ```
 
-- **1 scenario : N skills** (not 1:1). The `README.md` frontmatter declares the skill set (also
-  used by `--scenario` install, §3.2); it self-documents install and uninstall:
+- **1 demo : N skills** (not 1:1). The `README.md` frontmatter declares the skill set (also
+  used by `--demo` install, §3.2); it self-documents install and uninstall:
 
 ```yaml
 ---
@@ -265,7 +265,7 @@ during design (see `.insights/installer-node-vs-python.md`), run in CI and re-ru
   pre-existing user `provider`/`model` config.
 - **shared-MCP prune:** two skills declare the same server → uninstall one keeps it, uninstall the
   last removes it; a hand-planted user MCP server survives throughout.
-- **selection:** `--exclude` / `--scenario` resolve to the correct skill set.
+- **selection:** `--exclude` / `--demo` resolve to the correct skill set.
 - **MyHarness:** library reuse yields normalized MCP objects for an unknown target; our deployer
   writes `~/.myharness/skills/` + merges `~/.myharness/mcp.json` non-destructively; prune drops
   only unreferenced servers.
@@ -274,8 +274,8 @@ during design (see `.insights/installer-node-vs-python.md`), run in CI and re-ru
 
 Two instruments:
 
-1. **Scenario walkthroughs (§4)** validate the *authoring capability* — a real (harness, model)
-   follows an N-skill scenario `README.md` and reproduces the described artifacts (e.g. produced
+1. **Demo walkthroughs (§4)** validate the *authoring capability* — a real (harness, model)
+   follows an N-skill demo `README.md` and reproduces the described artifacts (e.g. produced
    OSCAL passes `trestle validate`).
 2. **Installer acceptance** = the §5.1 spikes at requirement level: skills land in each harness's
    native dir; MCP servers appear in native config; non-destructive uninstall; prune-when-unreferenced.
@@ -284,7 +284,7 @@ Two instruments:
 
 ```
 skills/<name>/               skill package: SKILL.md + apm.yml [+ scripts/refs/assets]
-scenarios/<name>/            README.md (frontmatter skills: + walkthrough) [+ assets]
+demos/<name>/            README.md (frontmatter skills: + walkthrough) [+ assets]
 tools/                       `ag-au-skills` — thin wrapper over apm-cli (Python)
   pyproject.toml             deps: apm-cli==<pin>, pyyaml
   ag_au_skills/
@@ -309,13 +309,13 @@ Notes:
 |---|---|
 | Install per each harness's convention | §3.1 APM native-dir deploy (claude/opencode verified); §3.3 MyHarness deployer |
 | Same package to all harnesses (no per-harness pkg) | §2.1 hybrid `SKILL.md`+`apm.yml`, target chosen at install |
-| Selectable which skills (default all) | §3.2 (`--skill`/`--exclude`/`--scenario`) |
+| Selectable which skills (default all) | §3.2 (`--skill`/`--exclude`/`--demo`) |
 | Provided as a CLI (uvx-runnable) | §3 (`ag-au-skills`, Python, pins `apm-cli`) |
 | Skill declares MCP dep; installer wires it | §2.3 + §3.1 (`apm`) / §3.3 (MyHarness) |
 | MCP merged into native config, non-destructive | §3.1 verified (Claude `.mcp.json`, OpenCode `opencode.json`) |
 | Uninstall non-destructive + prune unused MCP | §3.1 APM reachability prune (verified); §3.3 for MyHarness |
 | One source of truth for lifecycle/ownership | APM `apm.lock.yaml` for supported targets; minimal MyHarness-scoped record only |
-| Scenario = conformance run over N skills | §4 |
+| Demo = walkthrough over N skills | §4 |
 | Prerequisite policy (uv baseline) | §3.5 |
 
 ## 8. Phasing / open items
@@ -345,7 +345,7 @@ Short ADR-style records of load-bearing choices. Most recent first.
   it place "its" skills. Options: (a) require running from the repo root; (b) a remote `owner/repo`
   shorthand that git-clones first (§8.5, deferred — adds a git prereq + clone lifecycle); (c) bundle
   the skills into the package as data.
-- **Decision:** Ship the repo's `skills/` + `scenarios/` inside the wheel at build time
+- **Decision:** Ship the repo's `skills/` + `demos/` inside the wheel at build time
   (`ag_au_skills/_bundled/`, via hatchling `force-include`), and make `--source` **optional**,
   defaulting to that bundle. `--source <repo>` still installs from an external skills repo. Runtime
   resolution: bundled dir if present, else the repo checkout the package lives in (editable/dev).
@@ -380,7 +380,7 @@ Short ADR-style records of load-bearing choices. Most recent first.
     `CurrentMcpConfigView.derive`) yields normalized MCP for an **unknown** target — enabling
     MyHarness without forking APM.
 - **Decision:** `ag-au-skills` becomes a **thin wrapper**: delegate supported targets to the pinned
-  `apm` CLI; add only selection (our scenarios), UX, prereq policy, and a **MyHarness deployer** that
+  `apm` CLI; add only selection (our demos), UX, prereq policy, and a **MyHarness deployer** that
   reuses APM's target-agnostic resolve/normalize (library) and writes MyHarness's own skill dir +
   MCP config. Exact-pin `apm-cli`; gate bumps on the §5.1 spikes.
 - **Consequences:** (+) drastically less bespoke code; APM owns resolution/lockfile/ownership/prune;

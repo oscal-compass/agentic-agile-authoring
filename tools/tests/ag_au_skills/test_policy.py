@@ -52,8 +52,8 @@ def test_resolve_selection_default_is_all(source_repo):
     ]
 
 
-def test_resolve_selection_scenario(source_repo):
-    assert policy.resolve_selection(source_repo, scenario="catalog-to-assessment") == [
+def test_resolve_selection_demo(source_repo):
+    assert policy.resolve_selection(source_repo, demo="catalog-to-assessment") == [
         "catalog-authoring",
         "component-definition",
         "assessment",

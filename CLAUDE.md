@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 An ecosystem of portable authoring **skills** for OSCAL-based compliance authoring — from NIST
 catalog customization through component definition to assessment result generation — usable
 across multiple agent harnesses (Claude Code, Roo Code, opencode, …). Skills are the single
-source of truth in `skills/`; **scenarios** in `scenarios/` are end-to-end conformance runs;
+source of truth in `skills/`; **demos** in `demos/` are end-to-end walkthroughs;
 `tools/` holds the only bespoke code (the `ag-au-skills` CLI). See `docs/design-spec.md` for the design.
 
 ## Build & Development Commands
@@ -22,7 +22,7 @@ pip install -e ".[test]"     # pins apm-cli; pulls pyyaml + pytest
 pytest                       # unit tests + pinned-apm integration spikes
 
 # Run the CLI (prereq: uv):
-ag-au-skills install --scenario catalog-to-assessment --target claude
+ag-au-skills install --demo catalog-to-assessment --target claude
 ag-au-skills --help
 
 # Add license headers to source files
@@ -45,7 +45,7 @@ Skills in `skills/` are portable hybrid packages (`SKILL.md` + `apm.yml`) shared
 harness. Installation is delegated to **Microsoft APM** (`apm-cli`, exact-pinned): APM copies the
 skill package into each harness's native dir **and** wires the skill's declared MCP servers into
 that harness's native MCP config, with `apm.lock.yaml` ownership + non-destructive uninstall/prune.
-`ag-au-skills` (`tools/`, Python) is a thin wrapper adding only: selection over our scenarios, a
+`ag-au-skills` (`tools/`, Python) is a thin wrapper adding only: selection over our demos, a
 stable UX + prereq policy, and a custom-harness ("MyHarness") deployer that reuses APM's
 target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decision **D4**).
 
@@ -57,9 +57,9 @@ target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decis
 - **`skills/<name>/apm.yml`** — the APM package manifest (`name`, `version`, and `dependencies.mcp`
   where the skill needs an MCP server — `catalog-authoring`/`component-definition` declare
   `trestle`). Do NOT add a `target:` field (APM rejects unknown target tokens at parse time).
-- **`scenarios/<name>/`** — a single `README.md` (frontmatter `skills:` + the walkthrough:
-  prompts, install/uninstall, demo video) plus any referenced assets. A scenario is an end-to-end
-  walkthrough over N skills; `--scenario` reads its `skills:` frontmatter.
+- **`demos/<name>/`** — a single `README.md` (frontmatter `skills:` + the walkthrough:
+  prompts, install/uninstall, demo video) plus any referenced assets. A demo is an end-to-end
+  walkthrough over N skills; `--demo` reads its `skills:` frontmatter.
 - **`tools/`** — the `ag-au-skills` wrapper (Python). Modules: `cli.py`, `policy.py` (selection +
   prereq checks), `backends/apm_cli.py` (subprocess to pinned `apm` for supported targets),
   `targets/myharness.py` (library reuse of APM + our deployer). This is the code with tests.
@@ -74,7 +74,7 @@ resolved skill + normalized MCP, then deploys itself. `uninstall`/prune go throu
 supported targets (a shared MCP server is dropped only when no remaining skill needs it).
 
 Skills come from the copy **bundled inside the wheel** (`ag_au_skills/_bundled/`, built from the
-repo's top-level `skills/`/`scenarios/`) so the CLI works from any directory with no checkout;
+repo's top-level `skills/`/`demos/`) so the CLI works from any directory with no checkout;
 `--source <repo>` overrides to install from an external skills repo. (The old monolith/plugin/
 publish-wheel is still retired — this is the thin wrapper carrying its own skills as data, decision
 **D5**.)
@@ -87,7 +87,7 @@ publish-wheel is still retired — this is the thin wrapper carrying its own ski
 3. Add `skills/<skill-name>/apm.yml` (APM package manifest): `name`, `version`, and — if the skill
    needs an MCP server — `dependencies.mcp` in APM's shape (`registry: false` for self-defined
    stdio; mirror the server def in root `.mcp.json`). Do NOT add a `target:` field.
-4. Optionally add/extend a scenario in `scenarios/` that exercises it.
+4. Optionally add/extend a demo in `demos/` that exercises it.
 5. Run `python scripts/add_license_headers.py` to add license headers.
 
 Skills are invoked directly per harness — there is no orchestrator agent/mode to update.

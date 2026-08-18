@@ -11,8 +11,8 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
 - **Skill** — a unit of authoring know-how (`SKILL.md` + an `apm.yml` package manifest + optional
   scripts/references/assets), portable across harnesses. A skill that needs an MCP server declares
   it in `apm.yml` (`dependencies.mcp`).
-- **Scenario** — an end-to-end use case exercising N skills, doubling as a conformance run with
-  exact/approximate checkpoints. See [Architecture](architecture.md) and the
+- **Demo** — an end-to-end walkthrough exercising N skills, captured as a single
+  `demos/<name>/README.md`. See [Architecture](architecture.md) and the
   [Design Spec](design-spec.md).
 - **MCP dependency** — declared in `apm.yml`, resolved and wired into the target harness's native
   MCP config on install; not hardcoded anywhere.
@@ -24,8 +24,8 @@ Skills are installed by `ag-au-skills`, a thin CLI (in `tools/`) that wraps
 [`uv`](https://docs.astral.sh/uv/) (provides `uvx`) — no Node required.
 
 ```bash
-uvx ag-au-skills install --scenario catalog-to-assessment --target claude
-uvx ag-au-skills install --scenario catalog-to-assessment --target opencode
+uvx ag-au-skills install --demo catalog-to-assessment --target claude
+uvx ag-au-skills install --demo catalog-to-assessment --target opencode
 ```
 
 This copies the selected skills into the target's native skill dir (`.claude/skills/` for Claude,
@@ -35,11 +35,11 @@ native MCP config (`.mcp.json` / `opencode.json`) — non-destructively. See the
 [Development guide](development.md) and the [Design Spec](design-spec.md) for the full model,
 subset selection, uninstall/prune, and the custom-harness path.
 
-## Demo → scenario
+## Demo
 
 The full authoring lifecycle — tailoring a NIST SP 800-53 catalog, mapping controls to a
 Kubernetes component, and generating an assessment result — is captured as a runnable walkthrough,
-`catalog-to-assessment`. Its `scenarios/catalog-to-assessment/README.md` carries a demo video, the
+`catalog-to-assessment`. Its `demos/catalog-to-assessment/README.md` carries a demo video, the
 install steps, the prompts to give the agent in order, and uninstall (e.g. the generated
 `catalog.json` passes `trestle validate`).
 

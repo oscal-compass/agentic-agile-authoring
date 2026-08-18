@@ -17,7 +17,7 @@
 Installation, MCP wiring, the lockfile, and prune are **APM's** job — this package adds only what
 APM can't do for us (design-spec §3, decision D4):
 
-- **selection** over this repo (``--skill`` / ``--exclude`` / ``--scenario``) — :mod:`.selection`
+- **selection** over this repo (``--skill`` / ``--exclude`` / ``--demo``) — :mod:`.selection`
   + :mod:`.policy`;
 - a **stable UX + prereq policy** that hides APM's project mechanics (synthesize a project context
   for a standalone skill install) — :mod:`.policy` + :mod:`.backends.apm_cli`;

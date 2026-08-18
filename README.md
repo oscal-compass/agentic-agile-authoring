@@ -12,8 +12,8 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
   [`apm.yml`](docs/design-spec.md#23-mcp-dependency-declaration-dependenciesmcp) package manifest
   and optional `scripts/`/`references/`/`assets/`. A skill that needs an MCP server declares it in
   `apm.yml` (`dependencies.mcp`).
-- **Scenarios** (`scenarios/`) — end-to-end walkthroughs that exercise N skills, each a single
-  `scenarios/<name>/README.md` (prompts + install/uninstall + a demo video).
+- **Demos** (`demos/`) — end-to-end walkthroughs that exercise N skills, each a single
+  `demos/<name>/README.md` (prompts + install/uninstall + a demo video).
 - **`tools/`** — `ag-au-skills`, a thin installer CLI. It is a small wrapper over
   [**Microsoft APM**](https://github.com/microsoft/apm) (`apm-cli`), which does the heavy lifting:
   copy the skill into each harness's native dir **and** wire its declared MCP servers into that
@@ -26,11 +26,11 @@ Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`, which also
 MCP servers like trestle). That is the only baseline runtime — no Node required.
 
 ```bash
-# install a scenario's skills into Claude Code (skill files + MCP wiring, one step)
-uvx ag-au-skills install --scenario catalog-to-assessment --target claude
+# install a demo's skills into Claude Code (skill files + MCP wiring, one step)
+uvx ag-au-skills install --demo catalog-to-assessment --target claude
 
 # or into OpenCode
-uvx ag-au-skills install --scenario catalog-to-assessment --target opencode
+uvx ag-au-skills install --demo catalog-to-assessment --target opencode
 
 # subset selection
 uvx ag-au-skills install --exclude git-workflow --target claude
@@ -53,11 +53,11 @@ uvx ag-au-skills uninstall --skill assessment --target claude
 > [docs/design-spec.md](docs/design-spec.md), §8). The underlying APM flow — skill placement +
 > MCP wiring + prune, for Claude Code and OpenCode — is verified working.
 
-## Demo → scenario
+## Demo
 
 Tailoring a NIST SP 800-53 catalog, mapping controls to a Kubernetes component, and generating an
 assessment result — all in natural language — is captured as a runnable walkthrough with a demo
-video: **[`scenarios/catalog-to-assessment/`](scenarios/catalog-to-assessment/README.md)**. That
+video: **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)**. That
 README carries the install steps, the prompts to give the agent in order, and uninstall.
 
 ## Skills
@@ -69,7 +69,7 @@ README carries the install steps, the prompts to give the agent in order, and un
 | `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
 | `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
 
-Skills are invoked directly by each harness — there is no orchestrator persona. A scenario
+Skills are invoked directly by each harness — there is no orchestrator persona. A demo
 carries the orchestration.
 
 ## Contributing a skill
@@ -77,7 +77,7 @@ carries the orchestration.
 1. Add `skills/<name>/SKILL.md` (frontmatter: `name` = directory name, `description`).
 2. Add `skills/<name>/apm.yml` with `name`/`version`, and — if the skill needs an MCP server —
    `dependencies.mcp` (see the existing manifests). Do **not** put `target:` in it.
-3. Consider adding or extending a scenario in `scenarios/` that exercises the skill.
+3. Consider adding or extending a demo in `demos/` that exercises the skill.
 
 See [docs/development.md](docs/development.md) and [docs/design-spec.md](docs/design-spec.md).
 

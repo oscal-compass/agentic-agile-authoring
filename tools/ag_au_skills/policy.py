@@ -16,7 +16,7 @@
 
 Three concerns, all pure/deterministic so they're unit-testable without touching APM:
 
-* **selection** — turn ``--skill`` / ``--exclude`` / ``--scenario`` into an explicit, validated
+* **selection** — turn ``--skill`` / ``--exclude`` / ``--demo`` into an explicit, validated
   list of local skill packages (delegates the resolution to :mod:`.selection`);
 * **manifest validation** — each selected skill must be a well-formed APM package
   (``SKILL.md`` + an ``apm.yml`` carrying ``name`` + ``version`` and no ``target:`` field);
@@ -34,9 +34,9 @@ from pathlib import Path
 import yaml
 
 from .selection import (
+    demo_skills,
     list_all_skills,
     resolve_skill_list,
-    scenario_skills,
     unknown_names,
 )
 
@@ -47,9 +47,9 @@ class PolicyError(ValueError):
 
 # --- default source (bundled skills) -----------------------------------------
 
-# Skills + scenarios ship inside the wheel under this package-data dir, so the CLI works from any
+# Skills + demos ship inside the wheel under this package-data dir, so the CLI works from any
 # directory without a local checkout. Single source of truth stays the repo's top-level `skills/`
-# and `scenarios/`; the build copies them here (see tools/pyproject.toml force-include). In an
+# and `demos/`; the build copies them here (see tools/pyproject.toml force-include). In an
 # editable/dev install this dir is absent, so we fall back to the repo checkout the package lives
 # in. A user-supplied ``--source`` always overrides this (install from any external skills repo).
 _BUNDLED_DIRNAME = "_bundled"
@@ -90,7 +90,7 @@ def resolve_selection(
     source_root: Path,
     *,
     picks: list[str] | None = None,
-    scenario: str | None = None,
+    demo: str | None = None,
     exclude: list[str] | None = None,
 ) -> list[str]:
     """Resolve a selection against *source_root*'s ``skills/`` into an explicit skill list.
@@ -105,13 +105,13 @@ def resolve_selection(
     if not all_skills:
         raise PolicyError(f"no skills found under {source_root / 'skills'}")
 
-    scenario_set = scenario_skills(source_root, scenario) if scenario else None
-    bad = unknown_names(all_skills, picks=picks, scenario=scenario_set, exclude=exclude)
+    demo_set = demo_skills(source_root, demo) if demo else None
+    bad = unknown_names(all_skills, picks=picks, demo=demo_set, exclude=exclude)
     if bad:
         raise PolicyError(f"unknown skill(s) for source {source_root}: {', '.join(bad)}")
 
     skills = resolve_skill_list(
-        all_skills, picks=picks, scenario=scenario_set, exclude=exclude
+        all_skills, picks=picks, demo=demo_set, exclude=exclude
     )
     if not skills:
         raise PolicyError("selection resolved to zero skills")
