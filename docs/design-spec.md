@@ -128,12 +128,23 @@ maintainer-tested path. **Verified (spikes, §5):**
   user-defined MCP servers are never touched. (Verified with a diamond dep + a hand-injected user
   server that survived.)
 
-The wrapper's job for supported targets is just: resolve the selection → for each skill, ensure a
-project context (synthetic temp project depending on the local skill, or user scope `-g`) →
-`apm install --target <t>` → surface results. Ownership/lockfile/prune all live in APM.
+The wrapper's job for supported targets is just: resolve the selection → `apm install <skill-dirs>
+--target <t>` with the **`--project` dir as the APM project** (or `-g` for user scope) → surface
+results. There is **no** throwaway temp project — that would discard APM's `apm.lock.yaml`/prune,
+the reason we adopted APM (D4). Ownership/lockfile/prune all live in APM.
 
-Gotcha handled by the wrapper: APM's Claude skill deploy is gated `auto_create=False`, so the
-target root (`.claude/` or `~/.claude/`) must be pre-created or the skill silently isn't placed.
+Project tidy (project scope, on by default): APM writes its project bookkeeping into the target
+dir, but the user only wants the deployed products. After a successful install the wrapper drops
+the regenerable `apm_modules/` cache, reverts APM's `.gitignore` edit, and consolidates the ledger
+(`apm.yml` + `apm.lock.yaml`) into a hidden `.ag-au-skills/` dir — so the project shows just
+`.claude/skills/` + `.mcp.json` + that one hidden dir. `uninstall` restores the ledger to the
+project root so APM's reachability prune runs, then re-tidies. `--keep-apm-files` opts out
+(debugging / direct `apm` interop). Verified: uninstall + prune work with `apm_modules/` absent and
+the ledger restored to cwd.
+
+Note (verified @ 0.28.0): the historically-documented `auto_create=False` skill-skip gotcha does
+**not** bite when `--target` is passed explicitly (APM creates the target root on the
+`auto_create OR explicit` path). The wrapper still pre-creates the root as cheap insurance.
 
 ### 3.2 Selection (default: all skills in this repo)
 

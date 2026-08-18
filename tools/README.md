@@ -14,9 +14,13 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
    the **skills bundled inside this package** by default (so the CLI works from any directory
    without a checkout); `--source <repo>` installs from an external skills repo instead.
 2. **Stable UX** — hides APM's project mechanics (resolves the selection to local skill paths and
-   drives one `apm install <paths> --target <t>`; the `--project` dir *is* the APM project, so
-   APM's `apm.lock.yaml` + prune land there — no throwaway temp project) and enforces the
-   prerequisite policy. `--global` switches to APM user scope (`~/.claude/…`).
+   drives one `apm install <paths> --target <t>`; the `--project` dir *is* the APM project — no
+   throwaway temp project) and enforces the prerequisite policy. `--global` switches to APM user
+   scope (`~/.claude/…`). After a project-scope install the wrapper **tidies**: the project keeps
+   only the deployed products (`.claude/skills/`, `.mcp.json`), while APM's ledger (`apm.yml` +
+   `apm.lock.yaml`) is consolidated into a hidden `.ag-au-skills/` dir and the `apm_modules/` cache
+   + APM's `.gitignore` edit are dropped. `uninstall` restores the ledger transparently so APM's
+   prune still runs, then re-tidies. `--keep-apm-files` disables tidying (debugging / direct `apm`).
 3. **MyHarness deployment** — APM's target set is closed, so for our custom harness the wrapper
    **reuses APM's target-agnostic resolve/normalize as a library** and does the small deployment
    diff itself (copy skill + merge `~/.myharness/mcp.json`). No fork of APM.

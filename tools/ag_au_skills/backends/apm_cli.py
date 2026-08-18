@@ -57,6 +57,58 @@ _TARGET_ROOT = {
     "opencode": ".agents",
 }
 
+# --- project tidy ------------------------------------------------------------
+# In project scope APM writes its bookkeeping into the target dir. The user only wants the
+# deployed products (`.claude/skills/`, `.mcp.json`, …); the rest is APM's project state. After a
+# successful project-scope install we tidy: drop the regenerable module cache, revert APM's
+# .gitignore edit, and stash the ledger (apm.yml + apm.lock.yaml) into a single hidden dir. Before
+# an uninstall we restore the ledger so `apm` can operate, then re-tidy. (Verified: uninstall +
+# reachability prune still work with apm_modules/ absent and the ledger restored to cwd.)
+_STASH_DIRNAME = ".ag-au-skills"
+_LEDGER_FILES = ("apm.yml", "apm.lock.yaml")
+_APM_MODULES = "apm_modules"
+
+
+def _clean_gitignore(gitignore: Path) -> None:
+    """Strip the ``# APM dependencies`` / ``apm_modules/`` block APM appends; drop the file if empty."""
+    if not gitignore.is_file():
+        return
+    kept = [
+        ln for ln in gitignore.read_text(encoding="utf-8").splitlines()
+        if ln.strip() not in {"# APM dependencies", _APM_MODULES + "/", _APM_MODULES}
+    ]
+    text = "\n".join(kept).strip()
+    if text:
+        gitignore.write_text(text + "\n", encoding="utf-8")
+    else:
+        gitignore.unlink()
+
+
+def _tidy_project(project: Path) -> None:
+    """Consolidate APM's project bookkeeping into the hidden stash + drop the module cache."""
+    shutil.rmtree(project / _APM_MODULES, ignore_errors=True)
+    _clean_gitignore(project / ".gitignore")
+    stash = project / _STASH_DIRNAME
+    for name in _LEDGER_FILES:
+        src = project / name
+        if src.exists():
+            stash.mkdir(exist_ok=True)
+            shutil.move(str(src), str(stash / name))
+
+
+def _restore_project(project: Path) -> bool:
+    """Move the stashed ledger back to the project root so ``apm`` can read it. True if one existed."""
+    stash = project / _STASH_DIRNAME
+    if not stash.is_dir():
+        return False
+    restored = False
+    for name in _LEDGER_FILES:
+        src = stash / name
+        if src.exists():
+            shutil.move(str(src), str(project / name))
+            restored = True
+    return restored
+
 
 class ApmError(RuntimeError):
     """The pinned ``apm`` CLI exited non-zero (its stderr is attached)."""
@@ -108,6 +160,7 @@ def install(
     project: Path,
     global_scope: bool = False,
     dry_run: bool = False,
+    tidy: bool = True,
     apm_bin: str | None = None,
     env: dict | None = None,
 ) -> ApmResult | list[str]:
@@ -116,6 +169,11 @@ def install(
     ``skill_dirs`` are absolute local skill-package paths (each a dir with ``SKILL.md`` +
     ``apm.yml``). In project scope APM's bookkeeping lands in *project*; ``-g`` switches to user
     scope. Returns the argv (as a list) when ``dry_run`` is set, else the :class:`ApmResult`.
+
+    ``tidy`` (project scope only): after a successful install, consolidate APM's project
+    bookkeeping into the hidden ``.ag-au-skills/`` stash and drop the ``apm_modules/`` cache, so
+    the project keeps only the deployed products. Pass ``tidy=False`` to leave APM's files in
+    place (debugging / direct ``apm`` interop). On restore, ``uninstall`` handles the stash.
     """
     binp = resolve_apm_bin(apm_bin)
     argv = [binp, "install", *[str(d) for d in skill_dirs], "--target", target]
@@ -127,12 +185,17 @@ def install(
 
     if not global_scope:
         project.mkdir(parents=True, exist_ok=True)
+        # a prior tidy may have stashed the ledger — restore it so `apm` updates it in place.
+        _restore_project(project)
         # belt-and-suspenders: ensure the native root exists (not load-bearing in 0.28.0).
         root = _TARGET_ROOT.get(target)
         if root:
             (project / root).mkdir(parents=True, exist_ok=True)
 
-    return _run(argv, cwd=None if global_scope else project, env=env)
+    result = _run(argv, cwd=None if global_scope else project, env=env)
+    if tidy and not global_scope:
+        _tidy_project(project)
+    return result
 
 
 def uninstall(
@@ -142,6 +205,7 @@ def uninstall(
     project: Path,
     global_scope: bool = False,
     dry_run: bool = False,
+    tidy: bool = True,
     apm_bin: str | None = None,
     env: dict | None = None,
 ) -> ApmResult | list[str]:
@@ -151,6 +215,10 @@ def uninstall(
     each skill from the native dir and drops a shared MCP server only when no surviving installed
     skill still declares it — user-authored skills / user MCP servers are never touched (§3.1).
     ``target`` is accepted for symmetry/logging; APM resolves scope from the lockfile.
+
+    In project scope this first restores the hidden ``.ag-au-skills/`` ledger stash so ``apm`` can
+    read it, then re-tidies afterward (``tidy``). If no stash exists (e.g. a raw ``apm``-managed
+    project), it runs against whatever ledger is already in *project*.
     """
     binp = resolve_apm_bin(apm_bin)
     keys = [f"_local/{n}" for n in skill_names]
@@ -160,4 +228,11 @@ def uninstall(
 
     if dry_run:
         return argv
-    return _run(argv, cwd=None if global_scope else project, env=env)
+
+    if not global_scope:
+        _restore_project(project)
+    try:
+        return _run(argv, cwd=None if global_scope else project, env=env)
+    finally:
+        if tidy and not global_scope:
+            _tidy_project(project)

@@ -61,6 +61,11 @@ def _add_common(p: argparse.ArgumentParser) -> None:
         "--myharness-root", default=None,
         help=f"MyHarness root (default: {myharness.DEFAULT_ROOT})",
     )
+    p.add_argument(
+        "--keep-apm-files", action="store_true",
+        help="leave APM's project files (apm.yml/apm.lock.yaml/apm_modules) in place instead of "
+             "consolidating them into the hidden .ag-au-skills/ stash (project scope only)",
+    )
     p.add_argument("--dry-run", action="store_true", help="print what would happen; change nothing")
 
 
@@ -142,6 +147,7 @@ def _install(args: argparse.Namespace) -> int:
         project=Path(args.project).resolve(),
         global_scope=args.global_scope,
         dry_run=args.dry_run,
+        tidy=not args.keep_apm_files,
     )
     if args.dry_run:
         sys.stdout.write(f"[dry-run] {' '.join(out)}\n")
@@ -173,6 +179,7 @@ def _uninstall(args: argparse.Namespace) -> int:
         project=Path(args.project).resolve(),
         global_scope=args.global_scope,
         dry_run=args.dry_run,
+        tidy=not args.keep_apm_files,
     )
     if args.dry_run:
         sys.stdout.write(f"[dry-run] {' '.join(out)}\n")

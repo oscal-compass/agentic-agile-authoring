@@ -83,6 +83,46 @@ def test_shared_mcp_prune_via_apm(source_repo, tmp_path):
     assert "trestle" not in remaining
 
 
+def test_project_scope_tidy_leaves_only_products_and_stash(source_repo, tmp_path):
+    project = tmp_path / "proj"
+    apm_cli.install(_dirs(source_repo, "catalog-authoring"), target="claude", project=project)
+
+    # products present …
+    assert (project / ".claude" / "skills" / "catalog-authoring").is_dir()
+    assert (project / ".mcp.json").is_file()
+    # … APM's project bookkeeping consolidated into the hidden stash, cache + gitignore gone.
+    top = {p.name for p in project.iterdir()}
+    assert top == {".claude", ".mcp.json", ".ag-au-skills"}
+    assert not (project / "apm_modules").exists()
+    assert (project / ".ag-au-skills" / "apm.lock.yaml").is_file()
+
+
+def test_tidy_stash_restores_for_uninstall_prune(source_repo, tmp_path):
+    project = tmp_path / "proj"
+    apm_cli.install(
+        _dirs(source_repo, "catalog-authoring", "component-definition"),
+        target="claude",
+        project=project,
+    )
+    # uninstall must transparently restore the stash, prune correctly, and re-tidy.
+    apm_cli.uninstall(["catalog-authoring"], target="claude", project=project)
+    assert "trestle" in json.loads((project / ".mcp.json").read_text())["mcpServers"]
+    apm_cli.uninstall(["component-definition"], target="claude", project=project)
+    assert "trestle" not in json.loads((project / ".mcp.json").read_text()).get("mcpServers", {})
+    # still tidy after uninstalls.
+    assert not (project / "apm_modules").exists()
+
+
+def test_keep_apm_files_disables_tidy(source_repo, tmp_path):
+    project = tmp_path / "proj"
+    apm_cli.install(
+        _dirs(source_repo, "catalog-authoring"), target="claude", project=project, tidy=False
+    )
+    # APM's ledger left in place; no stash created.
+    assert (project / "apm.lock.yaml").is_file()
+    assert not (project / ".ag-au-skills").exists()
+
+
 def test_install_dry_run_builds_argv_without_running(source_repo, tmp_path):
     argv = apm_cli.install(
         _dirs(source_repo, "assessment"), target="claude", project=tmp_path / "p", dry_run=True
