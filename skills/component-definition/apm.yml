@@ -29,4 +29,9 @@ dependencies:
       args:
         - "--from"
         - "git+https://github.com/oscal-compass/compliance-trestle-mcp.git"
+        # Workaround: pin mcp<2 at launch. mcp 2.0.0 removed mcp.server.fastmcp, which upstream
+        # trestle-mcp still imports, so an unpinned resolve crashes on import. Drop this once the
+        # upstream repo caps mcp<2 (fixed in the YANA fork; PR pending oscal-compass).
+        - "--with"
+        - "mcp<2"
         - "trestle-mcp"
