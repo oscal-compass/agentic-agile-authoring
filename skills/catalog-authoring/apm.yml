@@ -1,0 +1,31 @@
+# Copyright OSCAL Compass Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# APM package manifest (Microsoft APM / OpenAPM shape). Read by `apm` and the ag-au-skills
+# wrapper (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md. `dependencies.mcp`
+# declares the MCP servers this skill needs; the trestle def mirrors the repo-root .mcp.json (the
+# canonical def). Do NOT add a `target:` field — APM rejects unknown target tokens at parse time.
+name: catalog-authoring
+version: "1.0.0"
+
+dependencies:
+  mcp:
+    - name: trestle              # self-described stdio server
+      registry: false            # self-defined (not resolved from a registry)
+      transport: stdio
+      command: uvx
+      args:
+        - "--from"
+        - "git+https://github.com/oscal-compass/compliance-trestle-mcp.git"
+        - "trestle-mcp"
