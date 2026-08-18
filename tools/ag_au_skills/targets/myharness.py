@@ -167,7 +167,9 @@ def install(
         dest = skills_root / d.name
         if dest.exists():
             shutil.rmtree(dest)
-        shutil.copytree(d, dest)
+        # skip __pycache__/*.pyc: pip byte-compiles the bundled skill scripts, and a --source repo
+        # may carry dev caches — neither belongs in a deployed skill.
+        shutil.copytree(d, dest, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"))
         result.skills_deployed.append(d.name)
 
     if all_servers:

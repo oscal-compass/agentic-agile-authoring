@@ -46,6 +46,14 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+# Junk that must never ride along into a deployed skill dir. `__pycache__`/`*.pyc` appear in the
+# bundled skills because pip byte-compiles the packaged `.py` scripts at install time; an external
+# --source repo can carry its own dev caches too. APM copytrees the skill folder verbatim, so we
+# strip these from the *deployed* dir after install (see _strip_pycache). We deliberately do NOT
+# filter at the source: APM records each local skill's source path in apm.lock.yaml and re-reads
+# surviving skills' manifests from there at uninstall to decide MCP prune — so the source must
+# stay intact, else uninstalling one skill would wrongly prune a server a sibling still needs.
+
 # APM-known targets we officially support in the wrapper UX. APM knows more (§3.1); these are the
 # two we've verified end-to-end. The wrapper's --target choicelist is the union of these +
 # myharness (added by cli.py). Unknown-to-APM slugs never reach this backend.
@@ -94,6 +102,26 @@ def _tidy_project(project: Path) -> None:
         if src.exists():
             stash.mkdir(exist_ok=True)
             shutil.move(str(src), str(stash / name))
+
+
+def _deploy_skills_root(target: str, project: Path, global_scope: bool) -> Path | None:
+    """Where APM deploys skills for (target, scope): ``<root>/skills`` under the project or ~."""
+    root_name = _TARGET_ROOT.get(target)
+    if not root_name:
+        return None
+    base = Path.home() if global_scope else project
+    return base / root_name / "skills"
+
+
+def _strip_pycache(skill_dir: Path) -> None:
+    """Remove byte-compile caches from a single deployed skill dir (APM copies them verbatim)."""
+    if not skill_dir.is_dir():
+        return
+    for pc in skill_dir.rglob("__pycache__"):
+        shutil.rmtree(pc, ignore_errors=True)
+    for pat in ("*.pyc", "*.pyo"):
+        for f in skill_dir.rglob(pat):
+            f.unlink(missing_ok=True)
 
 
 def _restore_project(project: Path) -> bool:
@@ -176,11 +204,10 @@ def install(
     place (debugging / direct ``apm`` interop). On restore, ``uninstall`` handles the stash.
     """
     binp = resolve_apm_bin(apm_bin)
-    argv = [binp, "install", *[str(d) for d in skill_dirs], "--target", target]
-    if global_scope:
-        argv.append("-g")
-
     if dry_run:
+        argv = [binp, "install", *[str(d) for d in skill_dirs], "--target", target]
+        if global_scope:
+            argv.append("-g")
         return argv
 
     if not global_scope:
@@ -192,7 +219,18 @@ def install(
         if root:
             (project / root).mkdir(parents=True, exist_ok=True)
 
+    argv = [binp, "install", *[str(d) for d in skill_dirs], "--target", target]
+    if global_scope:
+        argv.append("-g")
     result = _run(argv, cwd=None if global_scope else project, env=env)
+
+    # scrub byte-compile caches APM copied from the (pip-compiled bundle / dev) source. Done on the
+    # DEPLOYED dir so APM's source + lockfile stay intact for correct uninstall/prune.
+    deploy_root = _deploy_skills_root(target, project, global_scope)
+    if deploy_root:
+        for d in skill_dirs:
+            _strip_pycache(deploy_root / d.name)
+
     if tidy and not global_scope:
         _tidy_project(project)
     return result

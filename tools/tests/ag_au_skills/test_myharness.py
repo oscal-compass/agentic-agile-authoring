@@ -100,6 +100,15 @@ def test_prune_never_touches_user_server(source_repo, tmp_path):
     assert servers["my-own"] == {"command": "custom"}
 
 
+def test_install_skips_pycache(source_repo, tmp_path):
+    src = source_repo / "skills" / "catalog-authoring"
+    (src / "__pycache__").mkdir()
+    (src / "__pycache__" / "x.pyc").write_bytes(b"junk")
+    root = tmp_path / "mh"
+    myharness.install(_skill_dirs(source_repo, "catalog-authoring"), root=root)
+    assert not (root / "skills" / "catalog-authoring" / "__pycache__").exists()
+
+
 def test_install_dry_run_makes_no_changes(source_repo, tmp_path):
     root = tmp_path / "mh"
     res = myharness.install(_skill_dirs(source_repo, "catalog-authoring"), root=root, dry_run=True)

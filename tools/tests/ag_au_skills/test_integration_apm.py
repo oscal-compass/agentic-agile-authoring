@@ -123,6 +123,21 @@ def test_keep_apm_files_disables_tidy(source_repo, tmp_path):
     assert not (project / ".ag-au-skills").exists()
 
 
+def test_deployed_skill_has_no_pycache(source_repo, tmp_path):
+    # plant a __pycache__ in the source skill (mimics pip byte-compiling the bundled scripts).
+    src = source_repo / "skills" / "catalog-authoring"
+    (src / "__pycache__").mkdir()
+    (src / "__pycache__" / "x.cpython-311.pyc").write_bytes(b"junk")
+    (src / "helper.py").write_text("x = 1\n", encoding="utf-8")
+
+    project = tmp_path / "proj"
+    apm_cli.install(_dirs(source_repo, "catalog-authoring"), target="claude", project=project)
+
+    deployed = project / ".claude" / "skills" / "catalog-authoring"
+    assert (deployed / "helper.py").is_file()          # the real script rides along …
+    assert not (deployed / "__pycache__").exists()      # … but its cache does not.
+
+
 def test_install_dry_run_builds_argv_without_running(source_repo, tmp_path):
     argv = apm_cli.install(
         _dirs(source_repo, "assessment"), target="claude", project=tmp_path / "p", dry_run=True
