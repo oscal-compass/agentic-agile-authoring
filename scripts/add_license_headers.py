@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Add license headers to source files.
 
+Covers the current tree: scripts/, skills/ (incl. per-skill scripts and apm.yml), the Python
+`compliance-authoring-skills` CLI in tools/, docs config, and workflow YAML. Virtualenvs and caches
+(.venv, __pycache__, node_modules) are skipped.
+
 - Python files (.py)       : prepend Apache 2.0 comment block
-- YAML files (.yaml/.yml)  : prepend Apache 2.0 comment block
+- YAML files (.yaml/.yml)  : prepend Apache 2.0 comment block (includes skills' apm.yml)
 - SKILL.md files           : add 'license' field to frontmatter + copy LICENSE
 """
 
@@ -28,7 +32,7 @@ PYTHON_HEADER = """\
 # limitations under the License.
 """
 
-EXCLUDE_DIRS = {".venv", ".git", "dist", "__pycache__"}
+EXCLUDE_DIRS = {".venv", ".git", "dist", "__pycache__", "node_modules"}
 EXCLUDE_FILES = {".pre-commit-config.yaml"}
 
 

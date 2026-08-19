@@ -1,99 +1,63 @@
 # Agentic Agile Authoring
 
-AI agent skills and modes for OSCAL-based compliance authoring — from NIST catalog customization through component definition to assessment result generation.
+An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from NIST
+catalog customization through component definition to assessment result generation — installable
+into multiple agent harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
 
 The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
 
+## Three first-class objects
+
+- **Skill** — a unit of authoring know-how (`SKILL.md` + an `apm.yml` package manifest + optional
+  scripts/references/assets), portable across harnesses. A skill that needs an MCP server declares
+  it in `apm.yml` (`dependencies.mcp`).
+- **Demo** — an end-to-end walkthrough exercising N skills, captured as a single
+  `demos/<name>/README.md`. See [Architecture](architecture.md) and the
+  [Design Spec](design-spec.md).
+- **MCP dependency** — declared in `apm.yml`, resolved and wired into the target harness's native
+  MCP config on install; not hardcoded anywhere.
+
+## Install
+
+Skills are installed by `compliance-authoring-skills`, a thin CLI (in `tools/`) that wraps
+[OpenAPM](https://github.com/microsoft/apm) (`apm-cli`). Prerequisite:
+[`uv`](https://docs.astral.sh/uv/) (provides `uvx`) — no Node required.
+
+```bash
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+```
+
+This copies the selected skills into the target's native skill dir (`.claude/skills/` for Claude,
+`.agents/skills/` for OpenCode) and wires the
+[trestle MCP server](https://github.com/oscal-compass/compliance-trestle-mcp) into the target's
+native MCP config (`.mcp.json` / `opencode.json`) — non-destructively. See the
+[Development guide](development.md) and the [Design Spec](design-spec.md) for the full model,
+subset selection, uninstall/prune, and the custom-harness path.
+
 ## Demo
 
-<a href="https://github.com/oscal-compass/agentic-agile-authoring#demo">
-  Watch the demo on GitHub
-</a>
+The full authoring lifecycle — tailoring a NIST SP 800-53 catalog, mapping controls to a
+Kubernetes component, and generating an assessment result — is captured as a runnable walkthrough,
+`catalog-to-assessment`. Its `demos/catalog-to-assessment/README.md` carries a demo video, the
+install steps, the prompts to give the agent in order, and uninstall (e.g. the generated
+`catalog.json` passes `trestle validate`).
 
-The demo shows the full authoring lifecycle in Roo Code: tailoring a NIST SP 800-53 catalog, mapping controls to a Kubernetes component, and generating an assessment result — all through natural language.
+## Skills
 
-## Getting Started
+See the [Skills reference](skills.md).
 
-### 1. Prepare a workspace
-
-Create a dedicated directory for your compliance authoring project and open it as your coding agent workspace.
-
-```bash
-mkdir my-compliance-workspace && cd my-compliance-workspace
-```
-
-### 2. Install
-
-**Roo Code:**
-
-```bash
-uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring.git agentic-agile-authoring install
-```
-
-Then reload your workspace and switch to the **📑 Agentic Agile Authoring** mode in Roo Code.
-
-!!! note
-    Roo Code loads skills at startup. If you install after opening the workspace, reload it for the skills to take effect.
-
-**Claude Code:**
-
-```
-/plugin marketplace add oscal-compass/agentic-agile-authoring
-/plugin install agentic-agile-authoring@agentic-agile-authoring
-```
-
-### 3. Check Skills and MCP server
-
-Confirm that the skills are loaded and the [trestle MCP server](https://github.com/oscal-compass/compliance-trestle-mcp) is enabled in your workspace. The agent relies on trestle MCP for all OSCAL operations.
-
-### 4. Try compliance authoring
-
-Follow along with the demo above. Type each prompt into Roo Code chat:
-
-**Step 1 — Create a custom catalog**
-
-```
-Create regulatory controls for our organization, based on NIST SP 800-53 and limited to access control.
-```
-
-The agent prepares your regulatory document. Once done, it will ask if you want to customize the wording.
-
-**Step 2 — Generate OSCAL catalog**
-
-```
-For now, proceed with the default wording. Please create the OSCAL JSON for this custom catalog.
-```
-
-`catalog.json` is created. Your controls are ready.
-
-**Step 3 — Define a component (Kubernetes)**
-
-```
-Apply our organization's regulatory controls (catalogs/ac_controls_catalog) to Kubernetes. At this stage, please create the component definition.
-```
-
-The agent generates a human-readable implementation guide (Markdown + spreadsheet) per control, then produces the OSCAL `component-definition.json`.
-
-**Step 4 — Generate assessment results**
-
-```
-Using the component definition, create the assessment results.
-```
-
-Provide your security tool's scan output, and the agent generates an assessment posture. If no scan output is provided, a mock posture is created automatically.
-
-## Agent / Mode
-
-A single agent **`agentic-agile-authoring`** covers the full OSCAL authoring lifecycle and delegates to the individual skills.
-
-| Platform | Agent definition | Skill location |
-|----------|-----------------|----------------|
-| **Claude Code** | `agents/claude/agentic-agile-authoring.md` | `skills/` |
-| **Roo Code** | `agents-roo/agentic-agile-authoring/roo.yaml` | `.roo/skills[-agentic-agile-authoring]/` |
+| Skill | Description |
+|-------|-------------|
+| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs |
+| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` |
+| `assessment` | Evaluate control compliance from component definitions and validation scan results |
+| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) |
 
 ## License
 
-Unless otherwise noted, files in this repository are licensed under the Apache License 2.0. Some skill directories include their own LICENSE.txt, which governs files in that directory.
+Unless otherwise noted, files in this repository are licensed under the Apache License 2.0.
+Some skill directories include their own LICENSE.txt, which governs files in that directory.
 
 ---
 

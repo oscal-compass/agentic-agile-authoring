@@ -3,122 +3,114 @@
 ## Repo structure
 
 ```
-skills/                     Agent skills (source of truth for both Claude and Roo)
+skills/                     Skill packages (single source of truth for every harness)
   <skill-name>/
-    SKILL.md                Skill definition — frontmatter + instructions
+    SKILL.md                Skill definition — frontmatter (name, description) + instructions
+    apm.yml                 APM package manifest (name, version, dependencies.mcp)
     *.md / *.py             Supporting resources referenced by the skill
 
-agents/
-  claude/
-    agentic-agile-authoring.md   Claude Code agent persona
-  roo/
-    agentic-agile-authoring/
-      roo.yaml              Roo Code mode config (slug, name, groups, roleDefinition, ...)
-      rules/                Workflow rules installed to .roo/rules-<slug>/
+demos/                  End-to-end walkthroughs
+  <demo-name>/
+    README.md               Frontmatter (skills:) + demo video + install → prompts → uninstall
+    …                       Any referenced assets
 
-src/
-  agentic_agile_authoring/
-    cli.py                  CLI entry point (install / uninstall / download)
-    data/                   Bundled at build time via pyproject.toml force-include
-      skills/               -> copy of skills/
-      roo/                  -> copy of agents/roo/
+tools/                      `compliance-authoring-skills` — thin installer CLI over OpenAPM (Python)
+  pyproject.toml            deps: apm-cli==<pin>, pyyaml
+  compliance_authoring_skills/             cli / policy / backends.apm_cli / targets.myharness
+  tests/compliance_authoring_skills/       unit tests + pinned-apm integration spikes
 
-.github/
-  workflows/
-    publish.yml             Release workflow — builds, signs (Sigstore), publishes to GitHub Release
-
-.claude-plugin/
-  plugin.json               Claude Code plugin manifest
-  marketplace.json          Marketplace catalog entry
+.mcp.json                   Canonical trestle MCP server definition
+docs/                       This documentation site
+scripts/add_license_headers.py
 ```
+
+There is no wheel, plugin manifest, or build-time bundling. Skill placement and MCP wiring are
+delegated to [OpenAPM](https://github.com/microsoft/apm) (`apm-cli`); `compliance-authoring-skills` is a
+thin wrapper that adds selection, UX, and custom-harness deployment (see
+[Architecture](architecture.md) and the [Design Spec](design-spec.md)).
 
 ## Adding a skill
 
-1. Create `skills/<skill-name>/SKILL.md` with required frontmatter:
+1. Create `skills/<skill-name>/SKILL.md` with the required frontmatter:
 
 ```yaml
 ---
-name: skill-name        # slash command trigger: /skill-name
-description: ...        # when Claude should auto-invoke this skill
-argument-hint: <hint>   # shown in autocomplete (optional)
+name: skill-name        # MUST equal the directory name (Roo enforces this)
+description: ...        # when a harness should activate this skill
+argument-hint: <hint>   # optional
+license: Complete terms in LICENSE.txt   # optional; added by scripts/add_license_headers.py
 ---
 ```
 
-2. Add supporting `.md` or `.py` files under the same directory as needed.
-3. Reference the new skill from the agent prompt (`agents/claude/agentic-agile-authoring.md`) and Roo mode (`agents/roo/agentic-agile-authoring/roo.yaml`) if applicable.
+2. Add supporting `.md` / `.py` / `references/` / `assets/` files in the same directory.
+3. Add `skills/<skill-name>/apm.yml` — the APM package manifest. Include `name`/`version`, and,
+   if the skill needs an MCP server, `dependencies.mcp` (APM's shape; `registry: false` for a
+   self-defined stdio server):
 
-No build step is needed — skills are read directly from the filesystem.
-
-## Agent prompts
-
-### Claude Code agent — `agents/claude/agentic-agile-authoring.md`
-
-Defines the persona and scope for the Claude Code agent. Frontmatter fields:
-
-- `name` — agent identifier
-- `description` — when Claude auto-invokes this agent
-
-The body describes what the agent does and which skills it delegates to.
-
-### Roo Code mode — `agents/roo/agentic-agile-authoring/roo.yaml`
-
-Defines the Roo Code mode. Key fields:
-
-- `slug` / `name` — mode identifier and display name
-- `roleDefinition` — persona instructions embedded in the mode
-- `whenToUse` — shown in mode selection
-- `customInstructions` — which skill to use for each task type
-- `groups` — tool permissions (`read`, `edit`, `command`, `mcp`)
-
-Workflow rules in `rules/` are installed to `.roo/rules-<slug>/` and loaded automatically by Roo.
-
-## `src/` — installer and future agent tools
-
-### Current: installer CLI (`cli.py`)
-
-Three subcommands:
-
-| Command | What it does |
-|---|---|
-| `install` | Merges mode into `.roomodes`, copies skills and rules into `.roo/` |
-| `uninstall` | Reverses install |
-| `download` | Exports skills and mode YAMLs for manual GUI installation |
-
-`--skills-scope` controls where skills land:
-
-- `mode` (default) -> `.roo/skills-agentic-agile-authoring/`
-- `common` -> `.roo/skills/` (shared across all modes)
-
-### Future: agent tools
-
-`src/agentic_agile_authoring/` is the home for Python-based agent tools (MCP servers, CLI tools, etc.) that skills may invoke.
-
-## Release
-
-Releases are managed via git tags. The `publish.yml` workflow fires on `v*` tags:
-
-1. Builds the wheel with `hatch build`
-2. Signs all artifacts with Sigstore (keyless OIDC)
-3. Attaches wheel, sdist, and `.sigstore.json` files to the GitHub Release
-
-To cut a release:
-
-```bash
-# 1. Bump version in pyproject.toml
-# 2. Commit and tag
-git tag v0.1.0
-git push --tags
+```yaml
+name: skill-name
+version: "1.0.0"
+dependencies:
+  mcp:
+    - name: trestle
+      registry: false
+      transport: stdio
+      command: uvx
+      args: ["--from", "git+https://github.com/oscal-compass/compliance-trestle-mcp.git", "trestle-mcp"]
 ```
 
-The GitHub Release is created automatically with a pre-built wheel attached.
+Do **not** add a `target:` field to a skill's `apm.yml` (an unknown target token is the one thing
+APM rejects at parse time, which would break custom-harness reuse).
+
+4. Optionally add or extend a demo in `demos/` that exercises the skill.
+5. Run `python scripts/add_license_headers.py`.
+
+No build step is needed for skills. They are invoked directly; there is no orchestrator to update.
+
+## The `compliance-authoring-skills` CLI (`tools/`)
+
+A thin wrapper over [OpenAPM](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned).
+Python ≥ 3.10.
 
 ```bash
-# Install from a release wheel (recommended — no build step)
-uvx --from "https://github.com/oscal-compass/agentic-agile-authoring/releases/download/v0.1.0/agentic_agile_authoring-0.1.0-py3-none-any.whl" agentic-agile-authoring install
+cd tools
+python -m venv .venv && . .venv/bin/activate
+pip install -e ".[test]"     # pins apm-cli; pulls pyyaml + pytest
+pytest                       # unit tests + pinned-apm integration spikes
+compliance-authoring-skills --help
+```
 
-# Install from source at a git ref (tag or branch)
-uvx --from git+https://github.com/oscal-compass/agentic-agile-authoring@v0.1.0 agentic-agile-authoring install
+What the wrapper owns (everything else is APM's — resolution, deployment, lockfile, prune):
 
-# Install from local repo (development)
-uvx --from /path/to/agentic-agile-authoring agentic-agile-authoring install
+- **Selection** — `--skill`, `--exclude a,b`, `--demo <name>` (reads the demo `README.md` `skills:`).
+- **UX + prereq policy** — synthesize the APM project context for a standalone skill install;
+  check the baseline `uv`.
+- **MyHarness deployer** — reuse APM's target-agnostic `APMPackage.from_apm_yml` →
+  `APMDependencyResolver` → `CurrentMcpConfigView.derive` (library), then copy the skill +
+  merge `~/.myharness/mcp.json`.
+
+```bash
+compliance-authoring-skills install --demo catalog-to-assessment --target claude
+compliance-authoring-skills install --exclude git-workflow --target opencode
+compliance-authoring-skills uninstall --skill assessment --target claude
+```
+
+Testing strategy: the bespoke surface (selection/policy, MyHarness deployer) is unit-tested; the
+delegated behavior is covered by an **integration spike suite pinned to the `apm-cli` version**
+(standalone install → skill+MCP present; shared-MCP prune; OpenCode native-config merge), re-run
+before any pin bump. See [tools/README.md](https://github.com/oscal-compass/agentic-agile-authoring/blob/main/tools/README.md).
+
+## Prerequisites
+
+- **`uv`** — baseline runtime (provides `uvx`, which runs the pinned tooling and `uvx`-based MCP
+  servers). No Node required.
+- **Python ≥ 3.10** — to develop/run `compliance-authoring-skills`.
+- Per-MCP runtimes (`docker`, `npx`, …) are the environment's responsibility.
+
+## Documentation site
+
+```bash
+make install   # install docs dependencies
+make serve     # serve locally at http://localhost:8000
+make build     # build with strict mode
 ```

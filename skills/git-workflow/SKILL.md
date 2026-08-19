@@ -79,6 +79,6 @@ If this workflow doesn't fit user needs:
 
 ## Integration Points
 
-This workflow integrates with:
-- Phase 1 Setup: Execute after [`trestle_author_catalog_generate`](../../rules-agentic-agile-authoring/02-setup.md) and [`trestle_author_profile_generate`](../../rules-agentic-agile-authoring/02-setup.md)
-- Phase 2 Edit: Execute after [`trestle_author_profile_assemble`](../../rules-agentic-agile-authoring/03-edit.md) and catalog regeneration
+This workflow integrates with the `catalog-authoring` skill's phases:
+- Phase 1 Setup: Execute after the initial markdown deployment (`trestle_author_catalog_generate` / `trestle_author_profile_generate`), once the baseline artifacts exist.
+- Phase 2 Edit: Execute after parameter editing and catalog regeneration (`trestle_author_profile_assemble`).

@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+# only ever created inside the built wheel (force-include); ignore any in-tree build residue.
+compliance_authoring_skills/_bundled/
