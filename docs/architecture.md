@@ -32,7 +32,7 @@ uses to store and manage OSCAL artifacts.
 ## Installation & MCP wiring
 
 Installation is handled by `compliance-authoring-skills`, a **thin wrapper** (in `tools/`) over
-[Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`). APM is the engine — it copies the
+[OpenAPM](https://github.com/microsoft/apm) (`apm-cli`). APM is the engine — it copies the
 skill package into each harness's native dir **and** wires the skill's declared MCP servers into
 that harness's native MCP config, with a lockfile and non-destructive uninstall/prune. The
 wrapper adds only what APM lacks:

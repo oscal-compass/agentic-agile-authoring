@@ -1,7 +1,7 @@
 # `compliance-authoring-skills`
 
 A thin installer CLI for this repo's skills. It is **not** a package manager — it wraps
-[**Microsoft APM**](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned), which owns
+[**OpenAPM**](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned), which owns
 package resolution, per-harness deployment, the lockfile, non-destructive MCP merge, and
 reachability-based prune. `compliance-authoring-skills` adds only the parts APM doesn't cover.
 

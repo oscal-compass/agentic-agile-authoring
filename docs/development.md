@@ -14,7 +14,7 @@ demos/                  End-to-end walkthroughs
     README.md               Frontmatter (skills:) + demo video + install → prompts → uninstall
     …                       Any referenced assets
 
-tools/                      `compliance-authoring-skills` — thin installer CLI over Microsoft APM (Python)
+tools/                      `compliance-authoring-skills` — thin installer CLI over OpenAPM (Python)
   pyproject.toml            deps: apm-cli==<pin>, pyyaml
   compliance_authoring_skills/             cli / policy / backends.apm_cli / targets.myharness
   tests/compliance_authoring_skills/       unit tests + pinned-apm integration spikes
@@ -25,7 +25,7 @@ scripts/add_license_headers.py
 ```
 
 There is no wheel, plugin manifest, or build-time bundling. Skill placement and MCP wiring are
-delegated to [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`); `compliance-authoring-skills` is a
+delegated to [OpenAPM](https://github.com/microsoft/apm) (`apm-cli`); `compliance-authoring-skills` is a
 thin wrapper that adds selection, UX, and custom-harness deployment (see
 [Architecture](architecture.md) and the [Design Spec](design-spec.md)).
 
@@ -69,7 +69,7 @@ No build step is needed for skills. They are invoked directly; there is no orche
 
 ## The `compliance-authoring-skills` CLI (`tools/`)
 
-A thin wrapper over [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned).
+A thin wrapper over [OpenAPM](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned).
 Python ≥ 3.10.
 
 ```bash

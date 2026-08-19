@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# APM package manifest (Microsoft APM / OpenAPM shape). Read by `apm` and the compliance-authoring-skills
+# APM package manifest (OpenAPM shape). Read by `apm` and the compliance-authoring-skills
 # wrapper (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md. `dependencies.mcp`
 # declares the MCP servers this skill needs (this skill calls trestle_task_csv_to_oscal_cd); the
 # trestle def mirrors the repo-root .mcp.json (the canonical def). Do NOT add a `target:` field —

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# APM package manifest (Microsoft APM / OpenAPM shape). Read by `apm` and the compliance-authoring-skills
+# APM package manifest (OpenAPM shape). Read by `apm` and the compliance-authoring-skills
 # wrapper (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md. This skill needs
 # no MCP server, so it omits `dependencies.mcp`. Do NOT add a `target:` field — APM rejects
 # unknown target tokens at parse time.

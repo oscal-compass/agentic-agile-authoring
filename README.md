@@ -15,7 +15,7 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
 - **Demos** (`demos/`) — end-to-end walkthroughs that exercise N skills, each a single
   `demos/<name>/README.md` (prompts + install/uninstall + a demo video).
 - **`tools/`** — `compliance-authoring-skills`, a thin installer CLI. It is a small wrapper over
-  [**Microsoft APM**](https://github.com/microsoft/apm) (`apm-cli`), which does the heavy lifting:
+  [**OpenAPM**](https://github.com/microsoft/apm) (`apm-cli`), which does the heavy lifting:
   copy the skill into each harness's native dir **and** wire its declared MCP servers into that
   harness's native MCP config, with a lockfile and non-destructive uninstall/prune. See
   [tools/README.md](tools/README.md) and [docs/design-spec.md](docs/design-spec.md).

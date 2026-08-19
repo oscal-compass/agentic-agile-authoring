@@ -20,7 +20,7 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
 ## Install
 
 Skills are installed by `compliance-authoring-skills`, a thin CLI (in `tools/`) that wraps
-[Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`). Prerequisite:
+[OpenAPM](https://github.com/microsoft/apm) (`apm-cli`). Prerequisite:
 [`uv`](https://docs.astral.sh/uv/) (provides `uvx`) — no Node required.
 
 ```bash

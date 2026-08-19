@@ -12,8 +12,7 @@ source of truth in `skills/`; **demos** in `demos/` are end-to-end walkthroughs;
 
 ## Build & Development Commands
 
-The bespoke code is the `compliance-authoring-skills` CLI in `tools/` (Python) — a thin wrapper over Microsoft
-APM (`apm-cli`, exact-pinned).
+The bespoke code is the `compliance-authoring-skills` CLI in `tools/` (Python) — a thin wrapper over OpenAPM (`apm-cli`, exact-pinned).
 
 ```bash
 cd tools
@@ -39,10 +38,10 @@ make build     # Build docs with strict mode
 
 ## Architecture
 
-### Portable skills + a thin installer over Microsoft APM
+### Portable skills + a thin installer over OpenAPM
 
 Skills in `skills/` are portable hybrid packages (`SKILL.md` + `apm.yml`) shared by every
-harness. Installation is delegated to **Microsoft APM** (`apm-cli`, exact-pinned): APM copies the
+harness. Installation is delegated to **OpenAPM** (`apm-cli`, exact-pinned): APM copies the
 skill package into each harness's native dir **and** wires the skill's declared MCP servers into
 that harness's native MCP config, with `apm.lock.yaml` ownership + non-destructive uninstall/prune.
 `compliance-authoring-skills` (`tools/`, Python) is a thin wrapper adding only: selection over our demos, a

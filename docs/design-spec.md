@@ -5,7 +5,7 @@
 > (`catalog-to-assessment`) + the `compliance-authoring-skills` installer**; POA&M authoring is the next task.
 >
 > **Strategy (decided):** *Adopt, don't invent.* We are **not** building a package manager or a
-> second dependency/ownership system. We stand on **Microsoft APM** (`apm-cli`,
+> second dependency/ownership system. We stand on **OpenAPM** (`apm-cli`,
 > [`microsoft/apm`](https://github.com/microsoft/apm), MIT) — a real, actively-developed OSS
 > Agent Package Manager whose model (`apm.yml` package + `dependencies.mcp` + per-harness
 > deployment + `apm.lock.yaml` + non-destructive MCP merge + prune) is exactly our problem. Our
@@ -84,7 +84,7 @@ Skills with no MCP need simply omit `dependencies.mcp`.
 > is the one thing APM rejects at parse time — which would break MyHarness reuse (§3.3). Targets
 > are chosen at install time, not baked into the package.
 
-## 3. Installation — thin wrapper over Microsoft APM
+## 3. Installation — thin wrapper over OpenAPM
 
 `compliance-authoring-skills` is the only bespoke code. It does **not** re-implement package resolution,
 dependency graphs, lockfiles, MCP normalization, or ownership — APM owns all of that. It adds
@@ -359,11 +359,11 @@ Short ADR-style records of load-bearing choices. Most recent first.
 - **Not chosen:** repo-root-only (too restrictive); remote shorthand as the *only* path (heavier;
   still planned as an addition, §8.5).
 
-### D4 — Adopt Microsoft APM (`apm-cli`) as the installer backend
+### D4 — Adopt OpenAPM (`apm-cli`) as the installer backend
 
 - **Status:** Accepted (2026-08-18). **Supersedes D3** (and restores D1's "adopt, don't invent").
 - **Context:** After D3 chose to self-implement placement + a bespoke MCP bridge/lockfile, research
-  surfaced **Microsoft APM** (`microsoft/apm`, `apm-cli`) — a real, maintained OSS package manager
+  surfaced **OpenAPM** (`microsoft/apm`, `apm-cli`) — a real, maintained OSS package manager
   that already models exactly our problem: `apm.yml` packages, `dependencies.mcp` (incl. self-defined
   stdio `command`/`args`), per-harness deployment (Claude, OpenCode, +9), `apm.lock.yaml`,
   non-destructive native-MCP merge, and reachability-based prune. Re-implementing that ourselves

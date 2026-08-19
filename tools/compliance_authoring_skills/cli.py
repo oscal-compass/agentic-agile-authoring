@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""``compliance-authoring-skills`` CLI: a thin wrapper over Microsoft APM (design-spec §3).
+"""``compliance-authoring-skills`` CLI: a thin wrapper over OpenAPM (design-spec §3).
 
     compliance-authoring-skills install   --target {claude|opencode|myharness} [--demo|--skill|--exclude] …
     compliance-authoring-skills uninstall --target {claude|opencode|myharness}  --skill a,b | --all
@@ -72,7 +72,7 @@ def _add_common(p: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="compliance-authoring-skills",
-        description="thin wrapper over Microsoft APM: install portable skills + wire their MCP deps",
+        description="thin wrapper over OpenAPM: install portable skills + wire their MCP deps",
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
