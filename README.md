@@ -14,7 +14,7 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
   `apm.yml` (`dependencies.mcp`).
 - **Demos** (`demos/`) — end-to-end walkthroughs that exercise N skills, each a single
   `demos/<name>/README.md` (prompts + install/uninstall + a demo video).
-- **`tools/`** — `ag-au-skills`, a thin installer CLI. It is a small wrapper over
+- **`tools/`** — `compliance-authoring-skills`, a thin installer CLI. It is a small wrapper over
   [**Microsoft APM**](https://github.com/microsoft/apm) (`apm-cli`), which does the heavy lifting:
   copy the skill into each harness's native dir **and** wire its declared MCP servers into that
   harness's native MCP config, with a lockfile and non-destructive uninstall/prune. See
@@ -27,14 +27,14 @@ MCP servers like trestle). That is the only baseline runtime — no Node require
 
 ```bash
 # install a demo's skills into Claude Code (skill files + MCP wiring, one step)
-uvx ag-au-skills install --demo catalog-to-assessment --target claude
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
 
 # or into OpenCode
-uvx ag-au-skills install --demo catalog-to-assessment --target opencode
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
 
 # subset selection
-uvx ag-au-skills install --exclude git-workflow --target claude
-uvx ag-au-skills install --skill catalog-authoring,assessment --target opencode
+uvx compliance-authoring-skills install --exclude git-workflow --target claude
+uvx compliance-authoring-skills install --skill catalog-authoring,assessment --target opencode
 ```
 
 Each install copies the selected skills into the harness's native skill dir and wires the
@@ -46,10 +46,10 @@ Uninstall is non-destructive; a shared MCP server is pruned only once no remaini
 skill needs it:
 
 ```bash
-uvx ag-au-skills uninstall --skill assessment --target claude
+uvx compliance-authoring-skills uninstall --skill assessment --target claude
 ```
 
-> **Status:** the `ag-au-skills` wrapper is being built on top of `apm-cli` (see
+> **Status:** the `compliance-authoring-skills` wrapper is being built on top of `apm-cli` (see
 > [docs/design-spec.md](docs/design-spec.md), §8). The underlying APM flow — skill placement +
 > MCP wiring + prune, for Claude Code and OpenCode — is verified working.
 

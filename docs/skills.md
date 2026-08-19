@@ -16,7 +16,7 @@ expresses a particular end-to-end ordering when one is needed.
 
 **MCP dependency**: each skill carries an `apm.yml` package manifest; a skill that needs an MCP
 server declares it there under `dependencies.mcp`. On install, the installer (Microsoft APM, via
-the `ag-au-skills` wrapper) wires the declared server into the target harness's native MCP config,
+the `compliance-authoring-skills` wrapper) wires the declared server into the target harness's native MCP config,
 and on uninstall prunes it only when no remaining installed skill needs it — see
 [Architecture](architecture.md#installation--mcp-wiring). `assessment` and `git-workflow` declare
 no `dependencies.mcp`.

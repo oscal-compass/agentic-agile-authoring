@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ag-au-skills"
+name = "compliance-authoring-skills"
 version = "0.1.0"
 description = "thin wrapper over Microsoft APM: install portable skills into agent harnesses + wire their MCP deps"
 readme = "README.md"
@@ -16,19 +16,19 @@ dependencies = ["apm-cli==0.28.0", "pyyaml>=6.0"]
 test = ["pytest>=7"]
 
 [project.scripts]
-ag-au-skills = "ag_au_skills.cli:main"
+compliance-authoring-skills = "compliance_authoring_skills.cli:main"
 
 # Flat, single-project layout: one pyproject, package listed here.
 [tool.hatch.build.targets.wheel]
-packages = ["ag_au_skills"]
+packages = ["compliance_authoring_skills"]
 
 # Bundle the repo's skills + demos into the wheel as package data so the CLI works from any
 # directory without a local checkout (--source defaults to this bundle). Single source of truth
-# stays the repo's top-level dirs; they are copied under ag_au_skills/_bundled/ at build time
+# stays the repo's top-level dirs; they are copied under compliance_authoring_skills/_bundled/ at build time
 # only (not committed — editable installs fall back to the repo checkout; see policy.py).
 [tool.hatch.build.targets.wheel.force-include]
-"../skills" = "ag_au_skills/_bundled/skills"
-"../demos" = "ag_au_skills/_bundled/demos"
+"../skills" = "compliance_authoring_skills/_bundled/skills"
+"../demos" = "compliance_authoring_skills/_bundled/demos"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

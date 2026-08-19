@@ -8,11 +8,11 @@ An ecosystem of portable authoring **skills** for OSCAL-based compliance authori
 catalog customization through component definition to assessment result generation — usable
 across multiple agent harnesses (Claude Code, Roo Code, opencode, …). Skills are the single
 source of truth in `skills/`; **demos** in `demos/` are end-to-end walkthroughs;
-`tools/` holds the only bespoke code (the `ag-au-skills` CLI). See `docs/design-spec.md` for the design.
+`tools/` holds the only bespoke code (the `compliance-authoring-skills` CLI). See `docs/design-spec.md` for the design.
 
 ## Build & Development Commands
 
-The bespoke code is the `ag-au-skills` CLI in `tools/` (Python) — a thin wrapper over Microsoft
+The bespoke code is the `compliance-authoring-skills` CLI in `tools/` (Python) — a thin wrapper over Microsoft
 APM (`apm-cli`, exact-pinned).
 
 ```bash
@@ -22,8 +22,8 @@ pip install -e ".[test]"     # pins apm-cli; pulls pyyaml + pytest
 pytest                       # unit tests + pinned-apm integration spikes
 
 # Run the CLI (prereq: uv):
-ag-au-skills install --demo catalog-to-assessment --target claude
-ag-au-skills --help
+compliance-authoring-skills install --demo catalog-to-assessment --target claude
+compliance-authoring-skills --help
 
 # Add license headers to source files
 python scripts/add_license_headers.py
@@ -45,7 +45,7 @@ Skills in `skills/` are portable hybrid packages (`SKILL.md` + `apm.yml`) shared
 harness. Installation is delegated to **Microsoft APM** (`apm-cli`, exact-pinned): APM copies the
 skill package into each harness's native dir **and** wires the skill's declared MCP servers into
 that harness's native MCP config, with `apm.lock.yaml` ownership + non-destructive uninstall/prune.
-`ag-au-skills` (`tools/`, Python) is a thin wrapper adding only: selection over our demos, a
+`compliance-authoring-skills` (`tools/`, Python) is a thin wrapper adding only: selection over our demos, a
 stable UX + prereq policy, and a custom-harness ("MyHarness") deployer that reuses APM's
 target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decision **D4**).
 
@@ -60,20 +60,20 @@ target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decis
 - **`demos/<name>/`** — a single `README.md` (frontmatter `skills:` + the walkthrough:
   prompts, install/uninstall, demo video) plus any referenced assets. A demo is an end-to-end
   walkthrough over N skills; `--demo` reads its `skills:` frontmatter.
-- **`tools/`** — the `ag-au-skills` wrapper (Python). Modules: `cli.py`, `policy.py` (selection +
+- **`tools/`** — the `compliance-authoring-skills` wrapper (Python). Modules: `cli.py`, `policy.py` (selection +
   prereq checks), `backends/apm_cli.py` (subprocess to pinned `apm` for supported targets),
   `targets/myharness.py` (library reuse of APM + our deployer). This is the code with tests.
 - **`.mcp.json`** — the canonical `trestle` server definition (reference for the skill manifests).
 
 ### Installation flow
 
-`ag-au-skills install --target <t>` resolves a skill selection, then for each skill: if `<t>` is
+`compliance-authoring-skills install --target <t>` resolves a skill selection, then for each skill: if `<t>` is
 an APM-known target (claude, opencode, …) it delegates to the pinned `apm` (which copies the skill
 + wires MCP + updates `apm.lock.yaml`); if `<t>` is MyHarness it uses APM as a library to get the
 resolved skill + normalized MCP, then deploys itself. `uninstall`/prune go through APM for
 supported targets (a shared MCP server is dropped only when no remaining skill needs it).
 
-Skills come from the copy **bundled inside the wheel** (`ag_au_skills/_bundled/`, built from the
+Skills come from the copy **bundled inside the wheel** (`compliance_authoring_skills/_bundled/`, built from the
 repo's top-level `skills/`/`demos/`) so the CLI works from any directory with no checkout;
 `--source <repo>` overrides to install from an external skills repo. (The old monolith/plugin/
 publish-wheel is still retired — this is the thin wrapper carrying its own skills as data, decision
@@ -102,7 +102,7 @@ MCP server (compliance-trestle-mcp) when working in this repository.
 - **License headers**: `.py` and `.yaml`/`.yml` files get Apache 2.0 comment headers; SKILL.md
   files get a `license` frontmatter field and a `LICENSE.txt` in their directory. Use
   `scripts/add_license_headers.py` (it also covers the Python sources under `tools/`).
-- **`ag-au-skills` CLI**: Python ≥ 3.10, thin wrapper over exact-pinned `apm-cli`; tested with
+- **`compliance-authoring-skills` CLI**: Python ≥ 3.10, thin wrapper over exact-pinned `apm-cli`; tested with
   `pytest` (unit) + a pinned-apm integration spike suite. Baseline runtime prerequisite is `uv`
   (no Node). Per-MCP runtimes (docker/npx) are the environment's responsibility.
 - **Skill placement / MCP wiring / lockfile / prune are APM's**, not ours — don't re-implement

@@ -31,7 +31,7 @@ Each local skill package is self-contained, so we normalize per-package directly
 the full ``APMDependencyResolver`` graph (which is for transitive git/registry deps we don't use).
 
 Ownership: the only MyHarness-local state is *which MCP servers we wrote*, tracked in an
-``_ag_au`` provenance block inside ``mcp.json``. Prune reuses APM's reachability idea — recompute
+``_compliance_authoring_skills`` provenance block inside ``mcp.json``. Prune reuses APM's reachability idea — recompute
 the required MCP set from the currently-installed skills' manifests and drop only servers no
 surviving skill needs, never touching user-authored servers.
 """
@@ -46,7 +46,7 @@ from pathlib import Path
 # Default MyHarness root. Overridable (tests point it at a temp dir).
 DEFAULT_ROOT = Path.home() / ".myharness"
 
-_PROVENANCE_KEY = "_ag_au"  # our ownership marker inside mcp.json (namespaced, non-colliding).
+_PROVENANCE_KEY = "_compliance_authoring_skills"  # our ownership marker inside mcp.json (namespaced, non-colliding).
 
 
 class MyHarnessError(RuntimeError):
@@ -104,7 +104,7 @@ def _load_mcp_config(path: Path) -> dict:
 
 
 def _owned(config: dict) -> set[str]:
-    """Names of MCP servers we (ag-au-skills) previously wrote, per the provenance block."""
+    """Names of MCP servers we (compliance-authoring-skills) previously wrote, per the provenance block."""
     prov = config.get(_PROVENANCE_KEY) or {}
     owned = prov.get("owned_mcp") if isinstance(prov, dict) else None
     return set(owned) if isinstance(owned, list) else set()

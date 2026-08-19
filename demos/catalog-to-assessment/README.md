@@ -18,10 +18,10 @@ Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`; also runs 
 
 ```bash
 # skills + MCP wiring, one step — into Claude Code:
-uvx ag-au-skills install --demo catalog-to-assessment --target claude
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
 
 # …or into OpenCode:
-uvx ag-au-skills install --demo catalog-to-assessment --target opencode
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
 ```
 
 This copies `catalog-authoring`, `component-definition`, and `assessment` into the harness's
@@ -70,8 +70,8 @@ user-authored skills and user-defined MCP servers are never touched.
 
 ```bash
 # remove one skill:
-uvx ag-au-skills uninstall --skill assessment --target claude
+uvx compliance-authoring-skills uninstall --skill assessment --target claude
 
 # remove the whole demo set:
-uvx ag-au-skills uninstall --skill catalog-authoring,component-definition,assessment --target claude
+uvx compliance-authoring-skills uninstall --skill catalog-authoring,component-definition,assessment --target claude
 ```

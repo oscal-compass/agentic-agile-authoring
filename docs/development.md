@@ -14,10 +14,10 @@ demos/                  End-to-end walkthroughs
     README.md               Frontmatter (skills:) + demo video + install → prompts → uninstall
     …                       Any referenced assets
 
-tools/                      `ag-au-skills` — thin installer CLI over Microsoft APM (Python)
+tools/                      `compliance-authoring-skills` — thin installer CLI over Microsoft APM (Python)
   pyproject.toml            deps: apm-cli==<pin>, pyyaml
-  ag_au_skills/             cli / policy / backends.apm_cli / targets.myharness
-  tests/ag_au_skills/       unit tests + pinned-apm integration spikes
+  compliance_authoring_skills/             cli / policy / backends.apm_cli / targets.myharness
+  tests/compliance_authoring_skills/       unit tests + pinned-apm integration spikes
 
 .mcp.json                   Canonical trestle MCP server definition
 docs/                       This documentation site
@@ -25,7 +25,7 @@ scripts/add_license_headers.py
 ```
 
 There is no wheel, plugin manifest, or build-time bundling. Skill placement and MCP wiring are
-delegated to [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`); `ag-au-skills` is a
+delegated to [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`); `compliance-authoring-skills` is a
 thin wrapper that adds selection, UX, and custom-harness deployment (see
 [Architecture](architecture.md) and the [Design Spec](design-spec.md)).
 
@@ -67,7 +67,7 @@ APM rejects at parse time, which would break custom-harness reuse).
 
 No build step is needed for skills. They are invoked directly; there is no orchestrator to update.
 
-## The `ag-au-skills` CLI (`tools/`)
+## The `compliance-authoring-skills` CLI (`tools/`)
 
 A thin wrapper over [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned).
 Python ≥ 3.10.
@@ -77,7 +77,7 @@ cd tools
 python -m venv .venv && . .venv/bin/activate
 pip install -e ".[test]"     # pins apm-cli; pulls pyyaml + pytest
 pytest                       # unit tests + pinned-apm integration spikes
-ag-au-skills --help
+compliance-authoring-skills --help
 ```
 
 What the wrapper owns (everything else is APM's — resolution, deployment, lockfile, prune):
@@ -90,9 +90,9 @@ What the wrapper owns (everything else is APM's — resolution, deployment, lock
   merge `~/.myharness/mcp.json`.
 
 ```bash
-ag-au-skills install --demo catalog-to-assessment --target claude
-ag-au-skills install --exclude git-workflow --target opencode
-ag-au-skills uninstall --skill assessment --target claude
+compliance-authoring-skills install --demo catalog-to-assessment --target claude
+compliance-authoring-skills install --exclude git-workflow --target opencode
+compliance-authoring-skills uninstall --skill assessment --target claude
 ```
 
 Testing strategy: the bespoke surface (selection/policy, MyHarness deployer) is unit-tested; the
@@ -104,7 +104,7 @@ before any pin bump. See [tools/README.md](https://github.com/oscal-compass/agen
 
 - **`uv`** — baseline runtime (provides `uvx`, which runs the pinned tooling and `uvx`-based MCP
   servers). No Node required.
-- **Python ≥ 3.10** — to develop/run `ag-au-skills`.
+- **Python ≥ 3.10** — to develop/run `compliance-authoring-skills`.
 - Per-MCP runtimes (`docker`, `npx`, …) are the environment's responsibility.
 
 ## Documentation site

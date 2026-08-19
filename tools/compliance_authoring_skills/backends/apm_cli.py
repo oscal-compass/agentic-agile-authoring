@@ -72,7 +72,7 @@ _TARGET_ROOT = {
 # .gitignore edit, and stash the ledger (apm.yml + apm.lock.yaml) into a single hidden dir. Before
 # an uninstall we restore the ledger so `apm` can operate, then re-tidy. (Verified: uninstall +
 # reachability prune still work with apm_modules/ absent and the ledger restored to cwd.)
-_STASH_DIRNAME = ".ag-au-skills"
+_STASH_DIRNAME = ".compliance-authoring-skills"
 _LEDGER_FILES = ("apm.yml", "apm.lock.yaml")
 _APM_MODULES = "apm_modules"
 
@@ -199,7 +199,7 @@ def install(
     scope. Returns the argv (as a list) when ``dry_run`` is set, else the :class:`ApmResult`.
 
     ``tidy`` (project scope only): after a successful install, consolidate APM's project
-    bookkeeping into the hidden ``.ag-au-skills/`` stash and drop the ``apm_modules/`` cache, so
+    bookkeeping into the hidden ``.compliance-authoring-skills/`` stash and drop the ``apm_modules/`` cache, so
     the project keeps only the deployed products. Pass ``tidy=False`` to leave APM's files in
     place (debugging / direct ``apm`` interop). On restore, ``uninstall`` handles the stash.
     """
@@ -254,7 +254,7 @@ def uninstall(
     skill still declares it — user-authored skills / user MCP servers are never touched (§3.1).
     ``target`` is accepted for symmetry/logging; APM resolves scope from the lockfile.
 
-    In project scope this first restores the hidden ``.ag-au-skills/`` ledger stash so ``apm`` can
+    In project scope this first restores the hidden ``.compliance-authoring-skills/`` ledger stash so ``apm`` can
     read it, then re-tidies afterward (``tidy``). If no stash exists (e.g. a raw ``apm``-managed
     project), it runs against whatever ledger is already in *project*.
     """

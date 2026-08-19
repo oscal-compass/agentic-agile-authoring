@@ -24,7 +24,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ag_au_skills.targets import myharness
+from compliance_authoring_skills.targets import myharness
 
 
 def _skill_dirs(source_repo: Path, *names: str) -> list[Path]:
@@ -54,7 +54,7 @@ def test_install_deploys_skills_and_wires_mcp(source_repo, tmp_path):
     assert (root / "skills" / "catalog-authoring" / "SKILL.md").is_file()
     config = json.loads((root / "mcp.json").read_text())
     assert config["mcpServers"]["trestle"]["command"] == "uvx"
-    assert config["_ag_au"]["owned_mcp"] == ["trestle"]
+    assert config["_compliance_authoring_skills"]["owned_mcp"] == ["trestle"]
 
 
 def test_install_preserves_user_mcp_server(source_repo, tmp_path):
@@ -68,7 +68,7 @@ def test_install_preserves_user_mcp_server(source_repo, tmp_path):
     # user server untouched; ours added; not claimed as owned.
     assert config["mcpServers"]["my-own"] == {"command": "custom"}
     assert "trestle" in config["mcpServers"]
-    assert config["_ag_au"]["owned_mcp"] == ["trestle"]
+    assert config["_compliance_authoring_skills"]["owned_mcp"] == ["trestle"]
 
 
 def test_shared_mcp_prune_keeps_then_removes(source_repo, tmp_path):

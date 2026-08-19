@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""``ag-au-skills`` CLI: a thin wrapper over Microsoft APM (design-spec §3).
+"""``compliance-authoring-skills`` CLI: a thin wrapper over Microsoft APM (design-spec §3).
 
-    ag-au-skills install   --target {claude|opencode|myharness} [--demo|--skill|--exclude] …
-    ag-au-skills uninstall --target {claude|opencode|myharness}  --skill a,b | --all
+    compliance-authoring-skills install   --target {claude|opencode|myharness} [--demo|--skill|--exclude] …
+    compliance-authoring-skills uninstall --target {claude|opencode|myharness}  --skill a,b | --all
 
 Flow: resolve a skill selection over *this repo* (policy) → hand it to the right backend
 (``apm`` for supported targets; the MyHarness deployer for the custom harness). APM owns
@@ -64,14 +64,14 @@ def _add_common(p: argparse.ArgumentParser) -> None:
     p.add_argument(
         "--keep-apm-files", action="store_true",
         help="leave APM's project files (apm.yml/apm.lock.yaml/apm_modules) in place instead of "
-             "consolidating them into the hidden .ag-au-skills/ stash (project scope only)",
+             "consolidating them into the hidden .compliance-authoring-skills/ stash (project scope only)",
     )
     p.add_argument("--dry-run", action="store_true", help="print what would happen; change nothing")
 
 
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
-        prog="ag-au-skills",
+        prog="compliance-authoring-skills",
         description="thin wrapper over Microsoft APM: install portable skills + wire their MCP deps",
     )
     sub = ap.add_subparsers(dest="cmd", required=True)

@@ -27,7 +27,7 @@ from pathlib import Path
 
 import pytest
 
-from ag_au_skills.backends import apm_cli
+from compliance_authoring_skills.backends import apm_cli
 from tests.conftest import requires_apm
 
 pytestmark = [requires_apm, pytest.mark.integration]
@@ -92,9 +92,9 @@ def test_project_scope_tidy_leaves_only_products_and_stash(source_repo, tmp_path
     assert (project / ".mcp.json").is_file()
     # … APM's project bookkeeping consolidated into the hidden stash, cache + gitignore gone.
     top = {p.name for p in project.iterdir()}
-    assert top == {".claude", ".mcp.json", ".ag-au-skills"}
+    assert top == {".claude", ".mcp.json", ".compliance-authoring-skills"}
     assert not (project / "apm_modules").exists()
-    assert (project / ".ag-au-skills" / "apm.lock.yaml").is_file()
+    assert (project / ".compliance-authoring-skills" / "apm.lock.yaml").is_file()
 
 
 def test_tidy_stash_restores_for_uninstall_prune(source_repo, tmp_path):
@@ -120,7 +120,7 @@ def test_keep_apm_files_disables_tidy(source_repo, tmp_path):
     )
     # APM's ledger left in place; no stash created.
     assert (project / "apm.lock.yaml").is_file()
-    assert not (project / ".ag-au-skills").exists()
+    assert not (project / ".compliance-authoring-skills").exists()
 
 
 def test_deployed_skill_has_no_pycache(source_repo, tmp_path):

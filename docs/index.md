@@ -19,13 +19,13 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
 
 ## Install
 
-Skills are installed by `ag-au-skills`, a thin CLI (in `tools/`) that wraps
+Skills are installed by `compliance-authoring-skills`, a thin CLI (in `tools/`) that wraps
 [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`). Prerequisite:
 [`uv`](https://docs.astral.sh/uv/) (provides `uvx`) — no Node required.
 
 ```bash
-uvx ag-au-skills install --demo catalog-to-assessment --target claude
-uvx ag-au-skills install --demo catalog-to-assessment --target opencode
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
+uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
 ```
 
 This copies the selected skills into the target's native skill dir (`.claude/skills/` for Claude,

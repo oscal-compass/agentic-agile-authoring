@@ -2,14 +2,14 @@
 
 > **Status:** Approved; implementation in progress (rev.4, 2026-08-18). Supersedes the removed
 > `docs/installer-spec.md`. This restructure covers **structure + the first demo
-> (`catalog-to-assessment`) + the `ag-au-skills` installer**; POA&M authoring is the next task.
+> (`catalog-to-assessment`) + the `compliance-authoring-skills` installer**; POA&M authoring is the next task.
 >
 > **Strategy (decided):** *Adopt, don't invent.* We are **not** building a package manager or a
 > second dependency/ownership system. We stand on **Microsoft APM** (`apm-cli`,
 > [`microsoft/apm`](https://github.com/microsoft/apm), MIT) — a real, actively-developed OSS
 > Agent Package Manager whose model (`apm.yml` package + `dependencies.mcp` + per-harness
 > deployment + `apm.lock.yaml` + non-destructive MCP merge + prune) is exactly our problem. Our
-> `ag-au-skills` CLI is a **thin wrapper** that adds only what APM can't do for us. See
+> `compliance-authoring-skills` CLI is a **thin wrapper** that adds only what APM can't do for us. See
 > `.insights/installer-node-vs-python.md` and the decision log (§9, **D4**).
 >
 > **Runtime (decided):** Python. Baseline prerequisite is **`uv`** (provides `uvx`, which also
@@ -86,7 +86,7 @@ Skills with no MCP need simply omit `dependencies.mcp`.
 
 ## 3. Installation — thin wrapper over Microsoft APM
 
-`ag-au-skills` is the only bespoke code. It does **not** re-implement package resolution,
+`compliance-authoring-skills` is the only bespoke code. It does **not** re-implement package resolution,
 dependency graphs, lockfiles, MCP normalization, or ownership — APM owns all of that. It adds
 three things APM alone doesn't give us:
 
@@ -98,7 +98,7 @@ three things APM alone doesn't give us:
    MyHarness itself, **reusing APM's resolver/normalizer** so it's a deployment diff only.
 
 ```
-                    ag-au-skills
+                    compliance-authoring-skills
                          │
                          ▼
               APM manifest + resolution + MCP normalization   (always via apm-cli, pinned)
@@ -136,7 +136,7 @@ the reason we adopted APM (D4). Ownership/lockfile/prune all live in APM.
 Project tidy (project scope, on by default): APM writes its project bookkeeping into the target
 dir, but the user only wants the deployed products. After a successful install the wrapper drops
 the regenerable `apm_modules/` cache, reverts APM's `.gitignore` edit, and consolidates the ledger
-(`apm.yml` + `apm.lock.yaml`) into a hidden `.ag-au-skills/` dir — so the project shows just
+(`apm.yml` + `apm.lock.yaml`) into a hidden `.compliance-authoring-skills/` dir — so the project shows just
 `.claude/skills/` + `.mcp.json` + that one hidden dir. `uninstall` restores the ledger to the
 project root so APM's reachability prune runs, then re-tidies. `--keep-apm-files` opts out
 (debugging / direct `apm` interop). Verified: uninstall + prune work with `apm_modules/` absent and
@@ -159,8 +159,8 @@ The resolved set is validated against the source (typos error out), then each sk
 the appropriate backend (§3.1 for APM targets, §3.3 for MyHarness).
 
 **Source of the skills (decided, D5).** By default the selection is resolved against the skills
-**bundled inside the installed package** (`ag_au_skills/_bundled/{skills,demos}`, copied from
-this repo's top-level dirs at wheel-build time). So `ag-au-skills install …` works from **any
+**bundled inside the installed package** (`compliance_authoring_skills/_bundled/{skills,demos}`, copied from
+this repo's top-level dirs at wheel-build time). So `compliance-authoring-skills install …` works from **any
 directory** with no local checkout — the tool carries its own skills as package data. The repo's
 top-level `skills/`/`demos/` remain the single source of truth (no committed duplicate; an
 editable/dev install falls back to the repo checkout). `--source <repo>` overrides the default to
@@ -213,7 +213,7 @@ Version bumps of `apm-cli` are gated behind the §5 integration spikes.
 
 ### 3.5 Prerequisites (deliberately simple)
 
-- **Guaranteed baseline: `uv`** (→ `uvx`). `uvx` runs the pinned `ag-au-skills`/`apm-cli` and the
+- **Guaranteed baseline: `uv`** (→ `uvx`). `uvx` runs the pinned `compliance-authoring-skills`/`apm-cli` and the
   `uvx`-based trestle MCP. This is the only runtime we promise.
 - **Other MCP-specific prerequisites are the environment's responsibility.** If a skill's MCP
   needs `npx` or `docker`, those must already be installed; the wrapper validates presence and
@@ -285,14 +285,14 @@ Two instruments:
 ```
 skills/<name>/               skill package: SKILL.md + apm.yml [+ scripts/refs/assets]
 demos/<name>/            README.md (frontmatter skills: + walkthrough) [+ assets]
-tools/                       `ag-au-skills` — thin wrapper over apm-cli (Python)
+tools/                       `compliance-authoring-skills` — thin wrapper over apm-cli (Python)
   pyproject.toml             deps: apm-cli==<pin>, pyyaml
-  ag_au_skills/
+  compliance_authoring_skills/
     cli.py                   install / uninstall  --target {claude|opencode|myharness|…}
     policy.py                selection + apm.yml validation + prereq checks (uv; npx/docker existence)
     backends/apm_cli.py      subprocess to pinned `apm` for supported targets (canonical path)
     targets/myharness.py     library reuse (APM resolve/normalize) + our deployer
-  tests/ag_au_skills/        unit + pinned-apm integration spikes (§5.1)
+  tests/compliance_authoring_skills/        unit + pinned-apm integration spikes (§5.1)
 docs/
 ```
 
@@ -310,7 +310,7 @@ Notes:
 | Install per each harness's convention | §3.1 APM native-dir deploy (claude/opencode verified); §3.3 MyHarness deployer |
 | Same package to all harnesses (no per-harness pkg) | §2.1 hybrid `SKILL.md`+`apm.yml`, target chosen at install |
 | Selectable which skills (default all) | §3.2 (`--skill`/`--exclude`/`--demo`) |
-| Provided as a CLI (uvx-runnable) | §3 (`ag-au-skills`, Python, pins `apm-cli`) |
+| Provided as a CLI (uvx-runnable) | §3 (`compliance-authoring-skills`, Python, pins `apm-cli`) |
 | Skill declares MCP dep; installer wires it | §2.3 + §3.1 (`apm`) / §3.3 (MyHarness) |
 | MCP merged into native config, non-destructive | §3.1 verified (Claude `.mcp.json`, OpenCode `opencode.json`) |
 | Uninstall non-destructive + prune unused MCP | §3.1 APM reachability prune (verified); §3.3 for MyHarness |
@@ -320,7 +320,7 @@ Notes:
 
 ## 8. Phasing / open items
 
-1. **Wrapper build** — `ag-au-skills` (cli/policy/backends.apm_cli/targets.myharness). *In progress.*
+1. **Wrapper build** — `compliance-authoring-skills` (cli/policy/backends.apm_cli/targets.myharness). *In progress.*
 2. **apm-cli pin** — exact-pin the verified version (0.28.0) in `pyproject.toml`; CI gate on §5.1.
 3. **Standalone-install shaping** — finalize synthetic-project vs `-g` user-scope vs `--root` for
    supported targets (spikes used a temp project with a local-path dep; both work).
@@ -340,13 +340,13 @@ Short ADR-style records of load-bearing choices. Most recent first.
 ### D5 — Bundle the skills into the installer package (default source)
 
 - **Status:** Accepted (2026-08-18). Refines D4; does **not** reverse it.
-- **Context:** With `--source` defaulting to the current directory, `ag-au-skills` only worked from
+- **Context:** With `--source` defaulting to the current directory, `compliance-authoring-skills` only worked from
   a checkout of this repo — the user expected a tool they could run from **any** directory and have
   it place "its" skills. Options: (a) require running from the repo root; (b) a remote `owner/repo`
   shorthand that git-clones first (§8.5, deferred — adds a git prereq + clone lifecycle); (c) bundle
   the skills into the package as data.
 - **Decision:** Ship the repo's `skills/` + `demos/` inside the wheel at build time
-  (`ag_au_skills/_bundled/`, via hatchling `force-include`), and make `--source` **optional**,
+  (`compliance_authoring_skills/_bundled/`, via hatchling `force-include`), and make `--source` **optional**,
   defaulting to that bundle. `--source <repo>` still installs from an external skills repo. Runtime
   resolution: bundled dir if present, else the repo checkout the package lives in (editable/dev).
 - **Consequences:** (+) works from any cwd, no checkout, matches user expectation; single source of
@@ -379,7 +379,7 @@ Short ADR-style records of load-bearing choices. Most recent first.
   - target-agnostic library layer (`APMPackage.from_apm_yml` → `APMDependencyResolver` →
     `CurrentMcpConfigView.derive`) yields normalized MCP for an **unknown** target — enabling
     MyHarness without forking APM.
-- **Decision:** `ag-au-skills` becomes a **thin wrapper**: delegate supported targets to the pinned
+- **Decision:** `compliance-authoring-skills` becomes a **thin wrapper**: delegate supported targets to the pinned
   `apm` CLI; add only selection (our demos), UX, prereq policy, and a **MyHarness deployer** that
   reuses APM's target-agnostic resolve/normalize (library) and writes MyHarness's own skill dir +
   MCP config. Exact-pin `apm-cli`; gate bumps on the §5.1 spikes.
@@ -400,7 +400,7 @@ Short ADR-style records of load-bearing choices. Most recent first.
   library — so hand-writing it is no longer justified. The Vercel `skills` findings (no library API;
   closed harness set) remain recorded in `.insights/prior-art-skill-dependency-managers.md`.
 
-### D2 — Implement `ag-au-skills` in Python (still holds)
+### D2 — Implement `compliance-authoring-skills` in Python (still holds)
 
 - **Status:** Accepted. Reinforced by D4: APM itself is Python, so library reuse of its
   resolve/normalize layer for MyHarness is natural. Tested with `pytest`.

@@ -2,7 +2,7 @@
 """Add license headers to source files.
 
 Covers the current tree: scripts/, skills/ (incl. per-skill scripts and apm.yml), the Python
-`ag-au-skills` CLI in tools/, docs config, and workflow YAML. Virtualenvs and caches
+`compliance-authoring-skills` CLI in tools/, docs config, and workflow YAML. Virtualenvs and caches
 (.venv, __pycache__, node_modules) are skipped.
 
 - Python files (.py)       : prepend Apache 2.0 comment block

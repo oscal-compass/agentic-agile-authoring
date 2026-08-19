@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""ag-au-skills: a thin wrapper over Microsoft APM (``apm-cli``, exact-pinned).
+"""compliance-authoring-skills: a thin wrapper over Microsoft APM (``apm-cli``, exact-pinned).
 
 Installation, MCP wiring, the lockfile, and prune are **APM's** job — this package adds only what
 APM can't do for us (design-spec §3, decision D4):

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ag_au_skills.selection import parse_frontmatter, resolve_skill_list, unknown_names
+from compliance_authoring_skills.selection import parse_frontmatter, resolve_skill_list, unknown_names
 
 ALL = ["assessment", "catalog-authoring", "component-definition", "git-workflow"]
 

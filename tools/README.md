@@ -1,9 +1,9 @@
-# `ag-au-skills`
+# `compliance-authoring-skills`
 
 A thin installer CLI for this repo's skills. It is **not** a package manager — it wraps
 [**Microsoft APM**](https://github.com/microsoft/apm) (`apm-cli`, exact-pinned), which owns
 package resolution, per-harness deployment, the lockfile, non-destructive MCP merge, and
-reachability-based prune. `ag-au-skills` adds only the parts APM doesn't cover.
+reachability-based prune. `compliance-authoring-skills` adds only the parts APM doesn't cover.
 
 See [../docs/design-spec.md](../docs/design-spec.md) for the full design and decision log (D4).
 
@@ -18,7 +18,7 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
    throwaway temp project) and enforces the prerequisite policy. `--global` switches to APM user
    scope (`~/.claude/…`). After a project-scope install the wrapper **tidies**: the project keeps
    only the deployed products (`.claude/skills/`, `.mcp.json`), while APM's ledger (`apm.yml` +
-   `apm.lock.yaml`) is consolidated into a hidden `.ag-au-skills/` dir and the `apm_modules/` cache
+   `apm.lock.yaml`) is consolidated into a hidden `.compliance-authoring-skills/` dir and the `apm_modules/` cache
    + APM's `.gitignore` edit are dropped. `uninstall` restores the ledger transparently so APM's
    prune still runs, then re-tidies. `--keep-apm-files` disables tidying (debugging / direct `apm`).
 3. **MyHarness deployment** — APM's target set is closed, so for our custom harness the wrapper
@@ -37,14 +37,14 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
 
 ```bash
 # Skills come from the copy bundled in this package — run from ANY directory, no checkout needed:
-ag-au-skills install   [--demo <name> | --exclude a,b | --skill a,b] --target {claude|opencode|myharness}
-ag-au-skills uninstall [--skill a,b | --all] --target {claude|opencode|myharness}
+compliance-authoring-skills install   [--demo <name> | --exclude a,b | --skill a,b] --target {claude|opencode|myharness}
+compliance-authoring-skills uninstall [--skill a,b | --all] --target {claude|opencode|myharness}
 
 #   --project <dir>   where to install (default: cwd); --global for user scope (~/.claude/…)
 #   --source  <repo>  install from an external skills repo instead of the bundled skills
 ```
 
-The skills + demos are packaged into the wheel (`ag_au_skills/_bundled/`) at build time from
+The skills + demos are packaged into the wheel (`compliance_authoring_skills/_bundled/`) at build time from
 the repo's top-level `skills/`/`demos/` — those stay the single source of truth (no committed
 duplicate; an editable/dev install falls back to the repo checkout).
 
@@ -61,7 +61,7 @@ duplicate; an editable/dev install falls back to the repo checkout).
 python -m venv .venv && . .venv/bin/activate
 pip install -e ".[test]"     # pins apm-cli; pulls pyyaml + pytest
 pytest                       # unit tests + pinned-apm integration spikes
-ag-au-skills --help
+compliance-authoring-skills --help
 ```
 
 The bespoke surface is small: selection/policy (unit-tested) and the MyHarness deployer. The

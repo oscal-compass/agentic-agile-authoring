@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import pytest
 
-from ag_au_skills import cli, policy
+from compliance_authoring_skills import cli, policy
 
 
 @pytest.fixture

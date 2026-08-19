@@ -60,14 +60,14 @@ def default_source_root() -> Path:
 
     Resolution order:
 
-    1. **bundled** — ``ag_au_skills/_bundled/`` shipped in the wheel (works from any cwd);
-    2. **dev/editable** — the repo checkout this package lives in (``…/tools/ag_au_skills`` →
+    1. **bundled** — ``compliance_authoring_skills/_bundled/`` shipped in the wheel (works from any cwd);
+    2. **dev/editable** — the repo checkout this package lives in (``…/tools/compliance_authoring_skills`` →
        repo root), used before a wheel build has copied the bundle in.
 
     Raises :class:`PolicyError` if neither is found (tell the user to pass ``--source``).
     """
     try:
-        pkg_root = Path(str(importlib_resources.files("ag_au_skills")))
+        pkg_root = Path(str(importlib_resources.files("compliance_authoring_skills")))
         bundled = pkg_root / _BUNDLED_DIRNAME
         if (bundled / "skills").is_dir():
             return bundled

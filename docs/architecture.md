@@ -31,7 +31,7 @@ uses to store and manage OSCAL artifacts.
 
 ## Installation & MCP wiring
 
-Installation is handled by `ag-au-skills`, a **thin wrapper** (in `tools/`) over
+Installation is handled by `compliance-authoring-skills`, a **thin wrapper** (in `tools/`) over
 [Microsoft APM](https://github.com/microsoft/apm) (`apm-cli`). APM is the engine — it copies the
 skill package into each harness's native dir **and** wires the skill's declared MCP servers into
 that harness's native MCP config, with a lockfile and non-destructive uninstall/prune. The
@@ -47,7 +47,7 @@ wrapper adds only what APM lacks:
 
 ```mermaid
 graph LR
-    A["ag-au-skills install --target T"] --> B["APM: resolve apm.yml<br/>+ normalize dependencies.mcp"]
+    A["compliance-authoring-skills install --target T"] --> B["APM: resolve apm.yml<br/>+ normalize dependencies.mcp"]
     B --> C{"T known to APM?"}
     C -->|"claude / opencode / …"| D["apm deploys:<br/>skill dir + native MCP config + apm.lock.yaml"]
     C -->|"myharness"| E["our deployer:<br/>copy skill + merge ~/.myharness/mcp.json"]
