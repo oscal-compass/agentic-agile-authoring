@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>__TITLE__</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --panel: #ffffff;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --text: #18181b;
+    --muted: #71717a;
+    --accent: #2563eb;
+    --accent-soft: #eff6ff;
+    --danger: #dc2626;
+    --danger-soft: #fef2f2;
+    --success: #16a34a;
+    --success-soft: #f0fdf4;
+    --warning: #b45309;
+    --warning-soft: #fffbeb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+  }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header h1 { margin: 0; font-size: 16px; font-weight: 600; }
+  header .subtitle { color: var(--muted); font-size: 12px; }
+  main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .stat .value { font-size: 22px; font-weight: 600; }
+  .stat .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .panel-header h2 { margin: 0; font-size: 13px; font-weight: 600; }
+  .panel-body { padding: 12px 16px; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  input, select, button, textarea {
+    font: inherit;
+    color: inherit;
+    background: var(--panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    padding: 4px 8px;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  button {
+    cursor: pointer;
+    padding: 4px 12px;
+    background: var(--panel);
+    transition: background 0.1s;
+  }
+  button:hover { background: #f4f4f5; }
+  button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  button.primary:hover { background: #1d4ed8; }
+  button.danger { background: var(--danger-soft); color: var(--danger); border-color: var(--danger); }
+  button.danger:hover { background: #fee2e2; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-weight: 600; background: #f4f4f5; position: sticky; top: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; color: var(--muted); }
+  tr.pending-add { background: var(--success-soft); }
+  tr.pending-delete { background: var(--danger-soft); text-decoration: line-through; }
+  tr.pending-modify { background: var(--warning-soft); }
+  tr.selected { background: var(--accent-soft); }
+  .relationship-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    background: #f4f4f5;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .r-equivalent-to { background: #dbeafe; color: #1e40af; }
+  .r-intersects-with { background: #f4f4f5; color: #52525b; }
+  .r-superset-of { background: #dcfce7; color: #166534; }
+  .r-subset-of { background: #fef3c7; color: #854d0e; }
+  .id-cell { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; white-space: nowrap; }
+  .num-cell { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; text-align: right; font-size: 11px; }
+  .rationale-cell { max-width: 400px; color: var(--muted); font-size: 11px; }
+  .table-wrap { max-height: 500px; overflow: auto; }
+  .row-actions { white-space: nowrap; }
+  .row-actions button { padding: 2px 8px; font-size: 11px; }
+  #detail-panel {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 500px;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 12px rgba(0,0,0,0.08);
+    display: none;
+    flex-direction: column;
+    z-index: 10;
+  }
+  #detail-panel.open { display: flex; }
+  #detail-panel .panel-header { border-bottom: 1px solid var(--border); }
+  #detail-body { flex: 1; overflow: auto; padding: 16px; }
+  #detail-body h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin: 16px 0 6px; }
+  #detail-body h3:first-child { margin-top: 0; }
+  #detail-body .text-block { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 10px; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+  #detail-body dl { display: grid; grid-template-columns: 120px 1fr; gap: 4px 12px; font-size: 12px; }
+  #detail-body dt { color: var(--muted); }
+  .banner {
+    background: var(--warning-soft);
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .banner.open { display: flex; }
+  .empty { color: var(--muted); font-style: italic; padding: 8px 0; }
+  #chat-panel {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 420px;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 12px rgba(0,0,0,0.08);
+    display: none;
+    flex-direction: column;
+    z-index: 15;
+  }
+  body.chat-open #chat-panel { display: flex; }
+  body.chat-open main { padding-right: 440px; }
+  #chat-panel .panel-header { border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  #chat-log { flex: 1; overflow: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  #chat-input-row { padding: 10px 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-end; }
+  #chat-input { flex: 1; min-height: 60px; max-height: 200px; resize: vertical; font: inherit; }
+  .chat-msg { padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.45; word-wrap: break-word; }
+  .chat-msg.user { background: var(--accent-soft); color: #1e3a8a; align-self: flex-end; max-width: 90%; }
+  .chat-msg.assistant { background: #f4f4f5; color: var(--text); max-width: 95%; white-space: pre-wrap; }
+  .chat-msg.system { text-align: center; color: var(--muted); font-size: 11px; font-style: italic; }
+  .chat-msg.error { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger); }
+
+  /* Thinking blocks (chain-of-thought): collapsed by default. */
+  .chat-thinking { border: 1px solid var(--border); border-radius: 6px; background: var(--bg); font-size: 11px; }
+  .chat-thinking summary {
+    cursor: pointer; padding: 6px 10px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px; user-select: none;
+  }
+  .chat-thinking summary::-webkit-details-marker { display: none; }
+  .chat-thinking summary::before {
+    content: "▸"; display: inline-block; transition: transform 0.15s;
+    font-size: 10px; width: 10px;
+  }
+  .chat-thinking[open] summary::before { transform: rotate(90deg); }
+  .chat-thinking .thinking-body {
+    padding: 6px 10px 8px; color: var(--muted); white-space: pre-wrap;
+    max-height: 300px; overflow: auto; font-family: -apple-system, sans-serif;
+  }
+
+  /* Tool blocks (tool_use + paired tool_result) */
+  .chat-tool { border: 1px solid var(--border); border-radius: 6px; font-size: 11px; overflow: hidden; }
+  .chat-tool summary {
+    cursor: pointer; padding: 6px 10px; background: #f8fafc;
+    display: flex; align-items: center; gap: 6px; color: var(--text);
+    user-select: none;
+  }
+  .chat-tool summary::-webkit-details-marker { display: none; }
+  .chat-tool summary::before {
+    content: "▸"; display: inline-block; transition: transform 0.15s;
+    font-size: 10px; width: 10px; color: var(--muted);
+  }
+  .chat-tool[open] summary::before { transform: rotate(90deg); }
+  .chat-tool .tool-label { font-weight: 600; color: var(--accent); }
+  .chat-tool .tool-status {
+    margin-left: auto; font-size: 10px; padding: 1px 6px; border-radius: 3px;
+    background: var(--success-soft); color: var(--success);
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .chat-tool .tool-status.pending { background: var(--warning-soft); color: var(--warning); }
+  .chat-tool .tool-status.error { background: var(--danger-soft); color: var(--danger); }
+  .chat-tool .tool-body {
+    padding: 8px 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--muted); white-space: pre-wrap; word-break: break-word;
+  }
+  .chat-tool .tool-body h4 {
+    margin: 0 0 3px; font-size: 10px; color: var(--text); text-transform: uppercase;
+    letter-spacing: 0.4px; font-weight: 600;
+  }
+  .chat-tool .tool-body h4:not(:first-child) { margin-top: 8px; }
+  .chat-tool .tool-body pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+  #chat-toggle-btn { display: none; }
+  body.server-mode #chat-toggle-btn { display: inline-block; }
+  body.chat-open #chat-toggle-btn { background: var(--accent); color: white; border-color: var(--accent); }
+  dialog {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0;
+    min-width: 480px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  dialog::backdrop { background: rgba(0,0,0,0.3); }
+  dialog form { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  dialog h3 { margin: 0; font-size: 14px; }
+  dialog label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+  dialog input, dialog select, dialog textarea { font-size: 13px; padding: 6px 8px; }
+  dialog textarea { min-height: 60px; font-family: inherit; }
+  dialog .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .tab { padding: 6px 12px; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .changelog-entry { padding: 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .changelog-entry:last-child { border-bottom: none; }
+  .changelog-entry .op { font-weight: 600; }
+  .changelog-entry .diff { color: var(--muted); font-family: ui-monospace, monospace; font-size: 11px; margin-top: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>__TITLE__</h1>
+  <span class="subtitle" id="header-subtitle"></span>
+  <div style="flex:1"></div>
+  <div class="toolbar">
+    <button id="chat-toggle-btn" title="Open chat with the authoring agent">Chat</button>
+    <button id="btn-copy" title="Copy edited mapping JSON to clipboard">Copy JSON</button>
+    <button id="btn-download" class="primary" title="Download edited mapping JSON">Download JSON</button>
+  </div>
+</header>
+
+<main>
+  <div id="pending-banner" class="banner">
+    <span id="pending-summary"></span>
+    <div class="toolbar">
+      <button id="btn-approve" class="primary">Approve</button>
+      <button id="btn-discard" class="danger">Discard</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="links">Links</button>
+    <button class="tab" data-tab="target-gaps">Target gaps</button>
+    <button class="tab" data-tab="low-coverage">Low coverage</button>
+    <button class="tab" data-tab="changelog">Changelog</button>
+    <button class="tab" data-tab="raw">Raw JSON</button>
+  </div>
+
+  <div class="tab-panel active" data-tab-panel="links">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Links</h2>
+        <div class="toolbar">
+          <input id="filter-text" placeholder="Filter by control id, rationale..." style="width: 260px">
+          <select id="filter-relationship">
+            <option value="">All relationships</option>
+            <option value="intersects-with">intersects-with</option>
+            <option value="equivalent-to">equivalent-to</option>
+            <option value="superset-of">superset-of</option>
+            <option value="subset-of">subset-of</option>
+          </select>
+          <select id="filter-conf">
+            <option value="">Any confidence</option>
+            <option value="0.9">≥ 0.9</option>
+            <option value="0.75">≥ 0.75</option>
+            <option value="0.6">≥ 0.6</option>
+          </select>
+          <button id="btn-add-link">+ Add link</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="links-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Target</th>
+              <th>Relationship</th>
+              <th class="num-cell">Conf</th>
+              <th class="num-cell">Cov</th>
+              <th>Rationale</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="links-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-tab-panel="target-gaps">
+    <div class="panel">
+      <div class="panel-header"><h2>Target-side unmapped controls</h2></div>
+      <div class="panel-body" id="target-gaps-body"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-tab-panel="low-coverage">
+    <div class="panel">
+      <div class="panel-header"><h2>Source-side low-coverage controls (informational)</h2></div>
+      <div class="panel-body" id="low-coverage-body"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-tab-panel="changelog">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Change log</h2>
+        <button id="btn-clear-changelog" class="danger">Discard all changes</button>
+      </div>
+      <div id="changelog-body"><div class="empty">No edits yet.</div></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-tab-panel="raw">
+    <div class="panel">
+      <div class="panel-header"><h2>Current mapping JSON</h2></div>
+      <div class="panel-body"><pre id="raw-json" style="max-height: 600px; overflow: auto; font-size: 11px; background: var(--bg); padding: 12px; border-radius: 4px;"></pre></div>
+    </div>
+  </div>
+</main>
+
+<aside id="chat-panel" aria-label="Authoring chat">
+  <div class="panel-header">
+    <h2>Authoring chat</h2>
+    <div class="toolbar">
+      <button id="chat-clear-btn" title="Clear the chat history (does not touch the mapping)">Clear</button>
+      <button id="chat-close-btn" title="Close chat">×</button>
+    </div>
+  </div>
+  <div id="chat-log">
+    <div class="chat-msg system">Ask the authoring agent to change this mapping in natural language. It runs the same skill as <code>mapping.py authoring</code>. Any edit it stages will show up in the yellow banner for you to approve or discard.</div>
+  </div>
+  <div id="chat-input-row">
+    <textarea id="chat-input" placeholder="e.g. 'delete the AC-2 → cis-5.1 link' or 'find candidate mappings for target unit t-08'"></textarea>
+    <button id="chat-send-btn" class="primary">Send</button>
+  </div>
+</aside>
+
+<aside id="detail-panel">
+  <div class="panel-header">
+    <h2>Link detail</h2>
+    <button id="btn-close-detail">×</button>
+  </div>
+  <div id="detail-body"></div>
+</aside>
+
+<dialog id="add-link-dialog">
+  <form method="dialog" id="add-link-form">
+    <h3>Add link</h3>
+    <label>Source ID
+      <input name="source_id" required>
+    </label>
+    <label>Target ID
+      <input name="target_id" required>
+    </label>
+    <label>Relationship
+      <select name="relationship">
+        <option value="intersects-with" selected>intersects-with</option>
+        <option value="equivalent-to">equivalent-to</option>
+        <option value="superset-of">superset-of</option>
+        <option value="subset-of">subset-of</option>
+      </select>
+    </label>
+    <label>Confidence (0-1)
+      <input name="confidence" type="number" min="0" max="1" step="0.05" value="0.8">
+    </label>
+    <label>Coverage (0-1)
+      <input name="coverage" type="number" min="0" max="1" step="0.05" value="0.3">
+    </label>
+    <label>Rationale
+      <textarea name="rationale" placeholder="Why do these controls map?"></textarea>
+    </label>
+    <div class="dialog-actions">
+      <button type="button" data-close="add-link-dialog">Cancel</button>
+      <button type="submit" class="primary">Add</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="modify-link-dialog">
+  <form method="dialog" id="modify-link-form">
+    <h3>Modify link</h3>
+    <div style="font-size: 11px; color: var(--muted);" id="modify-link-ids"></div>
+    <label>Relationship
+      <select name="relationship">
+        <option value="intersects-with">intersects-with</option>
+        <option value="equivalent-to">equivalent-to</option>
+        <option value="superset-of">superset-of</option>
+        <option value="subset-of">subset-of</option>
+      </select>
+    </label>
+    <label>Confidence
+      <input name="confidence" type="number" min="0" max="1" step="0.05">
+    </label>
+    <label>Coverage
+      <input name="coverage" type="number" min="0" max="1" step="0.05">
+    </label>
+    <label>Rationale
+      <textarea name="rationale"></textarea>
+    </label>
+    <div class="dialog-actions">
+      <button type="button" data-close="modify-link-dialog">Cancel</button>
+      <button type="submit" class="primary">Apply</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Embedded data. Do not edit by hand. -->
+<script id="report-data" type="application/json">__REPORT_DATA__</script>
+
+<script>
+"use strict";
+
+// ---- State -----------------------------------------------------------------
+// The report is fully self-contained: initial mapping data is inlined above;
+// any edits live in a `pending` list until Approve is clicked, which folds
+// them into `mapping` and pushes an entry into `changelog`. Approved state
+// is persisted to LocalStorage per source-file path so the browser keeps
+// edits across refreshes.
+
+const REPORT = JSON.parse(document.getElementById("report-data").textContent);
+const STORAGE_KEY = "compliance-mapping-report:" + REPORT.sourceFingerprint;
+
+let mapping = deepClone(REPORT.mapping);
+let changelog = [];
+let pending = null; // { type, params, preview }
+
+const saved = loadFromStorage();
+if (saved) {
+  mapping = saved.mapping;
+  changelog = saved.changelog;
+}
+
+// ---- Utilities -------------------------------------------------------------
+
+function deepClone(x) { return JSON.parse(JSON.stringify(x)); }
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ mapping, changelog }));
+  } catch (e) { /* quota exceeded or storage disabled — silently ignore */ }
+}
+
+function getMaps() {
+  return mapping["mapping-collection"].mappings[0].maps;
+}
+
+function setMaps(maps) {
+  mapping["mapping-collection"].mappings[0].maps = maps;
+}
+
+function linkFromMap(m) {
+  const src = m.sources[0]?.["id-ref"] ?? "";
+  const tgt = m.targets[0]?.["id-ref"] ?? "";
+  const rat = (m.props || []).find(p => p.name === "mapping-rationale")?.value ?? "";
+  return {
+    uuid: m.uuid,
+    source_id: src,
+    target_id: tgt,
+    relationship: m.relationship,
+    confidence: m["confidence-score"]?.percentage ?? 0,
+    coverage: m.coverage?.["target-coverage"] ?? 0,
+    rationale: rat,
+    raw: m,
+  };
+}
+
+function newUuid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === "x" ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function nowIso() {
+  return new Date().toISOString().replace(/\.\d+Z$/, "Z");
+}
+
+// ---- Rendering -------------------------------------------------------------
+
+function renderStats() {
+  const el = document.getElementById("stats");
+  const maps = getMaps();
+  const numLinks = maps.length;
+  const numByRel = {};
+  let confSum = 0, covSum = 0;
+  for (const m of maps) {
+    numByRel[m.relationship] = (numByRel[m.relationship] || 0) + 1;
+    confSum += (m["confidence-score"]?.percentage ?? 0);
+    covSum += (m.coverage?.["target-coverage"] ?? 0);
+  }
+  const avgConf = numLinks ? (confSum / numLinks).toFixed(2) : "—";
+  const avgCov = numLinks ? (covSum / numLinks).toFixed(2) : "—";
+
+  const gapCount = REPORT.targetGaps.length;
+  const lowCovCount = REPORT.lowCoverage.length;
+
+  const stats = [
+    { label: "Links", value: numLinks },
+    { label: "Avg confidence", value: avgConf },
+    { label: "Avg coverage", value: avgCov },
+    { label: "Target gaps", value: gapCount },
+    { label: "Low-coverage source", value: lowCovCount },
+    { label: "Edits pending", value: changelog.length },
+  ];
+  el.innerHTML = stats.map(s =>
+    `<div class="stat"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`
+  ).join("");
+}
+
+function renderLinks() {
+  const tbody = document.getElementById("links-tbody");
+  const filterText = document.getElementById("filter-text").value.toLowerCase();
+  const filterRel = document.getElementById("filter-relationship").value;
+  const filterConf = parseFloat(document.getElementById("filter-conf").value) || 0;
+
+  const rows = [];
+  const maps = getMaps();
+  for (const m of maps) {
+    const link = linkFromMap(m);
+    if (filterRel && link.relationship !== filterRel) continue;
+    if (link.confidence < filterConf) continue;
+    if (filterText) {
+      const haystack = (link.source_id + " " + link.target_id + " " + link.rationale).toLowerCase();
+      if (!haystack.includes(filterText)) continue;
+    }
+    const pendingClass = pending && pending.type === "delete_link" && pending.params.uuid === link.uuid ? "pending-delete"
+                       : pending && pending.type === "modify_link" && pending.params.uuid === link.uuid ? "pending-modify"
+                       : "";
+    rows.push(`<tr class="${pendingClass}" data-uuid="${link.uuid}">
+      <td class="id-cell">${escapeHtml(link.source_id)}</td>
+      <td class="id-cell">${escapeHtml(link.target_id)}</td>
+      <td><span class="relationship-badge r-${link.relationship}">${link.relationship}</span></td>
+      <td class="num-cell">${link.confidence.toFixed(2)}</td>
+      <td class="num-cell">${link.coverage.toFixed(2)}</td>
+      <td class="rationale-cell">${escapeHtml(link.rationale).slice(0, 200)}</td>
+      <td class="row-actions">
+        <button data-action="view" data-uuid="${link.uuid}">View</button>
+        <button data-action="modify" data-uuid="${link.uuid}">Edit</button>
+        <button data-action="delete" data-uuid="${link.uuid}" class="danger">Del</button>
+      </td>
+    </tr>`);
+  }
+  // Also show pending-add row
+  if (pending && pending.type === "add_link") {
+    const p = pending.params;
+    rows.unshift(`<tr class="pending-add">
+      <td class="id-cell">${escapeHtml(p.source_id)}</td>
+      <td class="id-cell">${escapeHtml(p.target_id)}</td>
+      <td><span class="relationship-badge r-${p.relationship}">${p.relationship}</span></td>
+      <td class="num-cell">${Number(p.confidence).toFixed(2)}</td>
+      <td class="num-cell">${Number(p.coverage).toFixed(2)}</td>
+      <td class="rationale-cell">${escapeHtml(p.rationale).slice(0, 200)}</td>
+      <td class="row-actions"><em>pending add</em></td>
+    </tr>`);
+  }
+  tbody.innerHTML = rows.length ? rows.join("") : `<tr><td colspan="7" class="empty">No links match the current filter.</td></tr>`;
+}
+
+function renderTargetGaps() {
+  const el = document.getElementById("target-gaps-body");
+  if (!REPORT.targetGaps.length) {
+    el.innerHTML = `<div class="empty">All target-side units are mapped.</div>`;
+    return;
+  }
+  el.innerHTML = `<p style="margin-top: 0; color: var(--muted);">${REPORT.targetGaps.length} target units never appear in any map entry.</p>
+    <div style="font-family: ui-monospace, monospace; font-size: 11px; column-count: 3; gap: 12px;">
+    ${REPORT.targetGaps.map(id => `<div>${escapeHtml(id)}</div>`).join("")}
+    </div>`;
+}
+
+function renderLowCoverage() {
+  const el = document.getElementById("low-coverage-body");
+  if (!REPORT.lowCoverage.length) {
+    el.innerHTML = `<div class="empty">No source controls flagged as low coverage.</div>`;
+    return;
+  }
+  const rows = REPORT.lowCoverage.map(lc =>
+    `<tr><td class="id-cell">${escapeHtml(lc.control_id)}</td><td class="num-cell">${(lc.coverage_ratio ?? 0).toFixed(2)}</td><td>${escapeHtml(lc.reason ?? "")}</td></tr>`
+  );
+  el.innerHTML = `<table><thead><tr><th>Control</th><th class="num-cell">Coverage</th><th>Reason</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+}
+
+function renderChangelog() {
+  const el = document.getElementById("changelog-body");
+  if (!changelog.length) {
+    el.innerHTML = `<div class="empty">No edits yet.</div>`;
+    return;
+  }
+  el.innerHTML = changelog.slice().reverse().map((c, idx) => {
+    const realIdx = changelog.length - 1 - idx;
+    return `<div class="changelog-entry">
+      <div><span class="op">#${realIdx + 1} ${escapeHtml(c.operation)}</span> — <span style="color:var(--muted)">${c.timestamp}</span></div>
+      <div class="diff">${escapeHtml(JSON.stringify(c.params))}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderRawJson() {
+  document.getElementById("raw-json").textContent = JSON.stringify(mapping, null, 2);
+}
+
+function renderPendingBanner() {
+  const banner = document.getElementById("pending-banner");
+  if (!pending) {
+    banner.classList.remove("open");
+    return;
+  }
+  banner.classList.add("open");
+  document.getElementById("pending-summary").textContent = "Pending: " + pending.preview;
+}
+
+function renderAll() {
+  renderStats();
+  renderLinks();
+  renderTargetGaps();
+  renderLowCoverage();
+  renderChangelog();
+  renderRawJson();
+  renderPendingBanner();
+  saveToStorage();
+}
+
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[c]);
+}
+
+// ---- Detail panel ----------------------------------------------------------
+
+function showDetail(uuid) {
+  const m = getMaps().find(x => x.uuid === uuid);
+  if (!m) return;
+  const link = linkFromMap(m);
+  const srcText = REPORT.controlTexts.source[link.source_id] ?? "(source text not embedded)";
+  const tgtText = REPORT.controlTexts.target[link.target_id] ?? "(target text not embedded)";
+  document.getElementById("detail-body").innerHTML = `
+    <dl>
+      <dt>Source ID</dt><dd class="id-cell">${escapeHtml(link.source_id)}</dd>
+      <dt>Target ID</dt><dd class="id-cell">${escapeHtml(link.target_id)}</dd>
+      <dt>Relationship</dt><dd><span class="relationship-badge r-${link.relationship}">${link.relationship}</span></dd>
+      <dt>Confidence</dt><dd>${link.confidence.toFixed(3)}</dd>
+      <dt>Coverage</dt><dd>${link.coverage.toFixed(3)}</dd>
+    </dl>
+    <h3>Rationale</h3>
+    <div class="text-block">${escapeHtml(link.rationale) || "<em>(none)</em>"}</div>
+    <h3>Source text</h3>
+    <div class="text-block">${escapeHtml(srcText)}</div>
+    <h3>Target text</h3>
+    <div class="text-block">${escapeHtml(tgtText)}</div>
+  `;
+  document.getElementById("detail-panel").classList.add("open");
+}
+
+document.getElementById("btn-close-detail").addEventListener("click", () => {
+  document.getElementById("detail-panel").classList.remove("open");
+});
+
+// ---- Pending edits ---------------------------------------------------------
+
+function stagePending(edit) {
+  if (pending) {
+    if (!confirm("A pending edit already exists. Discard it and stage a new one?")) return false;
+  }
+  pending = edit;
+  renderAll();
+  return true;
+}
+
+document.getElementById("btn-approve").addEventListener("click", () => {
+  // In server mode approvals are handled by wireServerApprovals() below
+  // (they POST /api/apply). The file-mode fallback below only runs when
+  // the report is opened as a static file.
+  if (window.__SERVER_MODE__) return;
+  if (!pending) return;
+  applyPending();
+  changelog.push({
+    seq: changelog.length + 1,
+    operation: pending.type,
+    params: pending.params,
+    timestamp: nowIso(),
+  });
+  pending = null;
+  renderAll();
+});
+
+document.getElementById("btn-discard").addEventListener("click", () => {
+  if (window.__SERVER_MODE__) return;
+  pending = null;
+  renderAll();
+});
+
+function applyPending() {
+  const maps = getMaps();
+  if (pending.type === "delete_link") {
+    setMaps(maps.filter(m => m.uuid !== pending.params.uuid));
+  } else if (pending.type === "add_link") {
+    const p = pending.params;
+    maps.push({
+      uuid: newUuid(),
+      relationship: p.relationship,
+      sources: [{ type: "control", "id-ref": p.source_id }],
+      targets: [{ type: "control", "id-ref": p.target_id }],
+      "confidence-score": { percentage: Number(p.confidence) },
+      coverage: { "target-coverage": Number(p.coverage) },
+      props: p.rationale ? [{ name: "mapping-rationale", value: p.rationale, ns: "https://example.com/custom/ns/oscal" }] : [],
+    });
+    setMaps(maps);
+  } else if (pending.type === "modify_link") {
+    for (const m of maps) {
+      if (m.uuid !== pending.params.uuid) continue;
+      const u = pending.params.updates;
+      if (u.relationship !== undefined) m.relationship = u.relationship;
+      if (u.confidence !== undefined) m["confidence-score"] = { percentage: Number(u.confidence) };
+      if (u.coverage !== undefined) m.coverage = { "target-coverage": Number(u.coverage) };
+      if (u.rationale !== undefined) {
+        m.props = m.props || [];
+        const p = m.props.find(x => x.name === "mapping-rationale");
+        if (p) p.value = u.rationale;
+        else m.props.push({ name: "mapping-rationale", value: u.rationale, ns: "https://example.com/custom/ns/oscal" });
+      }
+      break;
+    }
+  }
+}
+
+// ---- Table interactions ----------------------------------------------------
+
+document.getElementById("links-tbody").addEventListener("click", (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const uuid = btn.dataset.uuid;
+  const m = getMaps().find(x => x.uuid === uuid);
+  if (!m) return;
+  const link = linkFromMap(m);
+  if (action === "view") {
+    showDetail(uuid);
+  } else if (action === "delete") {
+    stagePending({
+      type: "delete_link",
+      params: { uuid, source_id: link.source_id, target_id: link.target_id },
+      preview: `Delete link ${link.source_id} → ${link.target_id}`,
+    });
+  } else if (action === "modify") {
+    const dlg = document.getElementById("modify-link-dialog");
+    dlg.querySelector("#modify-link-ids").textContent = `${link.source_id} → ${link.target_id}`;
+    const f = dlg.querySelector("#modify-link-form");
+    f.elements.relationship.value = link.relationship;
+    f.elements.confidence.value = link.confidence;
+    f.elements.coverage.value = link.coverage;
+    f.elements.rationale.value = link.rationale;
+    f.dataset.uuid = uuid;
+    dlg.showModal();
+  }
+});
+
+// Filters
+for (const id of ["filter-text", "filter-relationship", "filter-conf"]) {
+  document.getElementById(id).addEventListener("input", renderLinks);
+}
+
+// Tabs
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.dataset.tabPanel === t.dataset.tab));
+  });
+});
+
+// Dialogs
+document.querySelectorAll("[data-close]").forEach(b => {
+  b.addEventListener("click", () => {
+    document.getElementById(b.dataset.close).close();
+  });
+});
+
+document.getElementById("btn-add-link").addEventListener("click", () => {
+  document.getElementById("add-link-dialog").showModal();
+});
+
+document.getElementById("add-link-form").addEventListener("submit", (e) => {
+  const f = e.target;
+  const params = {
+    source_id: f.elements.source_id.value.trim(),
+    target_id: f.elements.target_id.value.trim(),
+    relationship: f.elements.relationship.value,
+    confidence: f.elements.confidence.value,
+    coverage: f.elements.coverage.value,
+    rationale: f.elements.rationale.value.trim(),
+  };
+  document.getElementById("add-link-dialog").close();
+  stagePending({
+    type: "add_link",
+    params,
+    preview: `Add link ${params.source_id} → ${params.target_id} (${params.relationship})`,
+  });
+  f.reset();
+});
+
+document.getElementById("modify-link-form").addEventListener("submit", (e) => {
+  const f = e.target;
+  const uuid = f.dataset.uuid;
+  const m = getMaps().find(x => x.uuid === uuid);
+  if (!m) return;
+  const link = linkFromMap(m);
+  const updates = {};
+  if (f.elements.relationship.value !== link.relationship) updates.relationship = f.elements.relationship.value;
+  if (parseFloat(f.elements.confidence.value) !== link.confidence) updates.confidence = f.elements.confidence.value;
+  if (parseFloat(f.elements.coverage.value) !== link.coverage) updates.coverage = f.elements.coverage.value;
+  if (f.elements.rationale.value !== link.rationale) updates.rationale = f.elements.rationale.value;
+  document.getElementById("modify-link-dialog").close();
+  if (!Object.keys(updates).length) return;
+  stagePending({
+    type: "modify_link",
+    params: { uuid, updates },
+    preview: `Modify link ${link.source_id} → ${link.target_id}: ${Object.keys(updates).join(", ")}`,
+  });
+});
+
+// Discard all changelog
+document.getElementById("btn-clear-changelog").addEventListener("click", () => {
+  if (!confirm("Discard all edits and restore the original mapping?")) return;
+  mapping = deepClone(REPORT.mapping);
+  changelog = [];
+  pending = null;
+  renderAll();
+});
+
+// Export
+document.getElementById("btn-download").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(mapping, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "mapping_collection.edited.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById("btn-copy").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(mapping, null, 2));
+    const b = document.getElementById("btn-copy");
+    const orig = b.textContent;
+    b.textContent = "Copied ✓";
+    setTimeout(() => { b.textContent = orig; }, 1500);
+  } catch (e) {
+    alert("Failed to copy to clipboard: " + e);
+  }
+});
+
+// Header subtitle
+document.getElementById("header-subtitle").textContent = REPORT.subtitle || "";
+
+renderAll();
+
+// ---- Server mode ----------------------------------------------------------
+// When served by tools/serve/server.py the page is decorated with
+// window.__SERVER_MODE__ = true (see server.py handle_index). In that mode:
+//   - we bootstrap `mapping` from /api/session so we see the server's
+//     canonical state, not just the JSON inlined at build time
+//   - the Chat button becomes visible and drives the authoring agent
+//   - Approve / Discard hit /api/apply / /api/discard so the change lands
+//     in session.json and the authoring skill's changelog, not just in
+//     the browser's LocalStorage
+// Otherwise (file:// mode) none of this runs and the report stays fully
+// self-contained.
+
+const SERVER_MODE = !!window.__SERVER_MODE__;
+
+if (SERVER_MODE) {
+  document.body.classList.add("server-mode");
+  bootstrapServerSession().catch(err => {
+    console.error("server bootstrap failed:", err);
+    alert("Failed to load session from server: " + err.message);
+  });
+  wireChat();
+  wireServerApprovals();
+  restoreChatHistory();
+}
+
+async function bootstrapServerSession() {
+  const res = await fetch("/api/session");
+  if (!res.ok) throw new Error(`GET /api/session -> ${res.status}`);
+  const body = await res.json();
+  // In server mode `session` is the authoring skill's own session.json,
+  // not a full OSCAL Mapping Collection. Convert it into the shape our
+  // renderer expects (the Full Mapping Collection JSON) by projecting
+  // the session's `links` array back into `maps`.
+  const projected = projectSessionToMapping(body.session);
+  mapping = projected;
+  changelog = (body.session.changelog || []).map(c => ({
+    seq: c.seq,
+    operation: c.operation,
+    params: c.params,
+    timestamp: c.timestamp,
+  }));
+  pending = body.pending ? {
+    type: "server_pending",
+    params: {},
+    preview: pendingPreviewFromServer(body.pending),
+    serverPending: body.pending,
+  } : null;
+  renderAll();
+}
+
+function projectSessionToMapping(session) {
+  // We already have REPORT.mapping which was baked in at generate_report time
+  // and contains a full OSCAL Mapping Collection shape. Overlay it with the
+  // session's `links` state so counts/details agree with what the authoring
+  // skill has (including any prior approved edits).
+  const base = deepClone(REPORT.mapping);
+  const links = session.links || [];
+  // Rebuild `maps` from links (one map per link, preserving previously-seen
+  // uuids where possible).
+  const oldMaps = base["mapping-collection"].mappings[0].maps || [];
+  const oldByKey = new Map();
+  for (const m of oldMaps) {
+    const key = (m.sources[0]?.["id-ref"] ?? "") + "\x1f" + (m.targets[0]?.["id-ref"] ?? "");
+    oldByKey.set(key, m);
+  }
+  const newMaps = links.filter(l => !l.stale).map(l => {
+    const key = l.source_id + "\x1f" + l.target_id;
+    const prior = oldByKey.get(key);
+    return {
+      uuid: prior ? prior.uuid : newUuid(),
+      relationship: l.relationship,
+      sources: [{ type: "control", "id-ref": l.source_id }],
+      targets: [{ type: "control", "id-ref": l.target_id }],
+      "confidence-score": { percentage: Number(l.confidence) },
+      coverage: { "target-coverage": Number(l.coverage) },
+      props: l.rationale ? [{ name: "mapping-rationale", value: l.rationale, ns: "https://example.com/custom/ns/oscal" }] : [],
+    };
+  });
+  base["mapping-collection"].mappings[0].maps = newMaps;
+  return base;
+}
+
+function pendingPreviewFromServer(sessionPending) {
+  const cl = sessionPending.changelog || [];
+  const last = cl[cl.length - 1];
+  if (!last) return "A change is staged (waiting for approval).";
+  const p = last.params || {};
+  switch (last.operation) {
+    case "add_link":
+      return `Add link  ${p.source_id ?? "?"}  →  ${p.target_id ?? "?"}`;
+    case "delete_link":
+      return `Delete link  ${p.source_id ?? "?"}  →  ${p.target_id ?? "?"}`;
+    case "modify_link":
+      return `Modify link  ${p.source_id ?? "?"}  →  ${p.target_id ?? "?"}`;
+    case "apply_verdicts":
+      return `Apply ${(p.verdicts && p.verdicts.length) || "?"} verdicts`;
+    case "redecompose_atom":
+      return `Re-decompose atom  ${p.atom_id ?? "?"}`;
+    case "merge_atoms":
+      return `Merge atoms  ${(p.atom_ids || []).join(" + ")}`;
+    case "modify_atom_text":
+      return `Modify atom text  ${p.atom_id ?? "?"}`;
+    case "delete_atom":
+      return `Delete atom  ${p.atom_id ?? "?"}`;
+    case "add_atom":
+      return `Add atom under  ${p.control_id ?? "?"}`;
+    default:
+      return `${last.operation}`;
+  }
+}
+
+// ---- Server-mode approvals ----------------------------------------------
+
+function wireServerApprovals() {
+  const approveBtn = document.getElementById("btn-approve");
+  const discardBtn = document.getElementById("btn-discard");
+
+  approveBtn.onclick = async () => {
+    if (!pending) return;
+    approveBtn.disabled = true;
+    try {
+      const res = await fetch("/api/apply", { method: "POST" });
+      if (!res.ok) throw new Error("apply failed: " + res.status);
+      appendChat("system", "Change approved.");
+    } catch (e) {
+      appendChat("error", "Approve failed: " + e.message);
+      approveBtn.disabled = false;
+      saveChatHistory();
+      return;
+    }
+    approveBtn.disabled = false;
+    await bootstrapServerSession();
+    saveChatHistory();
+  };
+
+  discardBtn.onclick = async () => {
+    if (!pending) return;
+    discardBtn.disabled = true;
+    try {
+      const res = await fetch("/api/discard", { method: "POST" });
+      if (!res.ok) throw new Error("discard failed: " + res.status);
+      appendChat("system", "Change discarded.");
+    } catch (e) {
+      appendChat("error", "Discard failed: " + e.message);
+      discardBtn.disabled = false;
+      saveChatHistory();
+      return;
+    }
+    discardBtn.disabled = false;
+    await bootstrapServerSession();
+    saveChatHistory();
+  };
+}
+
+// ---- Chat -----------------------------------------------------------------
+
+function wireChat() {
+  const toggle = document.getElementById("chat-toggle-btn");
+  const closeBtn = document.getElementById("chat-close-btn");
+  const clearBtn = document.getElementById("chat-clear-btn");
+  toggle.addEventListener("click", () => document.body.classList.toggle("chat-open"));
+  closeBtn.addEventListener("click", () => document.body.classList.remove("chat-open"));
+  clearBtn.addEventListener("click", () => {
+    if (!confirm("Clear the chat history? This does not touch the mapping itself.")) return;
+    const log = document.getElementById("chat-log");
+    // Keep only the leading system hint (first child).
+    while (log.childNodes.length > 1) log.removeChild(log.lastChild);
+    clearChatHistory();
+  });
+
+  const input = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("chat-send-btn");
+
+  async function send() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    sendBtn.disabled = true;
+    appendChat("user", text);
+    saveChatHistory();
+    try {
+      await streamChat(text);
+    } catch (e) {
+      appendChat("error", "Chat failed: " + e.message);
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+      saveChatHistory();
+    }
+  }
+
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      send();
+    }
+  });
+}
+
+// Map internal tool names to something the user can parse at a glance.
+const TOOL_LABELS = {
+  // Bob / Claude built-ins that are common across turns
+  read_file: "Reading a file",
+  Read: "Reading a file",
+  write_to_file: "Writing a file",
+  Write: "Writing a file",
+  Edit: "Editing a file",
+  MultiEdit: "Editing files",
+  execute_command: "Running a shell command",
+  Bash: "Running a shell command",
+  list_files: "Listing files",
+  Glob: "Finding files",
+  Grep: "Searching in files",
+  search_files: "Searching in files",
+  browser_action: "Browsing",
+  ask_followup_question: "Asking a follow-up question",
+  attempt_completion: "Answering",
+  Task: "Delegating to a sub-agent",
+  TodoWrite: "Updating a todo list",
+};
+function friendlyToolLabel(name) {
+  return TOOL_LABELS[name] || name;
+}
+
+async function streamChat(instruction) {
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ instruction }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || ("status " + res.status));
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "";
+  // Streaming state — assistant text and thinking are each accumulated
+  // into a single element that grows as tokens arrive.
+  let currentAssistantMsg = null;
+  let currentThinking = null;
+  // Track pending tool_use blocks by their id so we can attach the paired
+  // tool_result into the same collapsible entry.
+  const toolBlocks = new Map();
+
+  function finishCurrentText() {
+    currentAssistantMsg = null;
+    currentThinking = null;
+  }
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    while (true) {
+      const idx = buf.indexOf("\n\n");
+      if (idx < 0) break;
+      const frame = buf.slice(0, idx);
+      buf = buf.slice(idx + 2);
+      const parsed = parseSseFrame(frame);
+      if (!parsed) continue;
+      const { event, data } = parsed;
+      if (event === "message") {
+        // Token-level assistant text — append to the running bubble.
+        currentThinking = null;
+        if (!currentAssistantMsg) {
+          currentAssistantMsg = appendChat("assistant", "");
+        }
+        currentAssistantMsg.textContent += data.text || "";
+        currentAssistantMsg.scrollIntoView({ block: "end" });
+      } else if (event === "thinking") {
+        // Chain-of-thought — into its own collapsible box, tokens grow it.
+        currentAssistantMsg = null;
+        if (!currentThinking) {
+          currentThinking = appendThinkingBlock();
+        }
+        const body = currentThinking.querySelector(".thinking-body");
+        body.textContent += data.text || "";
+        currentThinking.scrollIntoView({ block: "end" });
+      } else if (event === "tool_use") {
+        finishCurrentText();
+        const block = appendToolBlock(data.tool, data.params_preview);
+        if (data.id) toolBlocks.set(data.id, block);
+        block.scrollIntoView({ block: "end" });
+      } else if (event === "tool_result") {
+        finishCurrentText();
+        const block = data.id && toolBlocks.get(data.id);
+        if (block) {
+          attachToolResult(block, data.status, data.preview);
+          toolBlocks.delete(data.id);
+        } else {
+          // Orphan result (no matching id): emit as a standalone block.
+          const orphan = appendToolBlock("(result)", "");
+          attachToolResult(orphan, data.status, data.preview);
+        }
+      } else if (event === "edit_staged") {
+        finishCurrentText();
+        appendChat("system", "Agent staged an edit. Review it in the yellow banner at the top.");
+        bootstrapServerSession().catch(err => console.error(err));
+      } else if (event === "error") {
+        finishCurrentText();
+        appendChat("error", data.message || "unknown error");
+      } else if (event === "start") {
+        // no-op; server confirms it started
+      } else if (event === "done") {
+        finishCurrentText();
+        // Any tool_use without a matching tool_result — mark as pending
+        // status so the user knows it never completed cleanly.
+        for (const [, block] of toolBlocks) {
+          const s = block.querySelector(".tool-status");
+          if (s) { s.textContent = "no result"; s.classList.add("pending"); }
+        }
+        toolBlocks.clear();
+        // Final refresh in case edit_staged never fired but the agent
+        // still touched session_pending.json.
+        bootstrapServerSession().catch(err => console.error(err));
+        // Persist chat log so a page reload keeps the conversation.
+        saveChatHistory();
+      }
+    }
+  }
+}
+
+function appendThinkingBlock() {
+  const log = document.getElementById("chat-log");
+  const el = document.createElement("details");
+  el.className = "chat-thinking";
+  const summary = document.createElement("summary");
+  summary.textContent = "Thinking…";
+  el.appendChild(summary);
+  const body = document.createElement("div");
+  body.className = "thinking-body";
+  el.appendChild(body);
+  log.appendChild(el);
+  return el;
+}
+
+function appendToolBlock(toolName, paramsPreview) {
+  const log = document.getElementById("chat-log");
+  const el = document.createElement("details");
+  el.className = "chat-tool";
+  const summary = document.createElement("summary");
+  const label = document.createElement("span");
+  label.className = "tool-label";
+  label.textContent = friendlyToolLabel(toolName);
+  summary.appendChild(label);
+  const status = document.createElement("span");
+  status.className = "tool-status pending";
+  status.textContent = "running";
+  summary.appendChild(status);
+  el.appendChild(summary);
+  const body = document.createElement("div");
+  body.className = "tool-body";
+  const h4 = document.createElement("h4");
+  h4.textContent = "Input";
+  body.appendChild(h4);
+  const paramsPre = document.createElement("pre");
+  paramsPre.textContent = paramsPreview || "(none)";
+  body.appendChild(paramsPre);
+  el.appendChild(body);
+  log.appendChild(el);
+  return el;
+}
+
+function attachToolResult(block, status, preview) {
+  const s = block.querySelector(".tool-status");
+  if (s) {
+    s.classList.remove("pending");
+    if (status === "error") s.classList.add("error");
+    s.textContent = status || "ok";
+  }
+  const body = block.querySelector(".tool-body");
+  const h4 = document.createElement("h4");
+  h4.textContent = "Result";
+  body.appendChild(h4);
+  const pre = document.createElement("pre");
+  pre.textContent = preview || "(empty)";
+  body.appendChild(pre);
+}
+
+function parseSseFrame(frame) {
+  let event = "message";
+  let data = null;
+  for (const line of frame.split("\n")) {
+    if (line.startsWith("event:")) event = line.slice(6).trim();
+    else if (line.startsWith("data:")) {
+      try { data = JSON.parse(line.slice(5).trim()); }
+      catch (e) { data = null; }
+    }
+  }
+  if (data === null) return null;
+  return { event, data };
+}
+
+function appendChat(kind, text, decorateFn) {
+  const log = document.getElementById("chat-log");
+  const el = document.createElement("div");
+  el.className = "chat-msg " + kind;
+  if (decorateFn) decorateFn(el);
+  else el.textContent = text;
+  log.appendChild(el);
+  el.scrollIntoView({ block: "end" });
+  return el;
+}
+
+// ---- Chat history persistence (server mode) ----------------------------
+// Save the entire #chat-log HTML into sessionStorage at safe checkpoints
+// (turn boundaries + individual message flushes) so a page reload doesn't
+// wipe the conversation. sessionStorage scope = same tab, so reloading
+// preserves history, closing the tab clears it.
+const CHAT_HISTORY_KEY = "compliance-mapping-chat-history:" + location.pathname;
+
+function saveChatHistory() {
+  if (!window.__SERVER_MODE__) return;
+  try {
+    const log = document.getElementById("chat-log");
+    if (log) sessionStorage.setItem(CHAT_HISTORY_KEY, log.innerHTML);
+  } catch (e) {
+    // quota exceeded or storage disabled — ignore
+  }
+}
+
+function restoreChatHistory() {
+  if (!window.__SERVER_MODE__) return;
+  try {
+    const html = sessionStorage.getItem(CHAT_HISTORY_KEY);
+    if (!html) return;
+    const log = document.getElementById("chat-log");
+    if (log) log.innerHTML = html;
+  } catch (e) { /* ignore */ }
+}
+
+function clearChatHistory() {
+  try { sessionStorage.removeItem(CHAT_HISTORY_KEY); } catch (e) { /* ignore */ }
+}
+</script>
+</body>
+</html>

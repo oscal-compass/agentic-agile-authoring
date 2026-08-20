@@ -1,0 +1,832 @@
+#!/usr/bin/env python3
+# Copyright OSCAL Compass Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Seed-aware fast fix loop for the compliance-catalog batch pipeline.
+
+Purpose
+=======
+
+Replace the multi-subagent Phase 3 (validate_config authoring) +
+Phase 4 (iterative fix loop) + Phase 6 (report authoring) with a
+single deterministic-first orchestration that only invokes an LLM
+subagent when strictly necessary.
+
+The pipeline this script implements (for seed-mode runs):
+
+  1. Make sure ``validate.py`` and ``validate_config.py`` exist in
+     the output directory.  If ``validate.py`` is missing, copy the
+     template.  If ``validate_config.py`` is missing, derive it from
+     the seed catalog (deterministic).
+
+  2. Run ``seed_fill_titles.py`` (idempotent) to borrow control /
+     group titles from the seed for anything the extractor missed.
+
+  3. Compute the *seed baseline diff*: errors present in the seed
+     itself do not need to be fixed in the target.  This shrinks the
+     work item from "N errors" to "errors not in the seed".
+
+  4. If no target-only errors remain, skip Phase 4 entirely.  The
+     catalog is "as good as the seed" (by definition it was accepted
+     with those errors).
+
+  5. Otherwise, launch a SINGLE fix subagent (via ``run_agent.sh``)
+     that receives:
+       - the target-only error list
+       - a rule → function/CONFIG decision table
+       - the existing prev-run context (generate.py, catalog.json,
+         merged.txt)
+     The subagent runs an internal fix loop within its single
+     session, capped at ``--fix-iter-cap`` iterations.  Because it is
+     a single session it doesn't pay the multi-session startup +
+     context reload cost, and it can accumulate learning across
+     "iterations" within its own thread.
+
+  6. After the subagent exits, run validate one more time.  Report
+     the residual error count; the wrapper (``catalog.py``) still
+     writes ``.catalog.done`` with the exit code so the batch driver
+     sees a marker either way.
+
+  7. Author ``report.md`` inline (deterministic template that
+     summarises: seed source, control/group counts, ID overlap,
+     residual error breakdown).  A separate LLM report subagent
+     costs 3-6 min per framework and is unnecessary given the seed
+     mode; the deterministic report is entirely adequate for the
+     batch use case.
+
+Exit code
+=========
+
+  0  target validate passed OR target error set is a subset of seed
+     error set (i.e. we did not make anything worse)
+  20 residual target-only errors remain (best-effort)
+  other: I/O or launch error
+
+Runtime target
+==============
+
+For a seed-mode run this should complete in ~2-5 minutes when
+target-only errors are 0 (no subagent needed) and ~8-12 min when
+some target-only errors need a subagent.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+
+
+# =====================================================================
+# Deterministic validate_config.py generation from seed
+# =====================================================================
+
+def _derive_validate_config_from_seed(seed_catalog: Path) -> str:
+    """Emit a validate_config.py body derived from the seed catalog.
+
+    validate_config.py exposes a single ``CONFIG`` dict that the
+    validator consults for document-specific expectations (required
+    groups, control count band, etc.).  When we have a seed, all of
+    these are computable — no LLM required.
+    """
+    try:
+        data = json.loads(seed_catalog.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _default_validate_config(reason=f"seed parse failed: {e}")
+
+    root = data.get("catalog", data)
+    groups = root.get("groups") or []
+    required_groups: list[str] = []
+    for g in groups:
+        gid = g.get("id")
+        gtitle = (g.get("title") or "").strip()
+        if gid:
+            required_groups.append(gid)
+    controls = [c for g in groups for c in (g.get("controls") or [])]
+    n_ctrl = len(controls)
+
+    # +/- 30 % band around the seed's control count.  Loose enough
+    # that a legitimate structural change (a couple articles added)
+    # doesn't trip Rule 11, tight enough that a factor-of-4 blowup
+    # (the EU-AI-Act failure mode) does.
+    lo = max(1, int(n_ctrl * 0.7))
+    hi = int(n_ctrl * 1.3) + 1
+
+    lines = [
+        "# Auto-generated by seed_aware_fix.py from seed catalog.",
+        "# Do not hand-edit — regenerating from the seed will overwrite this.",
+        "",
+        "CONFIG = {",
+        f'    "required_groups": {required_groups!r},',
+        f'    "expected_control_count_min": {lo},',
+        f'    "expected_control_count_max": {hi},',
+        '    "skip_rule_10_sequential_gaps": False,',
+        "}",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def _default_validate_config(reason: str = "") -> str:
+    return (
+        "# Fallback CONFIG (seed unavailable: "
+        + (reason or "unknown")
+        + ")\n"
+        + "CONFIG = {\n"
+        + '    "required_groups": [],\n'
+        + '    "expected_control_count_min": 1,\n'
+        + '    "expected_control_count_max": 10000,\n'
+        + '    "skip_rule_10_sequential_gaps": False,\n'
+        + "}\n"
+    )
+
+
+# =====================================================================
+# Validate + diff helpers
+# =====================================================================
+
+def _run_validate(validate_py: Path, catalog: Path,
+                  merged: Path | None) -> tuple[int, str, str]:
+    cmd = ["python3", str(validate_py), str(catalog), "--skip-trestle"]
+    if merged is not None and merged.is_file():
+        cmd += ["--merged", str(merged)]
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        return p.returncode, p.stdout or "", p.stderr or ""
+    except subprocess.TimeoutExpired:
+        return 124, "", "validate.py timed out after 180s"
+
+
+def _extract_errors(validate_output: str) -> list[str]:
+    errors: list[str] = []
+    for line in validate_output.splitlines():
+        s = line.strip()
+        if s.startswith("❌"):
+            errors.append(s.lstrip("❌ ").strip())
+    return errors
+
+
+def _restore_titles_from_seed(target_catalog: Path,
+                              seed_catalog: Path) -> int:
+    """For any control whose title looks drifted (per
+    _detect_title_prose_drift heuristics), restore the seed's title
+    verbatim.  Additionally, if the drifted title contained prose
+    content, prepend that content back into the control's first
+    prose part so no PDF-derived text is lost.
+
+    Returns the number of controls whose title was restored.
+
+    This is safe because:
+    - the seed title is by definition the "correct short heading"
+      (that's what made it worth using as a seed)
+    - the prose that was inflated into the title came from the PDF
+      body; prepending it back to prose preserves anti-hallucination
+      (all text still comes from the new PDF)
+    """
+    try:
+        tgt = json.loads(target_catalog.read_text(encoding="utf-8"))
+        seed = json.loads(seed_catalog.read_text(encoding="utf-8"))
+    except Exception:
+        return 0
+
+    seed_titles: dict[str, str] = {}
+    for g in seed.get("catalog", seed).get("groups") or []:
+        for c in g.get("controls") or []:
+            cid = c.get("id")
+            st = (c.get("title") or "").strip()
+            if cid and st:
+                seed_titles[cid] = st
+
+    root = tgt.get("catalog", tgt)
+    restored = 0
+    for g in root.get("groups") or []:
+        for c in g.get("controls") or []:
+            cid = c.get("id")
+            if cid not in seed_titles:
+                continue
+            t_title = (c.get("title") or "").strip()
+            s_title = seed_titles[cid]
+
+            # Same predicate as _detect_title_prose_drift.
+            inflated = (len(t_title) > 60
+                        and len(s_title) > 0
+                        and len(t_title) > 3 * max(len(s_title), 5))
+            multi_sentence = t_title.count(". ") >= 3
+            if not (inflated or multi_sentence):
+                continue
+
+            # Extract the extra prose that was captured into the title.
+            extra_prose = ""
+            if t_title.lower().startswith(s_title.lower()):
+                # Common shape: title starts with the correct short
+                # heading, then a delimiter, then prose.
+                extra_prose = t_title[len(s_title):].lstrip(" .:,;-–—")
+            elif len(t_title) > len(s_title) + 20:
+                # Fallback: whole inflated title is the extra prose
+                # candidate (the correct heading is missing from it).
+                extra_prose = t_title
+
+            c["title"] = s_title
+            if extra_prose:
+                # Prepend to first prose part.  If there are no parts,
+                # create one; OSCAL requires at least one prose-bearing
+                # part per control (Rule 7 territory).
+                parts = c.get("parts")
+                if parts:
+                    first = parts[0]
+                    old_prose = (first.get("prose") or "").strip()
+                    if extra_prose not in old_prose:
+                        first["prose"] = (extra_prose + "\n" + old_prose
+                                          if old_prose else extra_prose)
+                else:
+                    c["parts"] = [{
+                        "id": f"{cid}_stmt",
+                        "name": "statement",
+                        "prose": extra_prose,
+                    }]
+            restored += 1
+
+    if restored:
+        target_catalog.write_text(
+            json.dumps(tgt, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+    return restored
+
+
+def _detect_title_prose_drift(target_catalog: Path,
+                              seed_catalog: Path) -> list[str]:
+    """Detect controls where the extractor most likely conflated the
+    title and the first sentence of prose.
+
+    validate.py's Rule 5 / Rule 7 / Rule 14 do not catch this shape:
+    the title is technically non-empty and prose is technically
+    non-empty, but the boundary between them shifted.  We caught this
+    in Argentina article-39/40/43 where the new title started with
+    "Proceedings i. Upon admission..." (correct: "Proceedings" only)
+    and the prose was 3× shorter than the seed's.
+
+    Heuristic: for each control_id present in BOTH catalogs, flag it
+    as "title-prose drift" when EITHER
+      (a) the new title is > 60 characters AND > 3× the seed's title
+          length (a drift almost always inflates the title
+          disproportionately), OR
+      (b) the new title contains 3 or more period-space sequences (a
+          proxy for "multiple sentences ended up in the title").
+
+    Returns error strings shaped like validate.py's output so they
+    slot into the existing target_only list.  Each returned entry
+    also names the specific control_id and offending title so the
+    fix subagent's decision-table entry for Rule 5(b) applies
+    directly.
+    """
+    try:
+        tgt = json.loads(target_catalog.read_text(encoding="utf-8"))
+        seed = json.loads(seed_catalog.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    def _idx(cat: dict) -> dict[str, tuple[str, str]]:
+        # id -> (group_id, title)
+        idx: dict[str, tuple[str, str]] = {}
+        root = cat.get("catalog", cat)
+        for g in root.get("groups") or []:
+            gid = g.get("id", "?")
+            for c in g.get("controls") or []:
+                cid = c.get("id")
+                if cid:
+                    idx[cid] = (gid, (c.get("title") or "").strip())
+        return idx
+
+    t_idx = _idx(tgt)
+    s_idx = _idx(seed)
+    drifts: list[str] = []
+    for cid, (t_grp, t_title) in t_idx.items():
+        if cid not in s_idx:
+            continue
+        _, s_title = s_idx[cid]
+        # Rule (a)
+        if (len(t_title) > 60
+                and len(s_title) > 0
+                and len(t_title) > 3 * max(len(s_title), 5)):
+            drifts.append(
+                f"[TitleDrift] catalog/group[{t_grp}]/{cid}: title is "
+                f"{len(t_title)}c but seed's is {len(s_title)}c "
+                f"(≥ 3× inflation, likely prose spilled into title)"
+            )
+            continue
+        # Rule (b): multiple sentence-terminators in title
+        if t_title.count(". ") >= 3:
+            drifts.append(
+                f"[TitleDrift] catalog/group[{t_grp}]/{cid}: title "
+                f"contains {t_title.count('. ')} period-space "
+                f"boundaries (likely prose spilled into title)"
+            )
+    return drifts
+
+
+def _normalise(err: str) -> str:
+    # Same normalisation as seed_validate_baseline.py — drop prose-tail
+    # after the second colon so we compare rules+paths, not the raw
+    # PDF excerpt.
+    parts = err.split(":", 2)
+    if len(parts) >= 3:
+        return f"{parts[0]}:{parts[1]}"
+    return err
+
+
+# =====================================================================
+# Rule → fix decision table (for fix subagent prompt)
+# =====================================================================
+
+RULE_FIX_TABLE = """\
+## Rule → Fix decision table (consult before iterating on your own)
+
+Every entry here is a "first thing to try" for a specific validate rule
+class.  These reflect the shape of past fix loops that succeeded; use
+them as a strong prior before doing exploratory grep-and-inspect.
+
+- **Rule 5 (TOC dot leader in title)**: the title captured contains
+  literal `...` or long paragraph text.  Fix in `generate.py`:
+    a) tighten `PATTERNS["chapter"]` / `PATTERNS["section"]` so title
+       capture stops at the first newline or first `.` followed by a
+       digit (page-number style).
+    b) if the title still looks like a whole paragraph, that means the
+       document has no first-line "title" for that unit (Argentine
+       Chapter I / APEC Part I style); the correct fix is to
+       postprocess: set control["title"] to the first sentence up to
+       80 chars.  Prefer editing `parse_structure()` to derive title
+       this way rather than adding regex.  This is a titles-from-body
+       fallback and does not count as hardcoding.
+
+- **Rule 6a (required group missing) / Rule 12 (group not in
+  merged.txt)**: the extractor did not create a group the seed
+  expects.  Fix in `generate.py`:
+    a) verify `PATTERNS["chapter"]` matches the boundary marker for
+       the missing group (check `merged.txt` for the literal text).
+    b) if the group's boundary uses a different marker style (Annex vs
+       Chapter), extend `PATTERNS` to accept both.
+
+- **Rule 7 (empty / too-short prose)**: extraction captured the
+  control id but no body text.  Fix in `generate.py:parse_structure()`:
+  the split boundary that ended the previous control was too greedy;
+  loosen it so this control's body is not truncated.  Read the section
+  in `merged.txt` around the offending id to see what the actual body
+  looks like.
+
+- **Rule 8 (unbalanced parentheses)**: prose was truncated mid-
+  paragraph.  Same root cause as Rule 7 — a boundary regex is
+  splitting too early.  Fix in `parse_structure()`.
+
+- **Rule 14 (prose contamination)**: filter marker text out of prose.
+  Fix in `CONFIG["garbage_line_patterns"]`: add a regex that matches
+  the offending marker (e.g. `r"^OJ L, \\d"` for EU Official Journal
+  citations, `r"^Decree \\d+/\\d+"` for Argentine decree refs).  The
+  contamination-triggering string is shown in the error message.
+
+- **Rule 15 (control title is empty)**: control has an id but no
+  title.  First try: run `seed_fill_titles.py` (fills from seed).
+  If the offending id is NOT in the seed, fix in `generate.py` per
+  Rule 5(b).
+
+- **TitleDrift (custom, not from validate.py)**: prose spilled into
+  the title — the offending control has an inflated title starting
+  with the correct short heading followed by the first sentence of
+  the body.  For example, `title = "Proceedings i. Upon admission of
+  the action, the Court shall …"` when the seed's title is
+  `"Proceedings"`.  Root cause is in `generate.py:parse_structure()`
+  where the boundary between "heading" and "first prose paragraph"
+  is captured too greedily.  Fix by tightening the heading regex to
+  stop at the first sub-item marker (`i.`, `a)`, `1.`, etc.) or at
+  the first period-space.  As a fallback that always works: set the
+  control's title from the seed catalog's title (deterministic — the
+  seed has the correct short title), and prepend the removed prefix
+  back into the control's prose.  If ≥ 5 controls have this drift
+  and touching regex is hard, prefer the deterministic
+  seed-title-restore fallback and move on.
+
+Never iterate on a single error more than TWICE.  If two rounds of
+edits do not clear a specific error, leave it — the wrapper accepts
+"best effort" and the residual will surface in the report.
+"""
+
+
+# =====================================================================
+# Fix subagent launch
+# =====================================================================
+
+def _launch_fix_subagent(output_dir: Path, target_only_errors: list[str],
+                         seed_catalog: Path, input_pdf: Path,
+                         fix_iter_cap: int) -> int:
+    """Launch a single fix subagent via run_agent.sh with a decision
+    table + target-only error list.  Return its exit code (0 =
+    subagent finished; non-zero surfaces to the wrapper).
+    """
+    fix_prompt_path = output_dir / "_seed_aware_fix_prompt.txt"
+    fix_log_path = output_dir / "_seed_aware_fix_agent.jsonl"
+
+    error_block = "\n".join(f"  - {e}" for e in target_only_errors)
+    prompt = f"""You are the seed-aware fix subagent for compliance-catalog.
+
+## Context
+
+The compliance-catalog pipeline just ran Phase 2 (author generate.py)
+and produced an initial ``catalog.json`` at:
+
+  {output_dir}/catalog.json
+
+The catalog was generated from PDF:
+
+  {input_pdf}
+
+with structure inherited from the seed catalog:
+
+  {seed_catalog}
+
+Running ``validate.py --skip-trestle`` currently reports the following
+validate errors THAT DO NOT ALSO APPEAR IN THE SEED (i.e. these are
+introduced by the current extraction and are the only ones worth
+fixing — errors present in the seed itself were already accepted and
+you MUST NOT chase them):
+
+{error_block}
+
+## Your job
+
+Fix the errors above by editing ``{output_dir}/generate.py`` (and
+occasionally ``{output_dir}/validate_config.py`` when the fix is a
+missing required-group entry).  After each edit, re-run:
+
+  python3 {output_dir}/generate.py && \\
+    python3 {output_dir}/validate.py {output_dir}/catalog.json \\
+    --merged {output_dir}/merged.txt --skip-trestle
+
+Stop when either
+  (a) validate.py exits 0, OR
+  (b) the target-only error set is empty (verify by comparing against
+      the seed's own errors — the wrapper will do this
+      programmatically after you finish, but you can pre-check with
+      ``python3 {SCRIPT_DIR}/seed_validate_baseline.py \\
+        {output_dir}/catalog.json {seed_catalog} \\
+        {output_dir}/validate.py --merged {output_dir}/merged.txt``), OR
+  (c) you have performed {fix_iter_cap} iterations of edit+validate.
+      DO NOT exceed {fix_iter_cap} iterations; hard-stop and print
+      ``DONE (best-effort)``.
+
+## Discipline rules
+
+- **Consult the Rule → Fix decision table below FIRST** before doing
+  exploratory grep-and-inspect.  Past fix loops have wasted 60+ turns
+  on ``grep`` and ``head`` calls that produced no edits.  Trust the
+  table.
+- **NO more than TWO iterations on any single error.**  If two rounds
+  of edits do not clear a specific error, leave it — the wrapper
+  accepts best effort.
+- **NEVER hand-edit ``catalog.json``.**  All fixes must be regressions
+  of ``generate.py`` (or ``validate_config.py`` for missing-group
+  cases); the catalog is regenerated by re-running ``generate.py``.
+
+{RULE_FIX_TABLE}
+
+## Completion
+
+When you stop, print ``DONE`` on its own line.  Do NOT author
+``report.md`` — the wrapper will do that deterministically after you
+finish.  Do NOT print anything after ``DONE`` other than a brief
+one-line summary of what you fixed vs left.
+"""
+    fix_prompt_path.write_text(prompt, encoding="utf-8")
+
+    # Fire the subagent via run_agent.sh.  Options per run_agent.sh
+    # usage: `-o <logfile>` for the JSONL log and `-f <prompt_file>`
+    # for the prompt.  The working directory is set via `-w`.
+    run_agent = SCRIPT_DIR / "run_agent.sh"
+    cmd = [
+        "bash", str(run_agent),
+        "-o", str(fix_log_path),
+        "-w", str(output_dir),
+        "-f", str(fix_prompt_path),
+    ]
+    # Timeout is generous (25 min) because the subagent is doing what
+    # took multiple Phase 4 iters before.
+    try:
+        proc = subprocess.run(cmd, timeout=1500)
+        return proc.returncode
+    except subprocess.TimeoutExpired:
+        print("seed_aware_fix: subagent timed out after 25 min",
+              file=sys.stderr)
+        return 124
+
+
+# =====================================================================
+# Deterministic report.md authoring
+# =====================================================================
+
+def _emit_report(output_dir: Path, seed_catalog: Path, input_pdf: Path,
+                 target_errors_before: list[str],
+                 target_only_before: list[str],
+                 target_errors_after: list[str],
+                 subagent_used: bool) -> None:
+    catalog_path = output_dir / "catalog.json"
+    try:
+        target = json.loads(catalog_path.read_text(encoding="utf-8"))
+        troot = target.get("catalog", target)
+        t_groups = troot.get("groups") or []
+        t_ctrl = sum(len(g.get("controls") or []) for g in t_groups)
+    except Exception:
+        t_groups, t_ctrl = [], 0
+
+    try:
+        seed = json.loads(seed_catalog.read_text(encoding="utf-8"))
+        sroot = seed.get("catalog", seed)
+        s_groups = sroot.get("groups") or []
+        s_ctrl = sum(len(g.get("controls") or []) for g in s_groups)
+        s_ids = {c.get("id") for g in s_groups for c in (g.get("controls") or [])}
+    except Exception:
+        s_groups, s_ctrl, s_ids = [], 0, set()
+
+    t_ids = {c.get("id") for g in t_groups for c in (g.get("controls") or [])}
+    overlap = len(t_ids & s_ids)
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    lines = [
+        f"# Generation report — {seed_catalog.parent.name}",
+        "",
+        "## Summary",
+        "",
+        f"Regenerated OSCAL Catalog from `{input_pdf.name}` using seed "
+        f"catalog `{seed_catalog}`.",
+        "",
+        f"- **Groups:** {len(t_groups)} (seed had {len(s_groups)})",
+        f"- **Controls:** {t_ctrl} (seed had {s_ctrl})",
+        f"- **ID overlap with seed:** {overlap}/{len(t_ids)} "
+        f"({(100 * overlap // max(len(t_ids), 1))}%)",
+        f"- **Validate errors before seed-aware fix:** "
+        f"{len(target_errors_before)} total, {len(target_only_before)} "
+        f"not in seed",
+        f"- **Validate errors after seed-aware fix:** "
+        f"{len(target_errors_after)} total",
+        f"- **Fix subagent used:** {'yes' if subagent_used else 'no (target already at seed quality)'}",
+        f"- **Generated at:** {now}",
+        "",
+        "## How this was produced",
+        "",
+        "1. `generate.py` was authored by the Phase 2 subagent using the "
+        "seed catalog as a structural template.",
+        "2. `validate_config.py` was derived deterministically from the "
+        "seed catalog (required groups, control-count band).",
+        "3. `seed_fill_titles.py` filled any control/group titles the "
+        "extractor missed, using the seed's exact strings.",
+        "4. `seed_validate_baseline.py` computed the *seed baseline diff* — "
+        "validate errors that are new to this catalog vs the seed. "
+        "Errors present in the seed itself were NOT re-attempted.",
+    ]
+    if subagent_used:
+        lines.append(
+            "5. A single fix subagent was launched to address the "
+            "target-only error subset, with a Rule → Fix decision "
+            "table to keep exploration bounded."
+        )
+    lines.append("")
+    lines.append("## Points for human review")
+    lines.append("")
+    if target_errors_after:
+        lines.append("The following validate rules still fire; a reviewer "
+                     "should decide whether to accept as-is (like the seed "
+                     "was) or hand-tune generate.py further:")
+        lines.append("")
+        for e in target_errors_after[:30]:
+            lines.append(f"- {e}")
+        if len(target_errors_after) > 30:
+            lines.append(f"- … and {len(target_errors_after) - 30} more")
+    else:
+        lines.append("Validate reports no residual errors after the seed-"
+                     "aware fix pass.  The catalog is at parity with the "
+                     "seed's quality bar.")
+    lines.append("")
+    lines.append("## Artefacts")
+    lines.append("")
+    lines.append(f"- `catalog.json` — the OSCAL Catalog ({t_ctrl} controls, "
+                 f"{len(t_groups)} groups)")
+    lines.append("- `generate.py` — the document-specific extractor")
+    lines.append("- `validate.py` / `validate_config.py` — the validator "
+                 "(config auto-derived from seed)")
+    lines.append("- `merged.txt` — intermediate PDF text extraction")
+    lines.append("- `_seed_baseline_diff.json` — validate diff vs seed")
+    lines.append("")
+
+    (output_dir / "report.md").write_text("\n".join(lines) + "\n",
+                                          encoding="utf-8")
+
+
+# =====================================================================
+# Main
+# =====================================================================
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("output_dir", type=Path,
+                        help="Catalog output directory (must contain "
+                             "generate.py + catalog.json already)")
+    parser.add_argument("input_pdf", type=Path, help="Source PDF")
+    parser.add_argument("seed_catalog", type=Path,
+                        help="Seed catalog (previous generation)")
+    parser.add_argument("--fix-iter-cap", type=int, default=3,
+                        help="Max iterations inside the fix subagent")
+    parser.add_argument("--no-subagent", action="store_true",
+                        help="Skip the fix subagent even if target-only "
+                             "errors exist (diagnostic mode)")
+    args = parser.parse_args()
+
+    out = args.output_dir
+    if not (out / "generate.py").is_file() or not (out / "catalog.json").is_file():
+        print("seed_aware_fix: prereqs missing (generate.py + catalog.json "
+              "must exist)", file=sys.stderr)
+        return 2
+
+    # Precondition: Phase 2 must have produced a catalog.json that
+    # reasonably reflects the seed's structure.  If it didn't
+    # (e.g. Phase 2 quit early before running generate.py, or
+    # generate.py failed silently), continuing is worse than useless:
+    # we would author a report that documents a broken catalog and
+    # ship it as "best effort".  Refuse instead and let the wrapper
+    # decide (typically retry Phase 2 or surface the failure).
+    try:
+        target = json.loads((out / "catalog.json").read_text(encoding="utf-8"))
+        seed = json.loads(args.seed_catalog.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"seed_aware_fix: could not parse catalog.json or seed: {e}",
+              file=sys.stderr)
+        return 2
+
+    def _count_controls(cat: dict) -> int:
+        n = 0
+        for g in cat.get("catalog", cat).get("groups") or []:
+            n += len(g.get("controls") or [])
+        return n
+
+    t_ctrl = _count_controls(target)
+    s_ctrl = _count_controls(seed)
+    if s_ctrl > 0 and t_ctrl < 0.3 * s_ctrl:
+        print(
+            f"seed_aware_fix: PHASE 2 UNDERPRODUCED — target has {t_ctrl} "
+            f"controls but seed has {s_ctrl} (< 30% of seed). Phase 2 "
+            "author likely quit before running generate.py end-to-end. "
+            "Refusing to proceed; the wrapper should retry Phase 2.",
+            file=sys.stderr,
+        )
+        return 3
+    print(
+        f"seed_aware_fix: Phase 2 precondition ok "
+        f"(target={t_ctrl} controls, seed={s_ctrl} controls)"
+    )
+
+    # --- Step 1: ensure validate.py + validate_config.py exist -----
+    validate_py = out / "validate.py"
+    if not validate_py.is_file():
+        shutil.copy(SCRIPT_DIR / "validate_template.py", validate_py)
+        print("seed_aware_fix: copied validate.py from template")
+
+    validate_config = out / "validate_config.py"
+    if not validate_config.is_file():
+        validate_config.write_text(
+            _derive_validate_config_from_seed(args.seed_catalog),
+            encoding="utf-8",
+        )
+        print("seed_aware_fix: derived validate_config.py from seed "
+              f"({args.seed_catalog.name})")
+
+    # --- Step 2: seed_fill_titles (idempotent) ---------------------
+    fill_script = SCRIPT_DIR / "seed_fill_titles.py"
+    if fill_script.is_file():
+        try:
+            fp = subprocess.run(
+                ["python3", str(fill_script), str(out / "catalog.json"),
+                 str(args.seed_catalog)],
+                capture_output=True, text=True, timeout=30,
+            )
+            for line in (fp.stdout or "").splitlines():
+                if line.strip():
+                    print(f"seed_aware_fix: {line}")
+        except Exception as e:
+            print(f"seed_aware_fix: seed_fill_titles failed: {e}",
+                  file=sys.stderr)
+
+    # --- Step 3: seed baseline diff --------------------------------
+    merged = out / "merged.txt"
+    seed_rc, seed_out, _ = _run_validate(validate_py, args.seed_catalog, merged)
+    tgt_rc, tgt_out, _ = _run_validate(validate_py, out / "catalog.json", merged)
+    seed_errs = _extract_errors(seed_out)
+    tgt_errs = _extract_errors(tgt_out)
+    seed_norm = {_normalise(e) for e in seed_errs}
+    target_only = [e for e in tgt_errs if _normalise(e) not in seed_norm]
+
+    # Detect title-vs-prose boundary drift (validate.py's rules don't
+    # cover this shape; see _detect_title_prose_drift docstring).
+    drifts = _detect_title_prose_drift(out / "catalog.json",
+                                       args.seed_catalog)
+    if drifts:
+        # Deterministic first-pass: for drifted controls, restore the
+        # title from the seed and prepend the removed prefix back
+        # into the prose.  This is the "fallback that always works"
+        # from the decision table.  Even if the fix subagent later
+        # revisits these, the deterministic pass already produces a
+        # correct catalog, so a subagent no-op is fine.
+        restored = _restore_titles_from_seed(out / "catalog.json",
+                                             args.seed_catalog)
+        if restored:
+            print(f"seed_aware_fix: deterministic title restore "
+                  f"applied to {restored} control(s)")
+            # Re-run validate + drift after restoration.
+            _, tgt_out, _ = _run_validate(validate_py,
+                                          out / "catalog.json", merged)
+            tgt_errs = _extract_errors(tgt_out)
+            target_only = [e for e in tgt_errs
+                           if _normalise(e) not in seed_norm]
+            drifts = _detect_title_prose_drift(out / "catalog.json",
+                                               args.seed_catalog)
+            print(f"seed_aware_fix: post-restore seed={len(seed_errs)}, "
+                  f"target={len(tgt_errs)}, drifts={len(drifts)}, "
+                  f"target_only={len(target_only)}")
+    if drifts:
+        print(f"seed_aware_fix: {len(drifts)} title-drift issue(s) "
+              "remain after deterministic pass — will forward to "
+              "fix subagent")
+        target_only.extend(drifts)
+
+    diff_path = out / "_seed_baseline_diff.json"
+    diff_path.write_text(json.dumps({
+        "seed_error_count": len(seed_errs),
+        "target_error_count": len(tgt_errs),
+        "title_drift_count": len(drifts),
+        "target_only_errors": target_only,
+        "target_only_error_count": len(target_only),
+    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    print(f"seed_aware_fix: seed={len(seed_errs)} errors, "
+          f"target={len(tgt_errs)} errors, drifts={len(drifts)}, "
+          f"target_only={len(target_only)}")
+
+    subagent_used = False
+    if not target_only or args.no_subagent:
+        if not target_only:
+            print("seed_aware_fix: no target-only errors — skipping fix "
+                  "subagent (catalog at seed quality)")
+        else:
+            print("seed_aware_fix: --no-subagent set, skipping subagent")
+    else:
+        # --- Step 4: launch single fix subagent --------------------
+        print(f"seed_aware_fix: launching fix subagent for "
+              f"{len(target_only)} target-only errors")
+        subagent_used = True
+        rc = _launch_fix_subagent(out, target_only, args.seed_catalog,
+                                  args.input_pdf, args.fix_iter_cap)
+        print(f"seed_aware_fix: fix subagent exited rc={rc}")
+
+        # Refresh seed_fill + validate after subagent's edits.
+        if fill_script.is_file():
+            subprocess.run(
+                ["python3", str(fill_script), str(out / "catalog.json"),
+                 str(args.seed_catalog)],
+                capture_output=True, text=True, timeout=30,
+            )
+        _, tgt_out, _ = _run_validate(validate_py, out / "catalog.json", merged)
+        tgt_errs = _extract_errors(tgt_out)
+        target_only = [e for e in tgt_errs
+                       if _normalise(e) not in seed_norm]
+        print(f"seed_aware_fix: post-subagent target_only={len(target_only)}")
+
+    # --- Step 5: write report.md deterministically -----------------
+    _emit_report(out, args.seed_catalog, args.input_pdf,
+                 target_errors_before=tgt_errs,
+                 target_only_before=[e for e in _extract_errors(tgt_out)
+                                     if _normalise(e) not in seed_norm],
+                 target_errors_after=tgt_errs,
+                 subagent_used=subagent_used)
+
+    # --- Exit code ------------------------------------------------
+    if not target_only:
+        return 0
+    return 20
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

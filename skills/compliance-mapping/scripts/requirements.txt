@@ -1,0 +1,6 @@
+sentence-transformers>=2.2
+numpy>=1.24
+faiss-cpu>=1.7
+pyyaml>=6.0
+compliance-trestle>=3.0
+aiohttp>=3.9
