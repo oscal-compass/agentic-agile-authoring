@@ -3,7 +3,7 @@
     "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
     "metadata": {
       "title": "Kubernetes Cluster POA&M",
-      "last-modified": "2026-08-25T13:52:21.634+00:00",
+      "last-modified": "2026-08-25T14:26:31.571+00:00",
       "version": "1.0",
       "oscal-version": "1.2.1"
     },
@@ -17,6 +17,28 @@
           "type": "service",
           "title": "GitHub",
           "description": "GitHub",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            }
+          ],
           "status": {
             "state": "operational"
           }
@@ -26,6 +48,58 @@
           "type": "service",
           "title": "Managed Kubernetes",
           "description": "Managed Kubernetes cluster",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            }
+          ],
           "status": {
             "state": "operational"
           }
@@ -35,6 +109,28 @@
           "type": "validation",
           "title": "Auditree",
           "description": "Auditree",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            }
+          ],
           "status": {
             "state": "operational"
           }
@@ -44,6 +140,28 @@
           "type": "validation",
           "title": "Kyverno",
           "description": "Kyverno as Policy Validation Point",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            }
+          ],
           "status": {
             "state": "operational"
           }
@@ -53,6 +171,38 @@
           "type": "validation",
           "title": "OCM",
           "description": "OCM as Policy Validation Point",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            }
+          ],
           "status": {
             "state": "operational"
           }

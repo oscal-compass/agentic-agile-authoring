@@ -88,7 +88,9 @@ Input is a trestle-style `component-definition.json`. The builder joins every co
 `Rule_Id → Check_Id` + the validation-component title. It emits a **pre-defined POA&M**:
 
 - `local-definitions.components` — one `SystemComponent` per component (type `service`/`validation`,
-  status `operational`).
+  status `operational`), each carrying the **`rule-id` / `check-id` props** it declares in the
+  component-definition (a service component lists all its rules; a validation component lists the
+  checks it runs).
 - `local-definitions.inventory-items` — one per service component (with an `implemented-component`
   back-reference).
 - `local-definitions.assessment-assets.assessment-platforms` — one per validation component.
