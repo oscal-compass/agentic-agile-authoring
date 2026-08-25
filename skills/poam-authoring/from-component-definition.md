@@ -22,7 +22,8 @@ produces). It has `component-definition.components[]`, each with:
   `Rule_Id` props.
 
 Ask the user for the path if it is not obvious. (A `.csv` sibling is the authoring source; read the
-`.json` — it is the OSCAL truth.)
+`.json` — it is the OSCAL truth.) *In a trestle workspace, don't ask — read
+`component-definitions/*/component-definition.json` (see [trestle-workspace.md](trestle-workspace.md)).*
 
 ## Step 2 — Join on `Rule_Id` to build the weakness list
 
@@ -63,6 +64,31 @@ keyed by check-id (or rule-id). Every field is optional; a good weakness name/de
 
 If you omit an entry, the builder still creates the poam-item using the check/rule description as a
 generic "Potential weakness: …" name. Fill in whatever the user can provide.
+
+### Consolidating remediation onto the component-definition (single source)
+
+Instead of a separate `remediations.json`, you can carry the remediation/risk **on the
+component-definition itself** — as extra props on each **validation** rule-set (the same rule-set,
+matched by its `remarks`, that already holds `Rule_Id` / `Check_Id`). Then the component-definition
+is the *single source* for pre-defining the POA&M and no `--remediations` file is needed:
+
+| Prop name (on the validation rule-set) | Maps to |
+|---|---|
+| `Remediation_Plan` | `remediation_plan` (item `remarks`) |
+| `Risk_Rating` | `risk-rating` |
+| `POC` | `point-of-contact` |
+| `Scheduled_Completion_Date` | `scheduled-completion-date` |
+| `Weakness_Name` / `Weakness_Description` | item title / description |
+| `Milestone` (repeatable) | one milestone; value `"<target_date>: <description>"` |
+
+**Not on the component-definition:** the **POA&M ID** is deliberately *not* a component-definition
+prop — it is assigned when the POA&M is built (auto `POAM-001…` in rule order, or from a
+`--remediations` file entry), so the identifier stays closed within the POA&M.
+
+**Precedence:** the props are the base; a `--remediations` file, if also supplied, **overrides** them
+per field. So a check with everything on its props needs no file; a file can still tweak individual
+fields at build time. (Demo **scenario 3** ships a component-definition with these props consolidated
+and passes **no** `--remediations` — see [the demo](../../demos/poam-authoring/README.md).)
 
 ## Step 4 — Build the pre-defined POA&M
 

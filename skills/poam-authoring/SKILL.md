@@ -66,12 +66,20 @@ Draft the first half, then ask the user for the second half. Do not invent remed
    by check-id), via `build_poam.py link-assessment`. No new items.
 8. [poam-preview.md](poam-preview.md) — Render the POA&M as a human-readable markdown table for
    review (there is no reverse trestle task — we build the preview ourselves).
+9. [trestle-workspace.md](trestle-workspace.md) — **(optional)** When the cwd is (or should be) a
+   trestle workspace: detect/`trestle init` it, locate inputs deterministically from the directory
+   layout (don't ask for paths), and write the POA&M straight to its canonical path. Orthogonal to
+   paths A/B/C.
 
 ## Workflow
 
 1. **Set up the isolated environment** ([setup-env.md](setup-env.md)). If neither `uv` nor
    `python -m venv` works, STOP and ask the user to enable one — do not fall back to a global
    install.
+   - *(optional)* If the cwd is a **trestle workspace** (or the user wants one), first read
+     [trestle-workspace.md](trestle-workspace.md): resolve inputs from the directory layout instead
+     of asking for paths, and write the POA&M to its canonical path. This is orthogonal to the path
+     you run below.
 2. **Locate the assessment result** and extract its **failed findings** only
    ([from-assessment.md](from-assessment.md)). If control/component context is missing, ask the
    user or recover it from the catalog/component-definition.
@@ -122,6 +130,9 @@ xlsx conversion: use `mcp__trestle__trestle_task_xlsx_to_oscal_poam` if wired, e
 - **The remediation plan is the user's, not yours.** Draft weaknesses from the assessment (or the
   component-definition, path C); ask the user for the plan/milestones/owner/dates.
 - **OSCAL is the source of truth.** Always validate the generated JSON before presenting it.
+- **In a trestle workspace, don't ask for paths.** If the cwd is a workspace (`.trestle/` present),
+  resolve inputs from the directory layout and write the POA&M to its canonical path
+  ([trestle-workspace.md](trestle-workspace.md)). Optional — only when a workspace is in play.
 - **MCP is optional, never required.** Everything works with the venv trestle (library/CLI). If a
   trestle MCP server is wired, prefer its tools; if it is absent or fails to start (0 tools), fall
   back to the venv — same result either way. See the Validation section.
