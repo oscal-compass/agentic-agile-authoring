@@ -77,7 +77,13 @@ POA&M top level and cross-linked from the poam-item (related-observations / rela
    Emits a PRE-DEFINED POA&M: one poam-item per rule/check (each a potential weakness) with
    remediation authored up front, and local-definitions (components / inventory-items /
    assessment-assets) filled from the component-definition. No observations/findings/risks yet.
-   remediations.json (optional) maps a rule/check id to remediation text + plan fields:
+   Remediation/risk can come from two sources (props are the base; the file overrides per field):
+     1. Consolidated on the component-definition itself — a validation rule-set's props carry
+        Remediation_Plan / Risk_Rating / POC / Scheduled_Completion_Date / Weakness_Name /
+        Weakness_Description, plus repeatable Milestone props ("<target_date>: <desc>"). Then the
+        component-definition is the single source and no --remediations file is needed. (The POA&M
+        ID is NOT carried here — it is assigned when the POA&M is built, closed within the POA&M.)
+     2. remediations.json (optional) maps a rule/check id to the same fields, overriding the props:
        {"allowed-base-images": {"remediation_plan": "...", "risk_rating": "High",
                                  "poc": "...", "scheduled_completion_date": "2026-12-31",
                                  "milestones": [{"description": "...", "target_date": "..."}]},
@@ -265,6 +271,47 @@ def build_poam(data: dict) -> PlanOfActionAndMilestones:
 # path C, phase 1 — from a component-definition -> a PRE-DEFINED POA&M
 # ─────────────────────────────────────────────────────────────────────────────
 
+# prop name (on a validation rule-set) -> remediation dict key consumed by _predefined_item
+_REMEDIATION_PROPS = {
+    "Remediation_Plan": "remediation_plan",
+    "Risk_Rating": "risk_rating",
+    "Severity": "severity",
+    "Phase": "phase",
+    "POC": "poc",
+    "Scheduled_Completion_Date": "scheduled_completion_date",
+    "Weakness_Name": "weakness_name",
+    "Weakness_Description": "weakness_description",
+    # NOTE: no POAM_Id here on purpose — the POA&M ID is assigned when the POA&M is built
+    # (auto POAM-001…, or from a --remediations file), never carried on the component-definition.
+}
+
+
+def _remediation_from_slot(slot: dict) -> dict:
+    """Pull consolidated remediation/risk out of one rule-set's props (path C, single-source).
+
+    Milestones are carried as repeatable `Milestone` props, value `"<target_date>: <description>"`
+    (the target date is optional — a value with no `": "` is treated as the description).
+    """
+    rem: dict = {}
+    for prop_name, key in _REMEDIATION_PROPS.items():
+        val = slot.get(prop_name)
+        if val:
+            rem[key] = val
+    milestones: list[dict] = []
+    for mval in slot.get("__milestones__") or []:
+        mval = (mval or "").strip()
+        if not mval:
+            continue
+        if ": " in mval:
+            target, desc = mval.split(": ", 1)
+            milestones.append({"target_date": target.strip(), "description": desc.strip()})
+        else:
+            milestones.append({"description": mval})
+    if milestones:
+        rem["milestones"] = milestones
+    return rem
+
+
 def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
     """Return (rules, components) from a trestle-style component-definition.json.
 
@@ -294,11 +341,17 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
             "rules": [],  # [{"rule_id", "check_id"}] this component declares (for local-def props)
         }
         # component-level props carry the rule_set details (Rule_Id/Description, Check_Id/Description)
+        # and, optionally, consolidated remediation/risk (Remediation_Plan / Risk_Rating / POC /
+        # Scheduled_Completion_Date / Weakness_Name / Weakness_Description / POAM_Id / Milestone).
         by_set: dict[str, dict] = {}
         for p in comp.get("props") or []:
             key = p.get("remarks") or "__flat__"
             slot = by_set.setdefault(key, {})
-            slot[p.get("name")] = p.get("value")
+            name = p.get("name")
+            if name == "Milestone":  # repeatable within a rule_set — collect, don't overwrite
+                slot.setdefault("__milestones__", []).append(p.get("value"))
+            else:
+                slot[name] = p.get("value")
         for slot in by_set.values():
             rid = slot.get("Rule_Id")
             if not rid:
@@ -315,6 +368,14 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
                 r["check_id"] = slot["Check_Id"]
             if ctype == "validation" and title not in r["validation_components"]:
                 r["validation_components"].append(title)
+            # consolidated remediation carried on the rule-set props (single-source path C).
+            # Only keys that are present are set, so it merges cleanly with a --remediations file
+            # (the file overrides these per field). First non-empty rule-set wins per key.
+            rem_props = _remediation_from_slot(slot)
+            if rem_props:
+                existing = r.setdefault("remediation", {})
+                for k, v in rem_props.items():
+                    existing.setdefault(k, v)
         # implemented-requirements: Rule_Id -> control-id (service comps carry the real mapping)
         for ci in comp.get("control-implementations") or []:
             for ir in ci.get("implemented-requirements") or []:
@@ -371,7 +432,10 @@ def _local_definitions(components: dict, system_id: str | None) -> LocalDefiniti
 def _predefined_item(rule: dict, index: int, remediations: dict) -> PoamItem:
     rid = rule["rule_id"]
     check_id = rule.get("check_id") or rid
-    rem = remediations.get(check_id) or remediations.get(rid) or {}
+    # Base: remediation consolidated on the component-definition props (if any).
+    # Overlay: an optional --remediations file entry, which wins per field.
+    file_rem = remediations.get(check_id) or remediations.get(rid) or {}
+    rem = {**(rule.get("remediation") or {}), **file_rem}
 
     poam_id = str(rem.get("poam_id") or f"POAM-{index + 1:03d}")
     name = (rem.get("weakness_name")

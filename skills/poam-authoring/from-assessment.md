@@ -12,7 +12,8 @@ The assessment result may be:
   **Status**). This is the common case today.
 - An OSCAL **`assessment-results.json`** (findings with `target` status, observations, risks).
 
-Ask the user for the path if it is not obvious.
+Ask the user for the path if it is not obvious. *In a trestle workspace, don't ask — read
+`assessment-results/*/assessment-results.json` (see [trestle-workspace.md](trestle-workspace.md)).*
 
 ## Step 2 — Keep only the FAILED findings
 

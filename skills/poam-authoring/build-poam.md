@@ -40,6 +40,10 @@ trestle validate -t plan-of-action-and-milestones
 Expect: `VALID: Model … passed the Validator`. (`<PY>`/`trestle` = the isolated env's interpreter
 or CLI, e.g. `.venv-poam/bin/trestle` or `uv run --with 'compliance-trestle>=3.0' trestle`.)
 
+> **Already in a trestle workspace?** Point the builder's `--output-dir` straight at
+> `plan-of-action-and-milestones/<name>/` — that *is* the location `trestle validate` expects, so the
+> `mkdir`/`cp` step above is unnecessary. See [trestle-workspace.md](trestle-workspace.md).
+
 ## If validation fails
 
 - **`… should be a valid dictionary or instance of SystemId`** — a field expects an OSCAL object,
