@@ -16,6 +16,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from compliance_authoring_skills import cli, policy
@@ -57,3 +59,43 @@ def test_install_explicit_source_overrides_default(monkeypatch, _ok_prereqs, sou
 
 def test_uninstall_requires_selection(_ok_prereqs):
     assert cli.main(["uninstall", "--target", "myharness"]) == 1  # needs --skill or --all
+
+
+def test_mcp_shaping_flags_produce_bob_clean_json(monkeypatch, _ok_prereqs, source_repo, tmp_path):
+    # bob wants command/args only, no transport/registry, and its own provenance key.
+    monkeypatch.setattr(policy, "default_source_root", lambda: source_repo)
+    root = tmp_path / ".bob"
+    rc = cli.main(
+        [
+            "install", "--skill", "catalog-authoring", "--target", "myharness",
+            "--myharness-root", str(root),
+            "--mcp-drop", "transport,registry", "--provenance-key", "_bob",
+        ]
+    )
+    assert rc == 0
+    config = json.loads((root / "mcp.json").read_text())
+    entry = config["mcpServers"]["trestle"]
+    assert set(entry) == {"command", "args"}      # exactly bob's stdio keys
+    assert config["_bob"]["owned_mcp"] == ["trestle"]
+
+
+def test_mcp_rename_bad_pair_errors(monkeypatch, _ok_prereqs, source_repo, tmp_path):
+    monkeypatch.setattr(policy, "default_source_root", lambda: source_repo)
+    rc = cli.main(
+        ["install", "--skill", "catalog-authoring", "--target", "myharness",
+         "--myharness-root", str(tmp_path / "mh"), "--mcp-rename", "transport"]
+    )
+    assert rc == 1  # OLD=NEW required
+
+
+def test_shaping_flags_warn_for_apm_target(monkeypatch, _ok_prereqs, source_repo, tmp_path, capsys):
+    monkeypatch.setattr(policy, "default_source_root", lambda: source_repo)
+    monkeypatch.setattr(
+        cli.apm_cli, "install",
+        lambda *a, **k: type("R", (), {"stdout": "ok\n"})(),
+    )
+    rc = cli.main(
+        ["install", "--skill", "assessment", "--target", "claude", "--mcp-drop", "transport"]
+    )
+    assert rc == 0
+    assert "have no effect for target 'claude'" in capsys.readouterr().err
