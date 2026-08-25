@@ -28,7 +28,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import policy
+from . import __version__, policy
 from .backends import apm_cli
 from .targets import myharness
 
@@ -61,6 +61,25 @@ def _add_common(p: argparse.ArgumentParser) -> None:
         "--myharness-root", default=None,
         help=f"MyHarness root (default: {myharness.DEFAULT_ROOT})",
     )
+    # MyHarness MCP-entry shaping — reshape APM's normalized keys for a custom harness (e.g. bob,
+    # which doesn't want `transport`/`registry`). Ignored by the APM-backed targets.
+    p.add_argument(
+        "--mcp-drop", action="append", default=[], metavar="KEY[,KEY…]",
+        help="MyHarness: drop these keys from each MCP server entry (comma-ok, repeatable)",
+    )
+    p.add_argument(
+        "--mcp-rename", action="append", default=[], metavar="OLD=NEW[,…]",
+        help="MyHarness: rename MCP entry keys, applied after --mcp-drop (e.g. transport=type)",
+    )
+    p.add_argument(
+        "--provenance-key", default=myharness.DEFAULT_PROVENANCE_KEY, metavar="KEY",
+        help="MyHarness: top-level mcp.json key tracking the servers we wrote "
+             f"(default: {myharness.DEFAULT_PROVENANCE_KEY})",
+    )
+    p.add_argument(
+        "--no-provenance", action="store_true",
+        help="MyHarness: write no provenance block (uninstall can then no longer prune wired MCP)",
+    )
     p.add_argument(
         "--keep-apm-files", action="store_true",
         help="leave APM's project files (apm.yml/apm.lock.yaml/apm_modules) in place instead of "
@@ -73,6 +92,10 @@ def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="compliance-authoring-skills",
         description="thin wrapper over OpenAPM: install portable skills + wire their MCP deps",
+    )
+    ap.add_argument(
+        "-V", "--version", action="version",
+        version=f"%(prog)s {__version__}",
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
@@ -93,6 +116,38 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _myharness_root(args: argparse.Namespace) -> Path:
     return Path(args.myharness_root).resolve() if args.myharness_root else myharness.DEFAULT_ROOT
+
+
+def _parse_renames(values) -> dict[str, str]:
+    """Parse repeatable ``old=new`` (comma-ok) rename pairs into a dict."""
+    out: dict[str, str] = {}
+    for item in _split_csv(values):
+        old, sep, new = item.partition("=")
+        old, new = old.strip(), new.strip()
+        if not sep or not old or not new:
+            raise policy.PolicyError(f"--mcp-rename expects OLD=NEW, got {item!r}")
+        out[old] = new
+    return out
+
+
+def _mcp_shape(args: argparse.Namespace) -> myharness.McpShape:
+    """Build the MyHarness MCP-entry shape from the shaping flags."""
+    return myharness.McpShape(
+        drop=frozenset(_split_csv(args.mcp_drop)),
+        rename=_parse_renames(args.mcp_rename),
+        provenance_key=None if args.no_provenance else args.provenance_key,
+    )
+
+
+def _warn_unused_shaping(args: argparse.Namespace) -> None:
+    """The shaping flags only affect MyHarness; note it if they're passed to an APM target."""
+    if args.target == MYHARNESS:
+        return
+    if args.mcp_drop or args.mcp_rename or args.no_provenance or args.provenance_key != myharness.DEFAULT_PROVENANCE_KEY:
+        sys.stderr.write(
+            f"warning: MCP-shaping flags (--mcp-drop/--mcp-rename/--provenance-key/--no-provenance) "
+            f"have no effect for target '{args.target}' — APM owns MCP wiring there\n"
+        )
 
 
 def _emit_prereqs(report: policy.PrereqReport) -> None:
@@ -127,10 +182,13 @@ def _install(args: argparse.Namespace) -> int:
         )
     _emit_prereqs(report)
 
+    _warn_unused_shaping(args)
     sys.stdout.write(f"Installing {len(skills)} skill(s) → {args.target}: {', '.join(skills)}\n")
 
     if args.target == MYHARNESS:
-        res = myharness.install(skill_dirs, root=_myharness_root(args), dry_run=args.dry_run)
+        res = myharness.install(
+            skill_dirs, root=_myharness_root(args), dry_run=args.dry_run, shape=_mcp_shape(args)
+        )
         if args.dry_run:
             sys.stdout.write(f"[dry-run] would deploy skills: {', '.join(res.skills_deployed)}\n")
             if res.mcp_added:
@@ -164,8 +222,12 @@ def _uninstall(args: argparse.Namespace) -> int:
     if args.all:
         picks = policy.resolve_selection(_resolve_source(args))
 
+    _warn_unused_shaping(args)
     if args.target == MYHARNESS:
-        res = myharness.uninstall(picks, root=_myharness_root(args), dry_run=args.dry_run)
+        res = myharness.uninstall(
+            picks, root=_myharness_root(args), dry_run=args.dry_run,
+            provenance_key=None if args.no_provenance else args.provenance_key,
+        )
         prefix = "[dry-run] would remove" if args.dry_run else "  removed"
         sys.stdout.write(f"{prefix}: {', '.join(res.skills_removed) or '(none)'}\n")
         if res.mcp_pruned:

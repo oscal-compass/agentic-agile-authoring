@@ -100,6 +100,46 @@ def test_prune_never_touches_user_server(source_repo, tmp_path):
     assert servers["my-own"] == {"command": "custom"}
 
 
+def test_install_shape_drops_and_renames_keys(source_repo, tmp_path):
+    root = tmp_path / "mh"
+    shape = myharness.McpShape(drop=frozenset({"registry"}), rename={"transport": "type"})
+    myharness.install(_skill_dirs(source_repo, "catalog-authoring"), root=root, shape=shape)
+    entry = json.loads((root / "mcp.json").read_text())["mcpServers"]["trestle"]
+    assert "registry" not in entry          # dropped
+    assert "transport" not in entry         # renamed away
+    assert entry["type"] == "stdio"         # renamed to
+    assert entry["command"] == "uvx"        # untouched keys survive
+    assert "args" in entry
+
+
+def test_install_custom_provenance_key(source_repo, tmp_path):
+    root = tmp_path / "mh"
+    shape = myharness.McpShape(provenance_key="_bob")
+    myharness.install(_skill_dirs(source_repo, "catalog-authoring"), root=root, shape=shape)
+    config = json.loads((root / "mcp.json").read_text())
+    assert config["_bob"]["owned_mcp"] == ["trestle"]
+    assert myharness._PROVENANCE_KEY not in config
+    # uninstall with the matching key still prunes.
+    res = myharness.uninstall(["catalog-authoring"], root=root, provenance_key="_bob")
+    assert res.mcp_pruned == ["trestle"]
+    assert json.loads((root / "mcp.json").read_text())["mcpServers"] == {}
+
+
+def test_install_no_provenance_writes_no_block(source_repo, tmp_path):
+    root = tmp_path / "mh"
+    shape = myharness.McpShape(provenance_key=None)
+    res = myharness.install(_skill_dirs(source_repo, "catalog-authoring"), root=root, shape=shape)
+    config = json.loads((root / "mcp.json").read_text())
+    assert res.mcp_added == ["trestle"]
+    assert "trestle" in config["mcpServers"]
+    assert myharness._PROVENANCE_KEY not in config   # no ownership marker at all
+    # lacking provenance, uninstall removes the skill but cannot prune the wired server.
+    res2 = myharness.uninstall(["catalog-authoring"], root=root, provenance_key=None)
+    assert res2.skills_removed == ["catalog-authoring"]
+    assert res2.mcp_pruned == []
+    assert "trestle" in json.loads((root / "mcp.json").read_text())["mcpServers"]
+
+
 def test_install_skips_pycache(source_repo, tmp_path):
     src = source_repo / "skills" / "catalog-authoring"
     (src / "__pycache__").mkdir()
