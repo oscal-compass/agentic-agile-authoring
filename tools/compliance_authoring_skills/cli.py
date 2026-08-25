@@ -111,6 +111,8 @@ def build_parser() -> argparse.ArgumentParser:
     unin.add_argument("--all", action="store_true", help="remove the whole selectable skill set")
     unin.add_argument("--source", default=None, help="skills repo the selection is drawn from for --all (default: the bundled skills)")
     _add_common(unin)
+
+    sub.add_parser("version", help="print the version and exit (same as -V/--version)")
     return ap
 
 
@@ -252,6 +254,9 @@ def _uninstall(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.cmd == "version":
+        sys.stdout.write(f"compliance-authoring-skills {__version__}\n")
+        return 0
     try:
         if args.cmd == "install":
             return _install(args)
