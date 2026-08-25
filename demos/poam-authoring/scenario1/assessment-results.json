@@ -1,0 +1,337 @@
+{
+  "assessment-results": {
+    "uuid": "bdcb52d0-aca3-5a99-b627-b517149badee",
+    "metadata": {
+      "title": "Kubernetes Cluster Assessment Results",
+      "last-modified": "2026-08-25T06:27:10+00:00",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "import-ap": {
+      "href": "assessment-plan.json"
+    },
+    "results": [
+      {
+        "uuid": "f22d7edf-3aa2-5ad6-a199-853e20c38e10",
+        "title": "Kubernetes cluster control assessment",
+        "description": "Assessment of the k8s-prod cluster against its component-definition checks.",
+        "start": "2026-08-25T06:27:10+00:00",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-all": {}
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "4a0cbdeb-f951-5163-bcc4-5136e6052faf",
+            "title": "Base image allow-list (allowed-base-images)",
+            "description": "4 of 22 running pods use base images not on the cluster allow list (OCI base annotation missing or unknown).",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "allowed-base-images"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "cm-2"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          },
+          {
+            "uuid": "1d5861f4-52bc-5bc7-9a4e-8328dfcb75ea",
+            "title": "High-level vulnerability scan (policy-high-scan)",
+            "description": "The cluster scan profile is set to 'medium'; the high-level scan required by policy is not enabled.",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "policy-high-scan"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "cm-6"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          },
+          {
+            "uuid": "ab3d0c53-c7f7-5a1a-82a2-c006ca2ee5fd",
+            "title": "Disallowed roles (policy-disallowed-roles)",
+            "description": "2 RoleBindings grant a role outside the allowed set (cluster-admin bound to a namespace service account).",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "policy-disallowed-roles"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "ac-1"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          },
+          {
+            "uuid": "3538e48d-6638-5c4e-831d-b0f570e0617b",
+            "title": "Disallowed capabilities (disallow-capabilities)",
+            "description": "No pod adds Linux capabilities beyond the policy allow list.",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "disallow-capabilities"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "cm-2.1"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          },
+          {
+            "uuid": "512fc65e-ca02-56fe-9eb7-7ef4934b1131",
+            "title": "NGINX deployment minimum (policy-deployment)",
+            "description": "NGINX deployment runs 3 replicas, meeting the configured minimum.",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "policy-deployment"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "cm-2"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          },
+          {
+            "uuid": "0c5a1f39-b812-5e3c-abc1-70a2575dfe61",
+            "title": "GitHub supported versions (demo_examples.checks.test_github.GitHubOrgs.test_supported_versions)",
+            "description": "GitHub API returns a supported version.",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "cm-2"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          },
+          {
+            "uuid": "2d8d7fc8-8724-583d-826d-1e0215ba4421",
+            "title": "GitHub org not empty (demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty)",
+            "description": "The GitHub org has members.",
+            "props": [
+              {
+                "name": "check-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+              },
+              {
+                "name": "control-id",
+                "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+                "value": "ac-2"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10+00:00"
+          }
+        ],
+        "risks": [
+          {
+            "uuid": "9df39bd1-966f-563b-b21f-f241405322b6",
+            "title": "Risk: Base image allow-list",
+            "description": "4 of 22 running pods use base images not on the cluster allow list (OCI base annotation missing or unknown).",
+            "statement": "Untrusted base images can introduce unvetted software into the supply chain.",
+            "status": "open"
+          },
+          {
+            "uuid": "3982133b-abb1-55ee-9db3-570c5ebd1734",
+            "title": "Risk: High-level vulnerability scan",
+            "description": "The cluster scan profile is set to 'medium'; the high-level scan required by policy is not enabled.",
+            "statement": "Undetected high/critical vulnerabilities may remain unremediated in workloads.",
+            "status": "open"
+          },
+          {
+            "uuid": "ebfa4de0-234e-5285-815b-632819cbb324",
+            "title": "Risk: Disallowed roles",
+            "description": "2 RoleBindings grant a role outside the allowed set (cluster-admin bound to a namespace service account).",
+            "statement": "Over-privileged roles enable privilege escalation and lateral movement.",
+            "status": "open"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "5a5c62b2-5f00-5713-beb7-3cbaf79cb9ea",
+            "title": "cm-2 — Base image allow-list",
+            "description": "4 of 22 running pods use base images not on the cluster allow list (OCI base annotation missing or unknown).",
+            "target": {
+              "type": "objective-id",
+              "target-id": "cm-2",
+              "status": {
+                "state": "not-satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "4a0cbdeb-f951-5163-bcc4-5136e6052faf"
+              }
+            ],
+            "related-risks": [
+              {
+                "risk-uuid": "9df39bd1-966f-563b-b21f-f241405322b6"
+              }
+            ]
+          },
+          {
+            "uuid": "8d867c33-ea70-5ba4-ba24-253366a29cf2",
+            "title": "cm-6 — High-level vulnerability scan",
+            "description": "The cluster scan profile is set to 'medium'; the high-level scan required by policy is not enabled.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "cm-6",
+              "status": {
+                "state": "not-satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "1d5861f4-52bc-5bc7-9a4e-8328dfcb75ea"
+              }
+            ],
+            "related-risks": [
+              {
+                "risk-uuid": "3982133b-abb1-55ee-9db3-570c5ebd1734"
+              }
+            ]
+          },
+          {
+            "uuid": "1a9fb391-da4a-5a9f-a4f6-1cea56e5f77f",
+            "title": "ac-1 — Disallowed roles",
+            "description": "2 RoleBindings grant a role outside the allowed set (cluster-admin bound to a namespace service account).",
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-1",
+              "status": {
+                "state": "not-satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "ab3d0c53-c7f7-5a1a-82a2-c006ca2ee5fd"
+              }
+            ],
+            "related-risks": [
+              {
+                "risk-uuid": "ebfa4de0-234e-5285-815b-632819cbb324"
+              }
+            ]
+          },
+          {
+            "uuid": "4847dc3b-52f1-53a3-8a7a-fd52ce805386",
+            "title": "cm-2.1 — Disallowed capabilities",
+            "description": "No pod adds Linux capabilities beyond the policy allow list.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "cm-2.1",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "3538e48d-6638-5c4e-831d-b0f570e0617b"
+              }
+            ]
+          },
+          {
+            "uuid": "122c3fd8-5671-5f29-ab9e-5d5277ae4240",
+            "title": "cm-2 — NGINX deployment minimum",
+            "description": "NGINX deployment runs 3 replicas, meeting the configured minimum.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "cm-2",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "512fc65e-ca02-56fe-9eb7-7ef4934b1131"
+              }
+            ]
+          },
+          {
+            "uuid": "4c17a5ba-8f6d-597c-9940-0e10a6970583",
+            "title": "cm-2 — GitHub supported versions",
+            "description": "GitHub API returns a supported version.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "cm-2",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "0c5a1f39-b812-5e3c-abc1-70a2575dfe61"
+              }
+            ]
+          },
+          {
+            "uuid": "1fb6cb61-6ac2-50d5-9f20-38fc44c3110a",
+            "title": "ac-2 — GitHub org not empty",
+            "description": "The GitHub org has members.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-2",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "2d8d7fc8-8724-583d-826d-1e0215ba4421"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,760 @@
+{
+  "plan-of-action-and-milestones": {
+    "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
+    "metadata": {
+      "title": "Kubernetes Cluster POA&M",
+      "last-modified": "2026-08-25T13:52:21.634+00:00",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "system-id": {
+      "id": "k8s-prod"
+    },
+    "local-definitions": {
+      "components": [
+        {
+          "uuid": "5d0bc58c-635a-5311-bb2e-9bd16dcf07b8",
+          "type": "service",
+          "title": "GitHub",
+          "description": "GitHub",
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "198917d4-b877-545c-8e31-70c66645881f",
+          "type": "service",
+          "title": "Managed Kubernetes",
+          "description": "Managed Kubernetes cluster",
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "213ce276-30f2-552c-81a0-91cd712c1848",
+          "type": "validation",
+          "title": "Auditree",
+          "description": "Auditree",
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "2538d29f-695f-5278-85c6-f2d8d2816785",
+          "type": "validation",
+          "title": "Kyverno",
+          "description": "Kyverno as Policy Validation Point",
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "41c791fb-03dd-58a3-a1ff-c59ffac0b1a2",
+          "type": "validation",
+          "title": "OCM",
+          "description": "OCM as Policy Validation Point",
+          "status": {
+            "state": "operational"
+          }
+        }
+      ],
+      "inventory-items": [
+        {
+          "uuid": "ca93096a-c747-5896-a953-d22a2bd5d6b0",
+          "description": "GitHub — GitHub",
+          "implemented-components": [
+            {
+              "component-uuid": "5d0bc58c-635a-5311-bb2e-9bd16dcf07b8"
+            }
+          ]
+        },
+        {
+          "uuid": "2d73b063-b743-51b1-8274-e03f75ce69cb",
+          "description": "Managed Kubernetes — Managed Kubernetes cluster",
+          "implemented-components": [
+            {
+              "component-uuid": "198917d4-b877-545c-8e31-70c66645881f"
+            }
+          ]
+        }
+      ],
+      "assessment-assets": {
+        "assessment-platforms": [
+          {
+            "uuid": "0e4238c1-2bee-50d8-8ce0-ce2abd53de29",
+            "title": "Auditree",
+            "uses-components": [
+              {
+                "component-uuid": "213ce276-30f2-552c-81a0-91cd712c1848"
+              }
+            ]
+          },
+          {
+            "uuid": "f6c319b4-6320-53a9-a480-5da251c77009",
+            "title": "Kyverno",
+            "uses-components": [
+              {
+                "component-uuid": "2538d29f-695f-5278-85c6-f2d8d2816785"
+              }
+            ]
+          },
+          {
+            "uuid": "e34096cd-c412-5480-a03c-e742d7aaa645",
+            "title": "OCM",
+            "uses-components": [
+              {
+                "component-uuid": "41c791fb-03dd-58a3-a1ff-c59ffac0b1a2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "observations": [
+      {
+        "uuid": "4a0cbdeb-f951-5163-bcc4-5136e6052faf",
+        "title": "Base image allow-list (allowed-base-images)",
+        "description": "4 of 22 running pods use base images not on the cluster allow list (OCI base annotation missing or unknown).",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "allowed-base-images"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      },
+      {
+        "uuid": "1d5861f4-52bc-5bc7-9a4e-8328dfcb75ea",
+        "title": "High-level vulnerability scan (policy-high-scan)",
+        "description": "The cluster scan profile is set to 'medium'; the high-level scan required by policy is not enabled.",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-high-scan"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      },
+      {
+        "uuid": "ab3d0c53-c7f7-5a1a-82a2-c006ca2ee5fd",
+        "title": "Disallowed roles (policy-disallowed-roles)",
+        "description": "2 RoleBindings grant a role outside the allowed set (cluster-admin bound to a namespace service account).",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-disallowed-roles"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      },
+      {
+        "uuid": "3538e48d-6638-5c4e-831d-b0f570e0617b",
+        "title": "Disallowed capabilities (disallow-capabilities)",
+        "description": "No pod adds Linux capabilities beyond the policy allow list.",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "disallow-capabilities"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      },
+      {
+        "uuid": "512fc65e-ca02-56fe-9eb7-7ef4934b1131",
+        "title": "NGINX deployment minimum (policy-deployment)",
+        "description": "NGINX deployment runs 3 replicas, meeting the configured minimum.",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-deployment"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      },
+      {
+        "uuid": "0c5a1f39-b812-5e3c-abc1-70a2575dfe61",
+        "title": "GitHub supported versions (demo_examples.checks.test_github.GitHubOrgs.test_supported_versions)",
+        "description": "GitHub API returns a supported version.",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      },
+      {
+        "uuid": "2d8d7fc8-8724-583d-826d-1e0215ba4421",
+        "title": "GitHub org not empty (demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty)",
+        "description": "The GitHub org has members.",
+        "props": [
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+          }
+        ],
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T06:27:10+00:00"
+      }
+    ],
+    "risks": [
+      {
+        "uuid": "9df39bd1-966f-563b-b21f-f241405322b6",
+        "title": "Risk: Base image allow-list",
+        "description": "4 of 22 running pods use base images not on the cluster allow list (OCI base annotation missing or unknown).",
+        "statement": "Untrusted base images can introduce unvetted software into the supply chain.",
+        "status": "open"
+      },
+      {
+        "uuid": "3982133b-abb1-55ee-9db3-570c5ebd1734",
+        "title": "Risk: High-level vulnerability scan",
+        "description": "The cluster scan profile is set to 'medium'; the high-level scan required by policy is not enabled.",
+        "statement": "Undetected high/critical vulnerabilities may remain unremediated in workloads.",
+        "status": "open"
+      },
+      {
+        "uuid": "ebfa4de0-234e-5285-815b-632819cbb324",
+        "title": "Risk: Disallowed roles",
+        "description": "2 RoleBindings grant a role outside the allowed set (cluster-admin bound to a namespace service account).",
+        "statement": "Over-privileged roles enable privilege escalation and lateral movement.",
+        "status": "open"
+      }
+    ],
+    "findings": [
+      {
+        "uuid": "5a5c62b2-5f00-5713-beb7-3cbaf79cb9ea",
+        "title": "cm-2 — Base image allow-list",
+        "description": "4 of 22 running pods use base images not on the cluster allow list (OCI base annotation missing or unknown).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "4a0cbdeb-f951-5163-bcc4-5136e6052faf"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "9df39bd1-966f-563b-b21f-f241405322b6"
+          }
+        ]
+      },
+      {
+        "uuid": "8d867c33-ea70-5ba4-ba24-253366a29cf2",
+        "title": "cm-6 — High-level vulnerability scan",
+        "description": "The cluster scan profile is set to 'medium'; the high-level scan required by policy is not enabled.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-6",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "1d5861f4-52bc-5bc7-9a4e-8328dfcb75ea"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "3982133b-abb1-55ee-9db3-570c5ebd1734"
+          }
+        ]
+      },
+      {
+        "uuid": "1a9fb391-da4a-5a9f-a4f6-1cea56e5f77f",
+        "title": "ac-1 — Disallowed roles",
+        "description": "2 RoleBindings grant a role outside the allowed set (cluster-admin bound to a namespace service account).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "ac-1",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "ab3d0c53-c7f7-5a1a-82a2-c006ca2ee5fd"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "ebfa4de0-234e-5285-815b-632819cbb324"
+          }
+        ]
+      },
+      {
+        "uuid": "4847dc3b-52f1-53a3-8a7a-fd52ce805386",
+        "title": "cm-2.1 — Disallowed capabilities",
+        "description": "No pod adds Linux capabilities beyond the policy allow list.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2.1",
+          "status": {
+            "state": "satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "3538e48d-6638-5c4e-831d-b0f570e0617b"
+          }
+        ]
+      },
+      {
+        "uuid": "122c3fd8-5671-5f29-ab9e-5d5277ae4240",
+        "title": "cm-2 — NGINX deployment minimum",
+        "description": "NGINX deployment runs 3 replicas, meeting the configured minimum.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2",
+          "status": {
+            "state": "satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "512fc65e-ca02-56fe-9eb7-7ef4934b1131"
+          }
+        ]
+      },
+      {
+        "uuid": "4c17a5ba-8f6d-597c-9940-0e10a6970583",
+        "title": "cm-2 — GitHub supported versions",
+        "description": "GitHub API returns a supported version.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2",
+          "status": {
+            "state": "satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "0c5a1f39-b812-5e3c-abc1-70a2575dfe61"
+          }
+        ]
+      },
+      {
+        "uuid": "1fb6cb61-6ac2-50d5-9f20-38fc44c3110a",
+        "title": "ac-2 — GitHub org not empty",
+        "description": "The GitHub org has members.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "ac-2",
+          "status": {
+            "state": "satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "2d8d7fc8-8724-583d-826d-1e0215ba4421"
+          }
+        ]
+      }
+    ],
+    "poam-items": [
+      {
+        "uuid": "140d6f6d-b06a-5ac1-924b-d52369c0eb73",
+        "title": "GitHub API version may be unsupported",
+        "description": "The GitHub API might not return a supported version (CM-2).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-002"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Auditree"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "DevOps Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "4c17a5ba-8f6d-597c-9940-0e10a6970583"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "0c5a1f39-b812-5e3c-abc1-70a2575dfe61"
+          }
+        ],
+        "remarks": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation."
+      },
+      {
+        "uuid": "cfa3d133-9dc0-5c6c-97bf-90bb7a27f0b0",
+        "title": "GitHub organization may be empty",
+        "description": "The GitHub org might have no members (AC-2, Account Management).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-003"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "ac-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Auditree"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "DevOps Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "1fb6cb61-6ac2-50d5-9f20-38fc44c3110a"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "2d8d7fc8-8724-583d-826d-1e0215ba4421"
+          }
+        ],
+        "remarks": "Alert via Auditree if the GitHub org membership drops to zero."
+      },
+      {
+        "uuid": "dfe8d1ad-0688-5c5b-9874-139c6e0db2e9",
+        "title": "Base image not restricted to an approved allow list",
+        "description": "Containers may run base images outside the cluster-wide approved allow list, weakening supply-chain assurance for CM-2 (Baseline Configuration).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-001"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "allowed-base-images"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Kyverno"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Security Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-12-31"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Publish approved base-image allow list (target: 2026-10-01)"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Enforce Kyverno allowed-base-images policy in audit->enforce (target: 2026-11-15)"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "5a5c62b2-5f00-5713-beb7-3cbaf79cb9ea"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "4a0cbdeb-f951-5163-bcc4-5136e6052faf"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "9df39bd1-966f-563b-b21f-f241405322b6"
+          }
+        ],
+        "remarks": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines."
+      },
+      {
+        "uuid": "72a1df4d-30f7-5089-88c2-5cf5895e98a0",
+        "title": "Added Linux capabilities not disallowed",
+        "description": "Containers could add Linux capabilities beyond the policy allow list (CM-2.1).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-004"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2.1"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "disallow-capabilities"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Kyverno"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Security Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "4847dc3b-52f1-53a3-8a7a-fd52ce805386"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "3538e48d-6638-5c4e-831d-b0f570e0617b"
+          }
+        ],
+        "remarks": "Enforce the Kyverno disallow-capabilities policy across all namespaces."
+      },
+      {
+        "uuid": "4310ad0e-e489-5671-b85c-bd545fb1841f",
+        "title": "Deployment minimum-replica policy not guaranteed",
+        "description": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-005"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-deployment"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "OCM"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "122c3fd8-5671-5f29-ab9e-5d5277ae4240"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "512fc65e-ca02-56fe-9eb7-7ef4934b1131"
+          }
+        ],
+        "remarks": "Enforce the OCM policy-deployment minimum-replica policy."
+      },
+      {
+        "uuid": "fcd23b5e-4eae-5f4a-8a7d-bd634889cae4",
+        "title": "Disallowed cluster roles in use",
+        "description": "RoleBindings grant roles outside the allowed set, violating AC-1 (Policy and Procedures) least-privilege expectations.",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-006"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "ac-1"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-disallowed-roles"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "OCM"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-12-15"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Remediate disallowed RoleBindings (target: 2026-11-01)"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "1a9fb391-da4a-5a9f-a4f6-1cea56e5f77f"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "ab3d0c53-c7f7-5a1a-82a2-c006ca2ee5fd"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "ebfa4de0-234e-5285-815b-632819cbb324"
+          }
+        ],
+        "remarks": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence."
+      },
+      {
+        "uuid": "0261baab-ebee-5485-87a5-296959e3078b",
+        "title": "High-level vulnerability scan not enabled",
+        "description": "The cluster scan profile does not run at the high level required by policy for CM-6 (Configuration Settings).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-007"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-6"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-high-scan"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "OCM"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-11-30"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Enable high-level scan profile (target: 2026-10-15)"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "8d867c33-ea70-5ba4-ba24-253366a29cf2"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "1d5861f4-52bc-5bc7-9a4e-8328dfcb75ea"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "3982133b-abb1-55ee-9db3-570c5ebd1734"
+          }
+        ],
+        "remarks": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline."
+      }
+    ]
+  }
+}
