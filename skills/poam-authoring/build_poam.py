@@ -448,13 +448,76 @@ def _index_items_by_anchor(poam: PlanOfActionAndMilestones) -> tuple[dict, dict]
     return by_check, by_control
 
 
+# result prop values (on a subject) that count as a failing check
+_FAIL_RESULTS = {"failure", "fail", "failed", "error", "not-satisfied", "noncompliant", "non-compliant"}
+
+# observation props that name the rule/check an observation is about (link keys, in priority order)
+_RULE_PROP_NAMES = ("check-id", "assessment-rule-id", "rule-id")
+
+
+def _obs_rule_key(src: dict) -> str | None:
+    for name in _RULE_PROP_NAMES:
+        v = _first_prop(src, name)
+        if v:
+            return v
+    return None
+
+
+def _derive_state(src: dict) -> tuple[str, int, int]:
+    """Derive a finding state from an observation's subject-level `result` props.
+
+    Returns (state, n_fail, n_total). A rule is not-satisfied if ANY evaluated subject failed;
+    satisfied if subjects were evaluated and none failed. With no per-subject result at all, we
+    treat the observation's mere existence as a concern -> not-satisfied (conservative).
+    """
+    n_fail = n_total = 0
+    for s in src.get("subjects") or []:
+        for p in s.get("props") or []:
+            if p.get("name") == "result":
+                n_total += 1
+                if str(p.get("value") or "").strip().lower() in _FAIL_RESULTS:
+                    n_fail += 1
+    if n_total == 0:
+        return "not-satisfied", 0, 0
+    return ("not-satisfied" if n_fail else "satisfied"), n_fail, n_total
+
+
+def _carry_observation(src: dict, seen_obs: set, observations: list) -> str:
+    """Faithfully carry an assessment observation (subjects + props + collected) into the POA&M.
+    Returns the observation uuid used."""
+    new_uuid = src.get("uuid") or _u5("obs", _obs_rule_key(src) or src.get("title") or "obs")
+    if new_uuid in seen_obs:
+        return new_uuid
+    data = dict(src)
+    data["uuid"] = new_uuid
+    data.setdefault("description", data.get("title") or "observation")
+    data.setdefault("methods", ["EXAMINE"])
+    if not data.get("collected"):
+        data["collected"] = _now().isoformat()
+    try:
+        obs = Observation.model_validate(data)  # preserves subjects, props, collected
+    except Exception:  # noqa: BLE001 — fall back to a minimal valid observation
+        obs = Observation(
+            uuid=new_uuid, title=src.get("title") or f"Observation {new_uuid[:8]}",
+            description=data["description"], methods=data["methods"],
+            collected=src.get("collected") or _now(),
+        )
+    observations.append(obs)
+    seen_obs.add(new_uuid)
+    return new_uuid
+
+
 def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int, int]:
     """Layer an assessment-results.json onto the pre-defined POA&M in place.
 
-    For each finding: emit a top-level Finding (+ its Observation, + an optional Risk from the
-    result), and cross-link the EXISTING pre-defined poam-item (matched by the observation's
-    check-id prop, else the finding's control target-id). No new poam-items are created.
-    Returns (n_findings_linked, n_unmatched).
+    Two sources of truth are handled:
+      1. Explicit `findings[]` (target status + related observations) — used as-is.
+      2. Observation-only results (no findings) — a finding is DERIVED per observation from its
+         subject-level `result` props (any failing subject -> not-satisfied), which is how real PVP
+         output (Auditree/Kyverno/OCM) looks.
+    Either way each Finding/Observation is cross-linked to the EXISTING pre-defined poam-item,
+    matched by the observation's check-id / assessment-rule-id (control target-id fallback). No new
+    poam-items are created. Returns (n_findings_linked, n_unmatched).
     """
     ar = ar_doc.get("assessment-results") or ar_doc
     by_check, by_control = _index_items_by_anchor(poam)
@@ -466,52 +529,48 @@ def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int,
     linked = 0
     unmatched = 0
 
+    def _attach(item, f_uuid, rel_obs, rel_risks):
+        if item is None:
+            return False
+        item.related_findings = (item.related_findings or []) + [RelatedFinding(finding_uuid=f_uuid)]
+        if rel_obs:
+            item.related_observations = (item.related_observations or []) + rel_obs
+        if rel_risks:
+            item.related_risks = (item.related_risks or []) + rel_risks
+        return True
+
     for result in ar.get("results") or []:
         obs_by_uuid = {o.get("uuid"): o for o in result.get("observations") or []}
         risk_by_uuid = {r.get("uuid"): r for r in result.get("risks") or []}
+        covered_obs: set = set()  # observation uuids already emitted via an explicit finding
+
+        # ── 1) explicit findings ────────────────────────────────────────────────
         for finding in result.get("findings") or []:
             target = finding.get("target") or {}
             control_id = target.get("target-id")
             state = ((target.get("status") or {}).get("state")) or "not-satisfied"
 
-            # gather the finding's linked observations (to read their check-id) + carry them across
-            rel_obs_uuids = [ro.get("observation-uuid")
-                             for ro in finding.get("related-observations") or []]
-            check_id = None
+            rule_key = None
             related_observations = []
-            for ou in rel_obs_uuids:
+            for ro in finding.get("related-observations") or []:
+                ou = ro.get("observation-uuid")
                 src = obs_by_uuid.get(ou)
                 if not src:
                     continue
-                check_id = check_id or _first_prop(src, "check-id")
-                new_uuid = src.get("uuid") or _u5("obs", ou or "")
-                if new_uuid not in seen_obs:
-                    # preserve the assessment observation's own `collected` timestamp (provenance +
-                    # determinism); fall back to now() only if the source omitted it.
-                    collected = src.get("collected")
-                    observations.append(Observation(
-                        uuid=new_uuid,
-                        title=src.get("title") or f"Observation {new_uuid[:8]}",
-                        description=src.get("description") or "",
-                        methods=src.get("methods") or ["EXAMINE"],
-                        collected=collected if collected else _now(),
-                        props=[_prop("check-id", check_id)] if check_id else None,
-                    ))
-                    seen_obs.add(new_uuid)
+                rule_key = rule_key or _obs_rule_key(src)
+                new_uuid = _carry_observation(src, seen_obs, observations)
+                covered_obs.add(ou)
                 related_observations.append(RelatedObservation(observation_uuid=new_uuid))
 
-            # locate the pre-defined poam-item (check-id first, control-id fallback)
-            item = (by_check.get(check_id) if check_id else None) or by_control.get(control_id)
+            item = (by_check.get(rule_key) if rule_key else None) or by_control.get(control_id)
 
-            # carry the finding's linked risks across (optional)
             related_risks = []
             for rr in finding.get("related-risks") or []:
                 ru = rr.get("risk-uuid")
                 src = risk_by_uuid.get(ru)
                 if src and ru not in seen_risk:
                     risks.append(Risk(
-                        uuid=ru,
-                        title=src.get("title") or "Risk",
+                        uuid=ru, title=src.get("title") or "Risk",
                         description=src.get("description") or "",
                         statement=src.get("statement") or "See linked finding.",
                         status=src.get("status") or "open",
@@ -520,10 +579,10 @@ def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int,
                 if ru:
                     related_risks.append(AssociatedRisk(risk_uuid=ru))
 
-            f_uuid = finding.get("uuid") or _u5("finding", check_id or control_id or str(linked))
+            f_uuid = finding.get("uuid") or _u5("finding", rule_key or control_id or str(linked))
             findings_out.append(Finding(
                 uuid=f_uuid,
-                title=finding.get("title") or f"Finding for {check_id or control_id}",
+                title=finding.get("title") or f"Finding for {rule_key or control_id}",
                 description=finding.get("description") or "",
                 target=FindingTarget(
                     type="objective-id",
@@ -533,21 +592,48 @@ def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int,
                 related_observations=related_observations or None,
                 related_risks=related_risks or None,
             ))
-
-            if item is not None:
-                item.related_findings = (item.related_findings or []) + [
-                    RelatedFinding(finding_uuid=f_uuid)]
-                if related_observations:
-                    item.related_observations = (item.related_observations or []) + related_observations
-                if related_risks:
-                    item.related_risks = (item.related_risks or []) + related_risks
+            if _attach(item, f_uuid, related_observations, related_risks):
                 linked += 1
             else:
                 unmatched += 1
                 sys.stderr.write(
-                    f"warning: finding {f_uuid[:8]} (check-id={check_id!r}, control={control_id!r}) "
-                    "matched no pre-defined poam-item; its finding/observation are still recorded.\n"
-                )
+                    f"warning: finding {f_uuid[:8]} (rule={rule_key!r}, control={control_id!r}) "
+                    "matched no pre-defined poam-item; recorded anyway.\n")
+
+        # ── 2) observation-only results → derive a finding per rule-keyed observation ──
+        for src in result.get("observations") or []:
+            if src.get("uuid") in covered_obs:
+                continue
+            rule_key = _obs_rule_key(src)
+            if not rule_key:
+                continue  # not tied to a rule/check — nothing to reference
+            item = by_check.get(rule_key) or by_control.get(rule_key)
+            state, n_fail, n_total = _derive_state(src)
+            new_uuid = _carry_observation(src, seen_obs, observations)
+            control_id = item and _first_prop_obj(item, "control-id")
+            if state == "not-satisfied":
+                desc = (f"Check '{rule_key}' failed for {n_fail} of {n_total} evaluated subject(s)."
+                        if n_total else f"Check '{rule_key}' produced an observation without a pass result.")
+            else:
+                desc = f"Check '{rule_key}' passed for all {n_total} evaluated subject(s)."
+            f_uuid = _u5("finding", rule_key)
+            findings_out.append(Finding(
+                uuid=f_uuid,
+                title=f"{rule_key}: {'not satisfied' if state == 'not-satisfied' else 'satisfied'}",
+                description=desc,
+                target=FindingTarget(
+                    type="objective-id", target_id=control_id or "na",
+                    status=ObjectiveStatus(state=state),
+                ),
+                related_observations=[RelatedObservation(observation_uuid=new_uuid)],
+            ))
+            if _attach(item, f_uuid, [RelatedObservation(observation_uuid=new_uuid)], None):
+                linked += 1
+            else:
+                unmatched += 1
+                sys.stderr.write(
+                    f"warning: observation for rule {rule_key!r} matched no pre-defined poam-item; "
+                    "its derived finding/observation are still recorded.\n")
 
     poam.observations = observations or None
     poam.risks = risks or None

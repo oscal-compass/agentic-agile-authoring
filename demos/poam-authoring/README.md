@@ -51,9 +51,10 @@ working dir first):
   controls, and **validation** components (Auditree, Kyverno, OCM) that carry the checks.
 - [`scenario1/remediations.json`](scenario1/remediations.json) — remediation authored up front,
   keyed by check id (optional input; supply your own or let the agent elicit it).
-- [`scenario1/assessment-results.json`](scenario1/assessment-results.json) — a valid
-  `assessment-results` over those checks (a subset `not-satisfied`, the rest `satisfied`), each
-  observation carrying a `check-id` prop for linking.
+- [`scenario1/assessment-results.json`](scenario1/assessment-results.json) — a **real** PVP
+  assessment over those checks (Auditree / Kyverno / OCM). It has **observations only, no findings**:
+  each observation names its rule via an `assessment-rule-id` prop and records per-subject
+  `result: pass|failure` on the actual cluster resources it evaluated.
 
 ### Step 1 — Pre-define the POA&M from the component-definition
 
@@ -70,9 +71,12 @@ filled from the component-definition. No findings yet. (`poam-authoring`, path C
 
 > Now layer assessment-results.json onto that pre-defined POA&M.
 
-The agent adds each finding as a top-level `Finding` (+ observation, + risk), and **references the
-existing pre-defined poam-item** for the same check (matched by `check-id`) — creating no new items.
-Passed checks stay too, linked to a `satisfied` finding (keep-all catalog). (path C phase 2)
+The assessment carries no findings, so the agent **derives** one per observation from its
+subject-level `result` props — any failing subject ⇒ the rule is `not-satisfied`, otherwise
+`satisfied` — then **references the existing pre-defined poam-item** for that rule (matched by
+`assessment-rule-id` ⇄ the item's `check-id`), carrying the observation (with all its evaluated
+subjects) across. No new poam-items are created; satisfied checks stay too (keep-all catalog), and a
+rule the assessment didn't cover simply keeps its pre-defined item with no finding. (path C phase 2)
 
 ### What you'll see (process log)
 
@@ -84,18 +88,19 @@ $ uv run --with 'compliance-trestle>=3.0' python build_poam.py from-component-de
     --input component-definition.json --remediations remediations.json \
     --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir predefined/
 OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, local-definitions filled); re-read validates.
-# phase 2 — link the assessment (reference existing items):
+# phase 2 — link the assessment (derive findings from pass/fail, reference existing items):
 $ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
     --poam predefined/plan-of-action-and-milestones.json \
     --assessment assessment-results.json --output-dir poam/
-OK: wrote linked poam/plan-of-action-and-milestones.json (7 poam-item(s), 7 finding(s): 3 open / 4 satisfied; 7 linked, 0 unmatched); re-read validates.
+OK: wrote linked poam/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 6 linked, 0 unmatched); re-read validates.
 $ trestle validate -t plan-of-action-and-milestones
 VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
 ```
 
 ### Result
 
-Markdown preview shown for confirmation (open = `not-satisfied` finding, ✓ = satisfied):
+Markdown preview shown for confirmation (`not-satisfied` = open, `satisfied` = passed, blank = the
+assessment didn't cover that rule):
 
 ```markdown
 # Kubernetes Cluster POA&M
@@ -104,18 +109,18 @@ Markdown preview shown for confirmation (open = `not-satisfied` finding, ✓ = s
 | POAM ID  | Weakness                                  | Ctrl   | Validation | Status        | Risk     | POC                    |
 |----------|-------------------------------------------|--------|------------|---------------|----------|------------------------|
 | POAM-001 | Base image not restricted to allow list   | cm-2   | Kyverno    | not-satisfied | High     | Platform Security Team |
-| POAM-002 | GitHub API version may be unsupported      | cm-2   | Auditree   | satisfied     | —        | DevOps Team            |
+| POAM-002 | GitHub API version may be unsupported      | cm-2   | Auditree   | (not assessed)| —        | DevOps Team            |
 | POAM-003 | GitHub organization may be empty           | ac-2   | Auditree   | satisfied     | —        | DevOps Team            |
-| POAM-004 | Added Linux capabilities not disallowed    | cm-2.1 | Kyverno    | satisfied     | Moderate | Platform Security Team |
-| POAM-005 | Deployment minimum-replica not guaranteed  | cm-2   | OCM        | satisfied     | —        | Platform Team          |
-| POAM-006 | Disallowed cluster roles in use            | ac-1   | OCM        | not-satisfied | Moderate | Platform Team          |
+| POAM-004 | Added Linux capabilities not disallowed    | cm-2.1 | Kyverno    | not-satisfied | Moderate | Platform Security Team |
+| POAM-005 | Deployment minimum-replica not guaranteed  | cm-2   | OCM        | not-satisfied | —        | Platform Team          |
+| POAM-006 | Disallowed cluster roles in use            | ac-1   | OCM        | satisfied     | Moderate | Platform Team          |
 | POAM-007 | High-level vulnerability scan not enabled  | cm-6   | OCM        | not-satisfied | High     | Platform Team          |
 
-**Total items:** 7 (3 open · 4 satisfied)
+**Total items:** 7 (4 open · 2 satisfied · 1 not assessed)
 ```
 
-Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; 7 findings/observations
-cross-linked to the existing items):
+Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; 6 findings/observations
+— derived from the assessment's per-subject pass/fail — cross-linked to the existing items):
 **[`scenario1/plan-of-action-and-milestones.json`](scenario1/plan-of-action-and-milestones.json)**
 
 ---

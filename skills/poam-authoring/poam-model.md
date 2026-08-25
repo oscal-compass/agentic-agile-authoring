@@ -109,12 +109,17 @@ per-item fields as path A (`weakness_name`, `weakness_description`, `remediation
 
 ### Phase 2 — `link-assessment`
 
-Inputs: the phase-1 POA&M (`--poam`) + an `assessment-results.json` (`--assessment`). For each
-finding, the builder emits a top-level `Finding` (objective-id target, `not-satisfied`/`satisfied`),
-carries its `Observation` (and any `Risk`), and **cross-links the existing pre-defined poam-item**
-matched by the observation's `check-id` prop (fallback: the finding's control `target-id` vs the
-item's `control-id`). No new poam-items. Keep-all: satisfied checks stay, linked to a satisfied
-finding. For matching to work, assessment observations should carry a `check-id` prop.
+Inputs: the phase-1 POA&M (`--poam`) + an `assessment-results.json` (`--assessment`). The builder
+handles both **explicit `findings[]`** and **observation-only** results (real PVP output such as
+Auditree/Kyverno/OCM, which has observations but no findings). In the observation-only case it
+**derives** a finding per observation from the observation's **subject-level `result` props** (any
+failing subject ⇒ `not-satisfied`, else `satisfied`), carries the full observation (all evaluated
+subjects) across as evidence, and emits a top-level `Finding` (objective-id target). Either way it
+**cross-links the existing pre-defined poam-item**, matched by the observation's rule identifier —
+`check-id` → `assessment-rule-id` → `rule-id` — against the item's `check-id` prop (fallback: the
+finding's control `target-id` vs the item's `control-id`). No new poam-items. Keep-all: satisfied
+checks stay (linked to a satisfied finding); a rule the assessment didn't cover keeps its item with
+no finding.
 
 ## Verified library facts (for anyone editing `build_poam.py`)
 
