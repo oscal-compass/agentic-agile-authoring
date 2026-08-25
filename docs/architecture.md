@@ -62,15 +62,23 @@ See the [decision log](design-spec.md#9-decision-log) (D4) for why we adopt APM.
 
 ## Skills
 
-The four skills cover the OSCAL compliance authoring lifecycle. They compose (catalog →
-component → assessment) but are invoked independently; a demo carries any ordering.
+Seven skills cover the OSCAL compliance authoring lifecycle plus framework onboarding. The
+lifecycle skills compose (catalog → component → assessment → POA&M); `compliance-catalog` and
+`compliance-mapping` onboard a framework (PDF → catalog, catalog ↔ catalog) upstream of that chain.
+All are invoked independently; a demo carries any ordering.
 
 | Skill | Input | Output | MCP dep |
 |-------|-------|--------|---------|
 | `catalog-authoring` | NIST OSCAL catalog / profile URL | `catalog.json`, editable Markdown | `trestle` |
 | `component-definition` | Catalog or profile + component description | `component-definition.json` | `trestle` |
 | `assessment` | Component definition + scan results | Compliance assessment table (Markdown / OSCAL) | — |
+| `poam-authoring` | Assessment result (failed findings) or FedRAMP `.xlsx` | `plan-of-action-and-milestones.json` | — |
+| `compliance-catalog` | Compliance-document PDF (law / regulation / standard) | Validated `catalog.json` (+ excluded-units record) | — |
+| `compliance-mapping` | Two OSCAL Catalogs (source, target) | `mapping-collection.json` + HTML report | — |
 | `git-workflow` | Compliance documents in workspace | Baseline branch, review PR | — |
+
+`compliance-catalog` / `compliance-mapping` use `trestle` as a local CLI/library for validation
+rather than the MCP server, so they declare no MCP dependency.
 
 ## Demos
 

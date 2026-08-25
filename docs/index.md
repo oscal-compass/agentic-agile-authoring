@@ -1,8 +1,9 @@
 # Agentic Agile Authoring
 
-An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from NIST
-catalog customization through component definition to assessment result generation — installable
-into multiple agent harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
+An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from framework
+onboarding (compliance PDF → catalog, catalog ↔ catalog mapping) through catalog customization,
+component definition, and assessment to POA&M generation — installable into multiple agent
+harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
 
 The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
 
@@ -52,6 +53,9 @@ See the [Skills reference](skills.md).
 | `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs |
 | `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` |
 | `assessment` | Evaluate control compliance from component definitions and validation scan results |
+| `poam-authoring` | Author an OSCAL POA&M from an assessment's failed findings — remediation plan, milestones, POC, due date |
+| `compliance-catalog` | Convert a compliance-document PDF (law, regulation, standard) into a validated OSCAL Catalog |
+| `compliance-mapping` | Map controls between two OSCAL Catalogs into an OSCAL Mapping Collection + browsable HTML report |
 | `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) |
 
 ## License

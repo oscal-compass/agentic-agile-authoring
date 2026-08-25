@@ -1,8 +1,9 @@
 # Agentic Agile Authoring
 
-An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from NIST
-catalog customization through component definition to assessment result generation — installable
-into multiple agent harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
+An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from framework
+onboarding (compliance PDF → catalog, catalog ↔ catalog mapping) through catalog customization,
+component definition, and assessment to POA&M generation — installable into multiple agent
+harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
 
 The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
 
@@ -19,6 +20,40 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
   copy the skill into each harness's native dir **and** wire its declared MCP servers into that
   harness's native MCP config, with a lockfile and non-destructive uninstall/prune. See
   [tools/README.md](tools/README.md) and [docs/design-spec.md](docs/design-spec.md).
+
+## Skills
+
+Seven portable skills. The **authoring lifecycle** composes left-to-right
+(`catalog-authoring → component-definition → assessment → poam-authoring`); the
+**framework-onboarding** skills sit upstream, turning source documents into the OSCAL Catalogs the
+lifecycle consumes. Each is invoked directly by the harness — there is no orchestrator persona; a
+demo carries any ordering.
+
+### Authoring lifecycle
+
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
+| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
+| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
+| `poam-authoring` | Author an OSCAL POA&M from an assessment's failed findings — remediation plan, milestones, POC, due date | — |
+
+### Framework onboarding
+
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `compliance-catalog` | Convert a compliance-document PDF (law, regulation, standard) into a validated OSCAL Catalog | — |
+| `compliance-mapping` | Map controls between two OSCAL Catalogs into an OSCAL Mapping Collection + browsable HTML report | — |
+
+### Cross-cutting
+
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
+
+`compliance-catalog` / `compliance-mapping` use `trestle` as a local CLI/library for validation
+rather than the MCP server, so they wire no MCP dependency. See the [Skills reference](docs/skills.md)
+for per-skill detail.
 
 ## Install
 
@@ -53,24 +88,18 @@ uvx compliance-authoring-skills uninstall --skill assessment --target claude
 > [docs/design-spec.md](docs/design-spec.md), §8). The underlying APM flow — skill placement +
 > MCP wiring + prune, for Claude Code and OpenCode — is verified working.
 
-## Demo
+## Demos
 
-Tailoring a NIST SP 800-53 catalog, mapping controls to a Kubernetes component, and generating an
-assessment result — all in natural language — is captured as a runnable walkthrough with a demo
-video: **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)**. That
-README carries the install steps, the prompts to give the agent in order, and uninstall.
+Each demo is a runnable walkthrough — install steps, the prompts to give the agent in order,
+uninstall, and a demo video:
 
-## Skills
-
-| Skill | Description | MCP dep |
-|-------|-------------|---------|
-| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
-| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
-| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
-| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
-
-Skills are invoked directly by each harness — there is no orchestrator persona. A demo
-carries the orchestration.
+- **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)** — the full authoring
+  lifecycle end-to-end: tailor a NIST SP 800-53 catalog, map its controls to a Kubernetes
+  component, and generate an assessment result (`catalog-authoring → component-definition →
+  assessment`).
+- **[`demos/poam-authoring/`](demos/poam-authoring/README.md)** — author a valid OSCAL Plan of
+  Action and Milestones, via both input paths (assessment result → POA&M, and FedRAMP xlsx →
+  POA&M).
 
 ## Contributing a skill
 
