@@ -1,0 +1,201 @@
+{
+  "assessment-results": {
+    "uuid": "c3161dd5-b3b1-5069-b4bc-967b84a24582",
+    "metadata": {
+      "title": "Assessment Results — Kubernetes Cluster (k8s-prod)",
+      "last-modified": "2026-08-25T06:27:10.427+00:00",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "import-ap": {
+      "href": "assessment-plan.json"
+    },
+    "results": [
+      {
+        "uuid": "cf7145ce-5d38-5378-88b8-eeee1850f5c4",
+        "title": "Kubernetes cluster control assessment",
+        "description": "Automated assessment of the k8s-prod cluster against selected NIST SP 800-53 controls.",
+        "start": "2026-08-25T06:27:10.426+00:00",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-all": {}
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "456e5b2a-57d4-5eb6-8577-f2ec03a322e5",
+            "title": "AC-2 — Account Management",
+            "description": "3 of 7 cluster-admin ClusterRoleBindings map to human accounts that can authenticate to the API server without MFA. The IdP does not enforce MFA for the kubernetes audience.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10.426+00:00"
+          },
+          {
+            "uuid": "7268ff5a-b118-54a5-b80c-5b1a12e848a6",
+            "title": "AU-2 — Event Logging",
+            "description": "kube-apiserver is started without --audit-policy-file; no audit backend is configured, so API requests are not recorded.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2026-08-25T06:27:10.426+00:00"
+          },
+          {
+            "uuid": "3680de3b-fab0-5083-b74a-32eed10626b5",
+            "title": "SC-8 — Transmission Confidentiality and Integrity",
+            "description": "etcd peer traffic is not encrypted: --peer-auto-tls is false and no --peer-cert-file/--peer-key-file are set on 2 of 3 control-plane nodes.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10.426+00:00"
+          },
+          {
+            "uuid": "e83d5db8-20e0-5f0b-b9e9-4d89ebae27cf",
+            "title": "AC-3 — Access Enforcement",
+            "description": "RBAC is enabled (--authorization-mode=Node,RBAC) and no wildcard cluster-admin bindings to system:authenticated were found.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-08-25T06:27:10.426+00:00"
+          },
+          {
+            "uuid": "4277dabf-5472-5089-b2d7-3501a5eae8d4",
+            "title": "CM-6 — Configuration Settings",
+            "description": "Pod Security Admission enforces the 'restricted' standard on all non-system namespaces.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2026-08-25T06:27:10.426+00:00"
+          }
+        ],
+        "risks": [
+          {
+            "uuid": "4623af7d-1fb5-5e22-b28d-c7c8adf67877",
+            "title": "Deficiency in AC-2 Account Management",
+            "description": "3 of 7 cluster-admin ClusterRoleBindings map to human accounts that can authenticate to the API server without MFA. The IdP does not enforce MFA for the kubernetes audience.",
+            "statement": "The cluster does not satisfy AC-2 (Account Management).",
+            "status": "open",
+            "related-observations": [
+              {
+                "observation-uuid": "456e5b2a-57d4-5eb6-8577-f2ec03a322e5"
+              }
+            ]
+          },
+          {
+            "uuid": "1998ef96-6d05-5d68-afea-eced200cf8e3",
+            "title": "Deficiency in AU-2 Event Logging",
+            "description": "kube-apiserver is started without --audit-policy-file; no audit backend is configured, so API requests are not recorded.",
+            "statement": "The cluster does not satisfy AU-2 (Event Logging).",
+            "status": "open",
+            "related-observations": [
+              {
+                "observation-uuid": "7268ff5a-b118-54a5-b80c-5b1a12e848a6"
+              }
+            ]
+          },
+          {
+            "uuid": "3baabfbc-f644-533f-9dc1-5f77e0e1de3b",
+            "title": "Deficiency in SC-8 Transmission Confidentiality and Integrity",
+            "description": "etcd peer traffic is not encrypted: --peer-auto-tls is false and no --peer-cert-file/--peer-key-file are set on 2 of 3 control-plane nodes.",
+            "statement": "The cluster does not satisfy SC-8 (Transmission Confidentiality and Integrity).",
+            "status": "open",
+            "related-observations": [
+              {
+                "observation-uuid": "3680de3b-fab0-5083-b74a-32eed10626b5"
+              }
+            ]
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "8e2dd1d3-4582-542b-932a-10b36e3090a0",
+            "title": "AC-2 Account Management",
+            "description": "3 of 7 cluster-admin ClusterRoleBindings map to human accounts that can authenticate to the API server without MFA. The IdP does not enforce MFA for the kubernetes audience.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-2",
+              "status": {
+                "state": "not-satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "456e5b2a-57d4-5eb6-8577-f2ec03a322e5"
+              }
+            ]
+          },
+          {
+            "uuid": "d8b8af57-e509-5cad-bba3-9a15eaf8e401",
+            "title": "AU-2 Event Logging",
+            "description": "kube-apiserver is started without --audit-policy-file; no audit backend is configured, so API requests are not recorded.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "au-2",
+              "status": {
+                "state": "not-satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "7268ff5a-b118-54a5-b80c-5b1a12e848a6"
+              }
+            ]
+          },
+          {
+            "uuid": "9899e2eb-0ebf-597f-8e33-c84ee2fa808d",
+            "title": "SC-8 Transmission Confidentiality and Integrity",
+            "description": "etcd peer traffic is not encrypted: --peer-auto-tls is false and no --peer-cert-file/--peer-key-file are set on 2 of 3 control-plane nodes.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "sc-8",
+              "status": {
+                "state": "not-satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "3680de3b-fab0-5083-b74a-32eed10626b5"
+              }
+            ]
+          },
+          {
+            "uuid": "ebc1f05b-44bb-512e-aa32-3ace4a925f9a",
+            "title": "AC-3 Access Enforcement",
+            "description": "RBAC is enabled (--authorization-mode=Node,RBAC) and no wildcard cluster-admin bindings to system:authenticated were found.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-3",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "e83d5db8-20e0-5f0b-b9e9-4d89ebae27cf"
+              }
+            ]
+          },
+          {
+            "uuid": "3cf744e9-778a-5fab-be1f-bcc6a978feaa",
+            "title": "CM-6 Configuration Settings",
+            "description": "Pod Security Admission enforces the 'restricted' standard on all non-system namespaces.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "cm-6",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "4277dabf-5472-5089-b2d7-3501a5eae8d4"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
