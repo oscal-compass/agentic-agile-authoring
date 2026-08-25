@@ -15,30 +15,26 @@
 # APM package manifest (OpenAPM shape). Read by `apm` and the compliance-authoring-skills wrapper
 # (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md.
 #
-# MCP dependency is INTENTIONALLY left commented out. APM's `dependencies.mcp` is binary — declared
-# means wired into EVERY install of this skill; there is no "optional MCP" flag. This skill does not
-# require an MCP server: it builds and validates the POA&M with the trestle *library/CLI* inside an
-# isolated venv (see setup-env.md / build-poam.md), and even the xlsx path falls back to
-# `trestle task xlsx-to-oscal-poam` in that venv. The trestle MCP is a *runtime* convenience only —
-# its optionality is expressed in SKILL.md ("use the MCP tool if present, else the venv trestle"),
-# NOT here.
+# This skill declares the trestle MCP so the installer wires it into the harness on install (APM's
+# `dependencies.mcp` is binary — declared means wired into EVERY install; there is no "optional MCP"
+# flag). The skill does NOT strictly require it: it builds/validates the POA&M with the trestle
+# library/CLI in an isolated venv, and the MCP is a runtime convenience — SKILL.md still prefers the
+# MCP tools when present and falls back to the venv trestle when absent or failing (0 tools).
 #
-# To ALSO wire the trestle MCP (e.g. to prefer its tools), uncomment the block below. It targets
-# compliance-trestle-mcp >=0.2.0, which ships `trestle_task_xlsx_to_oscal_poam` + `trestle_validate`
-# and self-caps `mcp<2` (so no `--with mcp<2` workaround). `registry: false` is REQUIRED for a
+# compliance-trestle-mcp >=0.2.0 ships `trestle_task_xlsx_to_oscal_poam` + `trestle_validate` and
+# self-caps `mcp<2` (so no `--with mcp<2` workaround). `registry: false` is REQUIRED for a
 # self-defined server — without it APM does a registry lookup and the install fails. Do NOT add a
-# `target:` field — APM rejects unknown target tokens at parse time. (0.2.0 is not published yet;
-# switch `--from` to `git+<repo>@v0.2.0` if consuming from git instead of PyPI.)
+# `target:` field — APM rejects unknown target tokens at parse time.
 name: poam-authoring
 version: "1.0.0"
 
-# dependencies:
-#   mcp:
-#     - name: trestle
-#       registry: false
-#       transport: stdio
-#       command: uvx
-#       args:
-#         - "--from"
-#         - "compliance-trestle-mcp>=0.2.0"
-#         - "trestle-mcp"
+dependencies:
+  mcp:
+    - name: trestle
+      registry: false
+      transport: stdio
+      command: uvx
+      args:
+        - "--from"
+        - "compliance-trestle-mcp>=0.2.0"
+        - "trestle-mcp"

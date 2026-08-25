@@ -26,11 +26,12 @@ uvx compliance-authoring-skills install --demo poam-authoring --target opencode
 uvx compliance-authoring-skills install --demo poam-authoring --target claude
 ```
 
-This copies `poam-authoring` into the harness's native skill dir. It declares **no MCP server** —
-it builds and validates the POA&M with the `trestle` library/CLI inside an isolated env (`uv` or a
-venv; never a global install), so nothing is wired into the harness's MCP config. If you *do* wire
-the trestle MCP (`compliance-trestle-mcp` >= 0.2.0), the skill prefers its tools and otherwise falls
-back to the venv — same result. Open the target project in the harness so it picks up the skill.
+This copies `poam-authoring` into the harness's native skill dir **and wires the `trestle` MCP
+server** (`compliance-trestle-mcp` >= 0.2.0, declared in the skill's `apm.yml`) into the harness's
+native MCP config. The MCP is not strictly required — the skill builds and validates the POA&M with
+the `trestle` library/CLI inside an isolated env (`uv` or a venv; never a global install), preferring
+the MCP tools when they're present and falling back to the venv when they're not. Open the target
+project in the harness so it picks up the skill + `trestle`.
 
 ---
 
