@@ -78,9 +78,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install build
 
-      - name: Build package (wheel bundles skills/ + demos/)
+      # Wheel only, built directly from the source tree — NOT via sdist. The
+      # package force-includes ../skills and ../demos (repo root, outside
+      # tools/); a tools/-only sdist can't carry them, and the default
+      # build-wheel-from-sdist flow would fail resolving those paths. The wheel
+      # bundles skills/ + demos/ and is self-contained.
+      - name: Build wheel (bundles skills/ + demos/)
         working-directory: tools
-        run: python -m build
+        run: python -m build --wheel
 
       - name: Create and push tag
         env:
@@ -99,4 +104,4 @@ jobs:
           gh release create "${TAG}" \
             --title "${TAG}" \
             --generate-notes \
-            tools/dist/*
+            tools/dist/*.whl
