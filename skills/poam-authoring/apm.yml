@@ -15,27 +15,30 @@
 # APM package manifest (OpenAPM shape). Read by `apm` and the compliance-authoring-skills wrapper
 # (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md.
 #
-# This skill authors the OSCAL POA&M via the trestle *library* inside an isolated venv (see
-# setup-env.md / build-poam.md), so it needs NO MCP server to work — hence no active
-# `dependencies.mcp` here.
+# MCP dependency is INTENTIONALLY left commented out. APM's `dependencies.mcp` is binary — declared
+# means wired into EVERY install of this skill; there is no "optional MCP" flag. This skill does not
+# require an MCP server: it builds and validates the POA&M with the trestle *library/CLI* inside an
+# isolated venv (see setup-env.md / build-poam.md), and even the xlsx path falls back to
+# `trestle task xlsx-to-oscal-poam` in that venv. The trestle MCP is a *runtime* convenience only —
+# its optionality is expressed in SKILL.md ("use the MCP tool if present, else the venv trestle"),
+# NOT here.
 #
-# OPTIONAL: the trestle MCP server (below) is left commented out. Its only POA&M-relevant tool is
-# schema *validation*, which authoring barely uses; the skill validates in the isolated venv
-# instead. Uncomment this block ONLY if you want the installer to also wire the trestle MCP into
-# the harness (e.g. to reuse a POA&M-validate tool if/when one ships). The def mirrors the repo-root
-# .mcp.json. Do NOT add a `target:` field — APM rejects unknown target tokens at parse time.
+# To ALSO wire the trestle MCP (e.g. to prefer its tools), uncomment the block below. It targets
+# compliance-trestle-mcp >=0.2.0, which ships `trestle_task_xlsx_to_oscal_poam` + `trestle_validate`
+# and self-caps `mcp<2` (so no `--with mcp<2` workaround). `registry: false` is REQUIRED for a
+# self-defined server — without it APM does a registry lookup and the install fails. Do NOT add a
+# `target:` field — APM rejects unknown target tokens at parse time. (0.2.0 is not published yet;
+# switch `--from` to `git+<repo>@v0.2.0` if consuming from git instead of PyPI.)
 name: poam-authoring
 version: "1.0.0"
 
 # dependencies:
 #   mcp:
-#     - name: trestle              # self-described stdio server
-#       registry: false            # self-defined (not resolved from a registry)
+#     - name: trestle
+#       registry: false
 #       transport: stdio
 #       command: uvx
 #       args:
 #         - "--from"
-#         - "git+https://github.com/oscal-compass/compliance-trestle-mcp.git"
-#         - "--with"
-#         - "mcp<2"
+#         - "compliance-trestle-mcp>=0.2.0"
 #         - "trestle-mcp"

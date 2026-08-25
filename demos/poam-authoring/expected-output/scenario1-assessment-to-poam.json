@@ -1,0 +1,212 @@
+{
+  "plan-of-action-and-milestones": {
+    "uuid": "05e1173c-f70d-55bf-9276-1cf69ee1456a",
+    "metadata": {
+      "title": "Kubernetes Cluster POA&M — Remediation Plan",
+      "last-modified": "2026-08-25T07:25:06.006+00:00",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "system-id": {
+      "id": "k8s-prod"
+    },
+    "observations": [
+      {
+        "uuid": "803b2e8b-833f-5c99-8014-58c66a5daeb9",
+        "title": "AC-2 — Account Management",
+        "description": "3 of 7 cluster-admin ClusterRoleBindings map to human accounts that can authenticate to the API server without MFA. The IdP does not enforce MFA for the kubernetes audience.",
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T07:25:06.006+00:00"
+      },
+      {
+        "uuid": "1551e1ae-5d99-523b-830e-f7552ba0697e",
+        "title": "AU-2 — Event Logging",
+        "description": "kube-apiserver is started without --audit-policy-file; no audit backend is configured, so API requests are not recorded.",
+        "methods": [
+          "EXAMINE"
+        ],
+        "collected": "2026-08-25T07:25:06.006+00:00"
+      },
+      {
+        "uuid": "74f6daca-582f-5407-a242-9b8b8ed8401d",
+        "title": "SC-8 — Transmission Confidentiality and Integrity",
+        "description": "etcd peer traffic is not encrypted: --peer-auto-tls is false and no --peer-cert-file/--peer-key-file are set on 2 of 3 control-plane nodes.",
+        "methods": [
+          "TEST"
+        ],
+        "collected": "2026-08-25T07:25:06.006+00:00"
+      }
+    ],
+    "risks": [
+      {
+        "uuid": "49e6efea-1e27-54ae-be69-5137d8a37fae",
+        "title": "Deficiency in AC-2 Account Management",
+        "description": "3 of 7 cluster-admin ClusterRoleBindings map to human accounts that can authenticate to the API server without MFA. The IdP does not enforce MFA for the kubernetes audience.",
+        "statement": "The cluster does not satisfy AC-2 (Account Management).",
+        "status": "open"
+      },
+      {
+        "uuid": "33365441-a1a9-5cea-847c-dbe497781637",
+        "title": "Deficiency in AU-2 Event Logging",
+        "description": "kube-apiserver is started without --audit-policy-file; no audit backend is configured, so API requests are not recorded.",
+        "statement": "The cluster does not satisfy AU-2 (Event Logging).",
+        "status": "open"
+      },
+      {
+        "uuid": "3e0c4ec8-5dcb-5893-9f8f-f52672735318",
+        "title": "Deficiency in SC-8 Transmission Confidentiality and Integrity",
+        "description": "etcd peer traffic is not encrypted: --peer-auto-tls is false and no --peer-cert-file/--peer-key-file are set on 2 of 3 control-plane nodes.",
+        "statement": "The cluster does not satisfy SC-8 (Transmission Confidentiality and Integrity).",
+        "status": "open"
+      }
+    ],
+    "poam-items": [
+      {
+        "uuid": "cacc2c1f-28be-5dbd-b0df-a26291b8741f",
+        "title": "MFA not enforced on admin accounts",
+        "description": "3 of 7 cluster-admin ClusterRoleBindings map to human accounts that can authenticate to the API server without MFA. The IdP does not enforce MFA for the kubernetes audience.",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-001"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "ac-2"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Security Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-12-31"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Enable MFA (target: 2026-10-01)"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "803b2e8b-833f-5c99-8014-58c66a5daeb9"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "49e6efea-1e27-54ae-be69-5137d8a37fae"
+          }
+        ],
+        "remarks": "Enforce MFA via IdP for all cluster-admin bindings. Coordinate with the identity provider to enable MFA enforcement for the kubernetes audience."
+      },
+      {
+        "uuid": "a1445393-c19d-5491-958c-be98f344456d",
+        "title": "API audit logging not configured",
+        "description": "kube-apiserver is started without --audit-policy-file; no audit backend is configured, so API requests are not recorded.",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-002"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "au-2"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-11-30"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Deploy audit policy (target: 2026-11-01)"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "1551e1ae-5d99-523b-830e-f7552ba0697e"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "33365441-a1a9-5cea-847c-dbe497781637"
+          }
+        ],
+        "remarks": "Configure kube-apiserver audit policy with appropriate backends to record all API requests. Deploy audit policy across all control-plane nodes."
+      },
+      {
+        "uuid": "be3bf28f-a7c0-53de-98fb-ff4a7b08b502",
+        "title": "etcd peer traffic not encrypted",
+        "description": "etcd peer traffic is not encrypted: --peer-auto-tls is false and no --peer-cert-file/--peer-key-file are set on 2 of 3 control-plane nodes.",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-003"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "sc-8"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-12-15"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Roll out etcd peer certs (target: 2026-10-15)"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "74f6daca-582f-5407-a242-9b8b8ed8401d"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "3e0c4ec8-5dcb-5893-9f8f-f52672735318"
+          }
+        ],
+        "remarks": "Enable etcd peer TLS by generating peer certificates and configuring --peer-cert-file and --peer-key-file on all control-plane nodes."
+      }
+    ]
+  }
+}
