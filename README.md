@@ -60,16 +60,28 @@ for per-skill detail.
 Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`, which also runs `uvx`-based
 MCP servers like trestle). That is the only baseline runtime — no Node required.
 
+Not published to a package index yet — install **git-direct** with `uvx --from`. The
+`--from` points at the `tools/` subdirectory of a release tag (`@v0.1.0`); use any newer
+release tag, or `@main` to track the latest:
+
 ```bash
 # install a demo's skills into Claude Code (skill files + MCP wiring, one step)
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
 
 # or into OpenCode
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target opencode
 
 # subset selection
-uvx compliance-authoring-skills install --exclude git-workflow --target claude
-uvx compliance-authoring-skills install --skill catalog-authoring,assessment --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills install --exclude git-workflow --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills install --skill catalog-authoring,assessment --target opencode
 ```
 
 Each install copies the selected skills into the harness's native skill dir and wires the
@@ -81,7 +93,9 @@ Uninstall is non-destructive; a shared MCP server is pruned only once no remaini
 skill needs it:
 
 ```bash
-uvx compliance-authoring-skills uninstall --skill assessment --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill assessment --target claude
 ```
 
 > **Status:** the `compliance-authoring-skills` wrapper is being built on top of `apm-cli` (see
