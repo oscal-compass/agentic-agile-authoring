@@ -13,6 +13,10 @@ Catalog / component-definition / SSP are **not** required references — a POA&M
 them. The affected control ID and component are optional enrichments (this skill attaches them as
 props). Verified against **trestle 5.0.0 / OSCAL 1.2.1**.
 
+A POA&M can also carry (all optional): `local-definitions` (system `components`, `inventory-items`,
+`assessment-assets`), top-level `observations` / `risks`, and top-level **`findings`** — the latter
+three record what an assessment saw. Path C uses all of these (see below).
+
 ## How this skill represents a weakness
 
 The unit is the **weakness** (`poam-item`), not the control. `build_poam.py` keeps everything on the
@@ -73,13 +77,57 @@ the `build_poam.py` header.
 }
 ```
 
+## Path C — component-definition-driven (pre-define, then reference)
+
+Path C uses two `build_poam.py` subcommands instead of the `build` input above.
+
+### Phase 1 — `from-component-definition`
+
+Input is a trestle-style `component-definition.json`. The builder joins every component on
+`Rule_Id`: **service** components map `Rule_Id → control-id`(s); **validation** components map
+`Rule_Id → Check_Id` + the validation-component title. It emits a **pre-defined POA&M**:
+
+- `local-definitions.components` — one `SystemComponent` per component (type `service`/`validation`,
+  status `operational`).
+- `local-definitions.inventory-items` — one per service component (with an `implemented-component`
+  back-reference).
+- `local-definitions.assessment-assets.assessment-platforms` — one per validation component.
+- `poam-items` — one per rule/check, anchored by a **`check-id`** prop (the phase-2 link key) plus
+  `control-id`(s) and `validation-component`(s). `uuid` is `uuid5` of the check-id (stable so phase
+  2 can find it). No observations/findings/risks yet.
+
+Optional **`remediations.json`** maps a check-id (or rule-id) to remediation fields — the same
+per-item fields as path A (`weakness_name`, `weakness_description`, `remediation_plan`,
+`risk_rating`/`severity`, `poc`, `scheduled_completion_date`, `milestones`, `phase`, `poam_id`):
+
+```json
+{ "allowed-base-images": { "weakness_name": "…", "remediation_plan": "…", "risk_rating": "High",
+                           "poc": "…", "milestones": [{"description": "…", "target_date": "…"}] } }
+```
+
+### Phase 2 — `link-assessment`
+
+Inputs: the phase-1 POA&M (`--poam`) + an `assessment-results.json` (`--assessment`). For each
+finding, the builder emits a top-level `Finding` (objective-id target, `not-satisfied`/`satisfied`),
+carries its `Observation` (and any `Risk`), and **cross-links the existing pre-defined poam-item**
+matched by the observation's `check-id` prop (fallback: the finding's control `target-id` vs the
+item's `control-id`). No new poam-items. Keep-all: satisfied checks stay, linked to a satisfied
+finding. For matching to work, assessment observations should carry a `check-id` prop.
+
 ## Verified library facts (for anyone editing `build_poam.py`)
 
-- Import paths: `from trestle.oscal.poam import PlanOfActionAndMilestones, PoamItem`;
+- Import paths: `from trestle.oscal.poam import PlanOfActionAndMilestones, PoamItem, LocalDefinitions,
+  RelatedFinding`;
   `from trestle.oscal.common import Metadata, Property, SystemId, Observation, Risk,
-  RelatedObservation, AssociatedRisk`; `from trestle.oscal import OSCAL_VERSION`
-  (NOT `trestle.common.const`).
+  RelatedObservation, AssociatedRisk, SystemComponent, Status, Finding, FindingTarget,
+  ObjectiveStatus, InventoryItem, AssessmentAssets, AssessmentPlatform, ImplementedComponent,
+  UsesComponent`; `from trestle.oscal import OSCAL_VERSION` (NOT `trestle.common.const`).
 - `system_id` is a **`SystemId` object** (`SystemId(id="…")`), not a bare string.
+- `SystemComponent` needs `status=Status(state="operational")`; a top-level finding uses
+  `FindingTarget(type="objective-id", target_id=<control>, status=ObjectiveStatus(state=
+  "not-satisfied"|"satisfied"))`; a poam-item references it via
+  `related_findings=[RelatedFinding(finding_uuid=…)]`. `ObjectiveStatus.state` is an enum — read it
+  as `.value`, not `.root`.
 - poam-item cross-links: `related_observations=[RelatedObservation(observation_uuid=…)]` and
   `related_risks=[AssociatedRisk(risk_uuid=…)]` (the field is `related-risks`, its element is
   `AssociatedRisk` — do **not** use a bare `associated-risks` field on the poam-item).

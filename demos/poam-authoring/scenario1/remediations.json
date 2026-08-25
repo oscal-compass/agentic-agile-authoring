@@ -1,0 +1,62 @@
+{
+  "allowed-base-images": {
+    "poam_id": "POAM-001",
+    "weakness_name": "Base image not restricted to an approved allow list",
+    "weakness_description": "Containers may run base images outside the cluster-wide approved allow list, weakening supply-chain assurance for CM-2 (Baseline Configuration).",
+    "risk_rating": "High",
+    "poc": "Platform Security Team",
+    "scheduled_completion_date": "2026-12-31",
+    "remediation_plan": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines.",
+    "milestones": [{"description": "Publish approved base-image allow list", "target_date": "2026-10-01"},
+                    {"description": "Enforce Kyverno allowed-base-images policy in audit->enforce", "target_date": "2026-11-15"}]
+  },
+  "policy-high-scan": {
+    "poam_id": "POAM-007",
+    "weakness_name": "High-level vulnerability scan not enabled",
+    "weakness_description": "The cluster scan profile does not run at the high level required by policy for CM-6 (Configuration Settings).",
+    "risk_rating": "High",
+    "poc": "Platform Team",
+    "scheduled_completion_date": "2026-11-30",
+    "remediation_plan": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline.",
+    "milestones": [{"description": "Enable high-level scan profile", "target_date": "2026-10-15"}]
+  },
+  "policy-disallowed-roles": {
+    "poam_id": "POAM-006",
+    "weakness_name": "Disallowed cluster roles in use",
+    "weakness_description": "RoleBindings grant roles outside the allowed set, violating AC-1 (Policy and Procedures) least-privilege expectations.",
+    "risk_rating": "Moderate",
+    "poc": "Platform Team",
+    "scheduled_completion_date": "2026-12-15",
+    "remediation_plan": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence.",
+    "milestones": [{"description": "Remediate disallowed RoleBindings", "target_date": "2026-11-01"}]
+  },
+  "disallow-capabilities": {
+    "poam_id": "POAM-004",
+    "weakness_name": "Added Linux capabilities not disallowed",
+    "weakness_description": "Containers could add Linux capabilities beyond the policy allow list (CM-2.1).",
+    "risk_rating": "Moderate",
+    "poc": "Platform Security Team",
+    "remediation_plan": "Enforce the Kyverno disallow-capabilities policy across all namespaces."
+  },
+  "policy-deployment": {
+    "poam_id": "POAM-005",
+    "weakness_name": "Deployment minimum-replica policy not guaranteed",
+    "weakness_description": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
+    "poc": "Platform Team",
+    "remediation_plan": "Enforce the OCM policy-deployment minimum-replica policy."
+  },
+  "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions": {
+    "poam_id": "POAM-002",
+    "weakness_name": "GitHub API version may be unsupported",
+    "weakness_description": "The GitHub API might not return a supported version (CM-2).",
+    "poc": "DevOps Team",
+    "remediation_plan": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation."
+  },
+  "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty": {
+    "poam_id": "POAM-003",
+    "weakness_name": "GitHub organization may be empty",
+    "weakness_description": "The GitHub org might have no members (AC-2, Account Management).",
+    "poc": "DevOps Team",
+    "remediation_plan": "Alert via Auditree if the GitHub org membership drops to zero."
+  }
+}

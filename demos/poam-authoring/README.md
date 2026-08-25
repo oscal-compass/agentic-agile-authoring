@@ -6,13 +6,19 @@ skills: [poam-authoring]
 # Demo: authoring a POA&M
 
 Produce a valid OSCAL **Plan of Action and Milestones** (`plan-of-action-and-milestones.json`) in
-natural language — one installed skill, no orchestrator persona. Two scenarios exercise the two
+natural language — one installed skill, no orchestrator persona. Two scenarios exercise two
 input paths:
 
-- **Scenario 1 — assessment result → POA&M** (the common path): draft weaknesses from an
-  assessment's non-compliant findings, then author the remediation plan.
+- **Scenario 1 — component-definition → pre-defined POA&M → assessment linking** (closes the
+  ecosystem loop): pre-define one weakness per rule/check from a `component-definition.json` with
+  remediation authored up front, then layer an assessment result in as observations/findings that
+  *reference* the pre-defined items.
 - **Scenario 2 — FedRAMP POA&M xlsx → POA&M**: convert a FedRAMP-format spreadsheet you already
   maintain.
+
+> The classic **reactive** path — draft weaknesses from an assessment's failed findings, then author
+> remediation (`poam-authoring`, path A) — is also supported; scenario 1 shows the newer
+> component-definition-driven path (path C) instead.
 
 ## Install
 
@@ -35,76 +41,89 @@ project in the harness so it picks up the skill + `trestle`.
 
 ---
 
-## Scenario 1 — assessment result → POA&M
+## Scenario 1 — component-definition → pre-defined POA&M → assessment linking
 
-Run in a working directory with an assessment result. This demo ships a sample OSCAL assessment
-result — [`assessment-results.json`](assessment-results.json) (a valid `assessment-results` for the
-`k8s-prod` cluster; copy it into your working dir first).
+This closes the loop `component-definition → POA&M → assessment`. The demo ships (copy into your
+working dir first):
 
-### Step 1 — Ask for a POA&M
+- [`scenario1/component-definition.json`](scenario1/component-definition.json) — a `k8s-prod`
+  component-definition with **service** components (GitHub, Managed Kubernetes) that map rules to
+  controls, and **validation** components (Auditree, Kyverno, OCM) that carry the checks.
+- [`scenario1/remediations.json`](scenario1/remediations.json) — remediation authored up front,
+  keyed by check id (optional input; supply your own or let the agent elicit it).
+- [`scenario1/assessment-results.json`](scenario1/assessment-results.json) — a valid
+  `assessment-results` over those checks (a subset `not-satisfied`, the rest `satisfied`), each
+  observation carrying a `check-id` prop for linking.
 
-> From assessment-results.json, create a Plan of Action and Milestones (POA&M) for the
-> non-compliant findings.
+### Step 1 — Pre-define the POA&M from the component-definition
 
-The agent reads the OSCAL assessment result, keeps **only the findings whose status is
-`not-satisfied`** (here AC-2, AU-2, and SC-8; the satisfied AC-3 and CM-6 are skipped), and drafts
-one weakness per failed finding — naming the *failure*, not the requirement (e.g. "MFA not enforced
-on admin accounts") and carrying the finding's evidence and control id across. It then asks you for
-the remediation details the assessment does not contain. (`poam-authoring`, path A)
+> From component-definition.json, pre-define a POA&M — one weakness per rule/check with remediation
+> up front — and fill its local-definitions from the components.
 
-### Step 2 — Provide the remediation plan
+The agent joins the component-definition on `Rule_Id` (service components give the control-id;
+validation components give the check-id + which tool checks it), then builds a **pre-defined POA&M**:
+one poam-item per rule/check (a *potential* weakness), each anchored by `check-id` + `control-id` +
+`validation-component`, with `local-definitions` (components / inventory-items / assessment-assets)
+filled from the component-definition. No findings yet. (`poam-authoring`, path C phase 1)
 
-> AC-2: enforce MFA via the IdP for all admin bindings; milestone "Enable MFA policy in IdP" by
-> 2026-10-01; owner Platform Security Team; complete by 2026-12-31; risk High.
-> AU-2: configure the kube-apiserver audit policy; milestone "Deploy audit policy" by 2026-11-01;
-> owner Platform Team; complete by 2026-11-30; risk Moderate.
-> SC-8: enable etcd peer TLS on all control-plane nodes; milestone "Roll out etcd peer certs" by
-> 2026-10-15; owner Platform Team; complete by 2026-12-15; risk High.
+### Step 2 — Link the assessment result (reference, don't recreate)
 
-The agent provisions an isolated environment (prefers `uv`, else a local venv; if neither works it
-stops and asks you to enable one rather than polluting your Python), writes `poam_input.json`, runs
-the skill's `build_poam.py`, and produces the POA&M — valid OSCAL — with each weakness carrying its
-controls, evidence (observation), risk, remediation plan, milestones, owner, and due date. It then
-shows a markdown preview to confirm.
+> Now layer assessment-results.json onto that pre-defined POA&M.
+
+The agent adds each finding as a top-level `Finding` (+ observation, + risk), and **references the
+existing pre-defined poam-item** for the same check (matched by `check-id`) — creating no new items.
+Passed checks stay too, linked to a `satisfied` finding (keep-all catalog). (path C phase 2)
 
 ### What you'll see (process log)
 
 ```console
 $ command -v uv && echo "→ using uv (isolated)"     # else falls back to python -m venv
 → using uv (isolated)
-# the skill drafts weaknesses, you supply the plan, it writes poam_input.json, then builds:
-$ uv run --with 'compliance-trestle>=3.0' python build_poam.py --input poam_input.json --output-dir poam/
-OK: wrote poam/plan-of-action-and-milestones.json (3 poam-item(s), 3 observation(s), 3 risk(s)); re-read validates.
+# phase 1 — pre-define from the component-definition:
+$ uv run --with 'compliance-trestle>=3.0' python build_poam.py from-component-definition \
+    --input component-definition.json --remediations remediations.json \
+    --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir predefined/
+OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, local-definitions filled); re-read validates.
+# phase 2 — link the assessment (reference existing items):
+$ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
+    --poam predefined/plan-of-action-and-milestones.json \
+    --assessment assessment-results.json --output-dir poam/
+OK: wrote linked poam/plan-of-action-and-milestones.json (7 poam-item(s), 7 finding(s): 3 open / 4 satisfied; 7 linked, 0 unmatched); re-read validates.
 $ trestle validate -t plan-of-action-and-milestones
 VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
 ```
 
 ### Result
 
-Markdown preview shown for confirmation:
+Markdown preview shown for confirmation (open = `not-satisfied` finding, ✓ = satisfied):
 
 ```markdown
-# Kubernetes Cluster POA&M — Remediation Plan
+# Kubernetes Cluster POA&M
 **System:** k8s-prod · **Version:** 1.0 · **OSCAL:** 1.2.1
 
-| POAM ID  | Weakness                            | Controls | Risk     | POC                    | Due        | Milestones                              |
-|----------|-------------------------------------|----------|----------|------------------------|------------|-----------------------------------------|
-| POAM-001 | MFA not enforced on admin accounts  | ac-2     | High     | Platform Security Team | 2026-12-31 | Enable MFA (target: 2026-10-01)         |
-| POAM-002 | API audit logging not configured    | au-2     | Moderate | Platform Team          | 2026-11-30 | Deploy audit policy (target: 2026-11-01)|
-| POAM-003 | etcd peer traffic not encrypted     | sc-8     | High     | Platform Team          | 2026-12-15 | Roll out etcd peer certs (2026-10-15)   |
+| POAM ID  | Weakness                                  | Ctrl   | Validation | Status        | Risk     | POC                    |
+|----------|-------------------------------------------|--------|------------|---------------|----------|------------------------|
+| POAM-001 | Base image not restricted to allow list   | cm-2   | Kyverno    | not-satisfied | High     | Platform Security Team |
+| POAM-002 | GitHub API version may be unsupported      | cm-2   | Auditree   | satisfied     | —        | DevOps Team            |
+| POAM-003 | GitHub organization may be empty           | ac-2   | Auditree   | satisfied     | —        | DevOps Team            |
+| POAM-004 | Added Linux capabilities not disallowed    | cm-2.1 | Kyverno    | satisfied     | Moderate | Platform Security Team |
+| POAM-005 | Deployment minimum-replica not guaranteed  | cm-2   | OCM        | satisfied     | —        | Platform Team          |
+| POAM-006 | Disallowed cluster roles in use            | ac-1   | OCM        | not-satisfied | Moderate | Platform Team          |
+| POAM-007 | High-level vulnerability scan not enabled  | cm-6   | OCM        | not-satisfied | High     | Platform Team          |
 
-**Total open items:** 3
+**Total items:** 7 (3 open · 4 satisfied)
 ```
 
-Full validated OSCAL output (3 poam-items, each cross-linked to a generated observation and risk):
-**[`expected-output/scenario1-assessment-to-poam.json`](expected-output/scenario1-assessment-to-poam.json)**
+Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; 7 findings/observations
+cross-linked to the existing items):
+**[`scenario1/plan-of-action-and-milestones.json`](scenario1/plan-of-action-and-milestones.json)**
 
 ---
 
 ## Scenario 2 — FedRAMP POA&M xlsx → POA&M
 
 For teams who already maintain the POA&M in the FedRAMP spreadsheet. This demo ships a sample —
-[`sample-poam.xlsx`](sample-poam.xlsx) (sheet `Open POA&M Items`, row 5 headers, two k8s weaknesses;
+[`scenario2/sample-poam.xlsx`](scenario2/sample-poam.xlsx) (sheet `Open POA&M Items`, row 5 headers, two k8s weaknesses;
 required columns `POAM ID` / `Weakness Name` / `Weakness Description` / `Controls`). Copy it into
 your working dir first.
 
@@ -134,7 +153,7 @@ VALID: Model plan-of-action-and-milestones.json passed the Validator ...
 
 Full validated OSCAL output (2 poam-items; the converter auto-generates a linked observation and
 risk for each, with deterministic UUIDs):
-**[`expected-output/scenario2-xlsx-to-poam.json`](expected-output/scenario2-xlsx-to-poam.json)**
+**[`scenario2/plan-of-action-and-milestones.json`](scenario2/plan-of-action-and-milestones.json)**
 
 > This path is **control-centric** (the FedRAMP template requires the `Controls` column). If your
 > spreadsheet has no controls (e.g. a scanner export keyed only by check id), use Scenario 1
