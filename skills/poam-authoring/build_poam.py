@@ -291,6 +291,7 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
         components[title] = {
             "type": ctype if ctype in _COMPONENT_TYPES else (ctype or "service"),
             "description": comp.get("description") or title,
+            "rules": [],  # [{"rule_id", "check_id"}] this component declares (for local-def props)
         }
         # component-level props carry the rule_set details (Rule_Id/Description, Check_Id/Description)
         by_set: dict[str, dict] = {}
@@ -302,6 +303,9 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
             rid = slot.get("Rule_Id")
             if not rid:
                 continue
+            pair = {"rule_id": rid, "check_id": slot.get("Check_Id")}
+            if pair not in components[title]["rules"]:
+                components[title]["rules"].append(pair)
             r = rule(rid)
             if slot.get("Rule_Description") and not r["description"]:
                 r["description"] = slot["Rule_Description"]
@@ -333,9 +337,17 @@ def _local_definitions(components: dict, system_id: str | None) -> LocalDefiniti
     platforms: list[AssessmentPlatform] = []
     for title, meta in components.items():
         cuuid = _u5("comp", title)
+        # carry the rule-id / check-id this component declares (from the component-definition)
+        cprops: list[Property] = []
+        for pair in meta.get("rules") or []:
+            if pair.get("rule_id"):
+                cprops.append(_prop("rule-id", str(pair["rule_id"])))
+            if pair.get("check_id"):
+                cprops.append(_prop("check-id", str(pair["check_id"])))
         sys_components.append(SystemComponent(
             uuid=cuuid, type=meta["type"], title=title,
             description=meta["description"], status=Status(state="operational"),
+            props=cprops or None,
         ))
         if meta["type"] == "service":
             inv_items.append(InventoryItem(

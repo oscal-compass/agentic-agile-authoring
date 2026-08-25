@@ -82,7 +82,10 @@ uv run --with 'compliance-trestle>=3.0' python "$SKILL_DIR/build_poam.py" from-c
 
 `--remediations`, `--system-id`, `--title`, `--version` are all optional. The result
 (`poam/plan-of-action-and-milestones.json`) is valid OSCAL — one poam-item per rule/check plus
-`local-definitions` — round-tripped through `oscal_read`.
+`local-definitions` — round-tripped through `oscal_read`. Each component in `local-definitions`
+also carries the **`rule-id` / `check-id` props** it declares in the component-definition (a service
+component lists all its rules; a validation component lists the checks it runs), so the component's
+scope is traceable directly on the component entry.
 
 ## Next
 
