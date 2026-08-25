@@ -4,27 +4,40 @@ Prerequisite: a **pre-defined POA&M** built from a component-definition
 ([from-component-definition.md](from-component-definition.md)) and an OSCAL
 `assessment-results.json`.
 
-This step layers the assessment onto the pre-defined POA&M: each finding becomes a top-level
-`Finding` (with its `Observation`, and an optional `Risk`) and is **cross-linked to the existing
-pre-defined poam-item** for the same check. **No new poam-items are created** — the weakness catalog
-was already defined in phase 1; assessment only records *which* weaknesses are currently open.
+This step layers the assessment onto the pre-defined POA&M: each result becomes a top-level
+`Finding` (with its `Observation`, and any `Risk`) and is **cross-linked to the existing pre-defined
+poam-item** for the same rule/check. **No new poam-items are created** — the weakness catalog was
+already defined in phase 1; assessment only records *which* weaknesses are currently open.
 
-## The linking key: `check-id` (fallback `control-id`)
+The builder handles **two shapes** of assessment result:
 
-For each finding in the assessment result:
+### A) Results with explicit `findings[]`
 
-1. Read the finding's linked observation(s) (`finding.related-observations[].observation-uuid` →
-   `results[].observations[]`) and take the observation's **`check-id`** prop.
-2. Find the pre-defined poam-item whose **`check-id`** prop matches. If the observation has no
-   `check-id`, fall back to matching the finding's control **`target-id`** against the item's
-   `control-id` prop.
-3. Append the observation + a top-level `Finding` (objective-id target, state
-   `not-satisfied`/`satisfied`) + any linked `Risk`, and cross-link the matched poam-item via
-   `related-findings` / `related-observations` / `related-risks`.
+For each finding: read its linked observation(s)
+(`finding.related-observations[].observation-uuid` → `results[].observations[]`), take the
+observation's rule key, carry the observation + emit a top-level `Finding` (objective-id target,
+`not-satisfied`/`satisfied`) + any linked `Risk`, and cross-link the matched item.
 
-For the linking to be unambiguous, the assessment's observations should carry a **`check-id`** prop
-naming the rule/check that was evaluated (the demo assessment does this). If yours does not, add it,
-or rely on the control-id fallback.
+### B) Observation-only results (real PVP output — Auditree / Kyverno / OCM)
+
+Real policy-validation output often has **observations but no findings**, with per-subject
+pass/fail. The builder **derives** a finding per observation:
+
+- **rule key** ← the observation's `check-id`, else `assessment-rule-id`, else `rule-id` prop.
+- **state** ← from the observation's **subject-level `result` props**: if *any* evaluated subject is
+  `failure`/`fail`/`error` (etc.) the rule is **`not-satisfied`**; if subjects were evaluated and
+  none failed, **`satisfied`**. (An observation with no per-subject result at all is treated as
+  `not-satisfied`, conservatively.)
+- The full observation — including every evaluated subject and its `result`/`reason` — is carried
+  into the POA&M as evidence, and a derived `Finding` (target = the item's `control-id`) is linked.
+
+## The linking key
+
+In both shapes the item is matched by the observation's rule identifier —
+**`check-id` → `assessment-rule-id` → `rule-id`** (first present) — against the pre-defined item's
+`check-id` prop, falling back to the finding's control `target-id` vs the item's `control-id`. So an
+assessment need only name each observation's rule via any of those props (the demo's real assessment
+uses `assessment-rule-id`).
 
 ## Keep-all semantics
 
@@ -33,9 +46,11 @@ The pre-defined POA&M is a **catalog of potential weaknesses**. Linking keeps *e
 - A **not-satisfied** finding marks its item as a currently-open weakness.
 - A **satisfied** finding is still recorded and linked — the item stays as a pre-declared weakness
   that currently passes (useful provenance: "this was checked and passed").
+- An item whose rule the assessment **did not cover** keeps its pre-defined entry with **no
+  finding** (a known potential weakness that simply wasn't assessed this run).
 
 This is deliberate (the component-definition-driven interpretation): the item set is fixed by the
-component-definition; the assessment only toggles open/closed via findings.
+component-definition; the assessment only toggles open/closed (or leaves untouched) via findings.
 
 ## Run it
 
@@ -52,8 +67,8 @@ uv run --with 'compliance-trestle>=3.0' python "$SKILL_DIR/build_poam.py" link-a
 
 The result (`linked/plan-of-action-and-milestones.json`) is valid OSCAL, round-tripped through
 `oscal_read`. The tool prints how many findings are open vs satisfied and how many linked to a
-pre-defined item (`unmatched` findings are still recorded, with a warning — usually a `check-id`
-mismatch to investigate).
+pre-defined item (`unmatched` findings are still recorded, with a warning — usually a rule-id ⇄
+check-id mismatch to investigate).
 
 ## Next
 
