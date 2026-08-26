@@ -36,7 +36,7 @@ demo carries any ordering.
 | `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
 | `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
 | `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
-| `poam-authoring` | Author an OSCAL POA&M from an assessment's failed findings — remediation plan, milestones, POC, due date | — |
+| `poam-authoring` | Author an OSCAL POA&M — reactively from an assessment's failed findings, from a FedRAMP xlsx, or pre-defined from a `component-definition` then linked to an assessment; generates `risks[]` and works inside a trestle workspace | — |
 
 ### Framework onboarding
 
@@ -112,8 +112,11 @@ uninstall, and a demo video:
   component, and generate an assessment result (`catalog-authoring → component-definition →
   assessment`).
 - **[`demos/poam-authoring/`](demos/poam-authoring/README.md)** — author a valid OSCAL Plan of
-  Action and Milestones, via both input paths (assessment result → POA&M, and FedRAMP xlsx →
-  POA&M).
+  Action and Milestones, in three scenarios: `01-component-definition` (pre-define from a
+  component-definition, then link an assessment), `02-trestle-workspace` (same path run inside a
+  trestle workspace with remediation/risk consolidated onto the component-definition), and
+  `03-fedramp-xlsx` (convert a FedRAMP spreadsheet). Each scenario lists expected-result invariants,
+  so the demo doubles as validation.
 
 ## Contributing a skill
 

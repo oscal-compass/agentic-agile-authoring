@@ -9,20 +9,20 @@ Produce a valid OSCAL **Plan of Action and Milestones** (`plan-of-action-and-mil
 natural language — one installed skill, no orchestrator persona. Three scenarios exercise the
 input paths:
 
-- **Scenario 1 — component-definition → pre-defined POA&M → assessment linking** (closes the
-  ecosystem loop): pre-define one weakness per rule/check from a `component-definition.json` with
-  remediation authored up front (a separate `remediations.json`), then layer an assessment result in
-  as observations/findings that *reference* the pre-defined items.
-- **Scenario 2 — FedRAMP POA&M xlsx → POA&M**: convert a FedRAMP-format spreadsheet you already
-  maintain.
-- **Scenario 3 — trestle workspace + consolidated component-definition**: the same path C as
-  scenario 1, but run **inside a trestle workspace** (inputs found deterministically from the
-  directory layout — no paths given) and with remediation/risk **consolidated onto the
-  component-definition's props** (no separate `remediations.json`). Produces the *same* POA&M as
-  scenario 1.
+- **[`01-component-definition`](01-component-definition/) — component-definition → pre-defined POA&M
+  → assessment linking** (closes the ecosystem loop): pre-define one weakness per rule/check from a
+  `component-definition.json` with remediation authored up front (a separate `remediations.json`),
+  then layer an assessment result in as observations/findings that *reference* the pre-defined items.
+- **[`02-trestle-workspace`](02-trestle-workspace/) — trestle workspace + consolidated
+  component-definition**: the same path C as scenario 01, but run **inside a trestle workspace**
+  (inputs found deterministically from the directory layout — no paths given) and with
+  remediation/risk **consolidated onto the component-definition's props** (no separate
+  `remediations.json`). Produces the *same* POA&M as scenario 01.
+- **[`03-fedramp-xlsx`](03-fedramp-xlsx/) — FedRAMP POA&M xlsx → POA&M**: convert a FedRAMP-format
+  spreadsheet you already maintain.
 
 > The classic **reactive** path — draft weaknesses from an assessment's failed findings, then author
-> remediation (`poam-authoring`, path A) — is also supported; scenario 1 shows the newer
+> remediation (`poam-authoring`, path A) — is also supported; scenario 01 shows the newer
 > component-definition-driven path (path C) instead.
 
 > **These demos double as validation.** Each scenario lists an **Expected result** — but an agent
@@ -53,20 +53,21 @@ project in the harness so it picks up the skill + `trestle`.
 
 ---
 
-## Scenario 1 — component-definition → pre-defined POA&M → assessment linking
+## Scenario 01 — component-definition → pre-defined POA&M → assessment linking
 
 This closes the loop `component-definition → POA&M → assessment`. The demo ships (copy into your
 working dir first):
 
-- [`scenario1/component-definition.json`](scenario1/component-definition.json) — a `k8s-prod`
-  component-definition with **service** components (GitHub, Managed Kubernetes) that map rules to
-  controls, and **validation** components (Auditree, Kyverno, OCM) that carry the checks.
-- [`scenario1/remediations.json`](scenario1/remediations.json) — remediation authored up front,
-  keyed by check id (optional input; supply your own or let the agent elicit it).
-- [`scenario1/assessment-results.json`](scenario1/assessment-results.json) — a **real** PVP
-  assessment over those checks (Auditree / Kyverno / OCM). It has **observations only, no findings**:
-  each observation names its rule via an `assessment-rule-id` prop and records per-subject
-  `result: pass|failure` on the actual cluster resources it evaluated.
+- [`01-component-definition/component-definition.json`](01-component-definition/component-definition.json) —
+  a `k8s-prod` component-definition with **service** components (GitHub, Managed Kubernetes) that map
+  rules to controls, and **validation** components (Auditree, Kyverno, OCM) that carry the checks.
+- [`01-component-definition/remediations.json`](01-component-definition/remediations.json) —
+  remediation authored up front, keyed by check id (optional input; supply your own or let the agent
+  elicit it).
+- [`01-component-definition/assessment-results.json`](01-component-definition/assessment-results.json) —
+  a **real** PVP assessment over those checks (Auditree / Kyverno / OCM). It has **observations only,
+  no findings**: each observation names its rule via an `assessment-rule-id` prop and records
+  per-subject `result: pass|failure` on the actual cluster resources it evaluated.
 
 ### Step 1 — Pre-define the POA&M from the component-definition
 
@@ -135,7 +136,7 @@ Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; a t
 per item** — generic/xlsx-style: rating → `original-risk-rating` prop, remediation → response, due
 date → deadline — of which 2 are `closed` once their check passed; 6 findings/observations — derived
 from the assessment's per-subject pass/fail — cross-linked to the existing items):
-**[`scenario1/plan-of-action-and-milestones.json`](scenario1/plan-of-action-and-milestones.json)**
+**[`01-component-definition/plan-of-action-and-milestones.json`](01-component-definition/plan-of-action-and-milestones.json)**
 
 **Expected result (validation)** — check these invariants, not exact strings:
 - `trestle validate -t plan-of-action-and-milestones` → **VALID**
@@ -146,10 +147,93 @@ from the assessment's per-subject pass/fail — cross-linked to the existing ite
 
 ---
 
-## Scenario 2 — FedRAMP POA&M xlsx → POA&M
+## Scenario 02 — trestle workspace + consolidated component-definition
+
+Same authoring path as scenario 01 (component-definition → pre-defined POA&M → assessment linking),
+but it shows two conveniences that remove all the manual plumbing:
+
+1. **The cwd is a trestle workspace.** `02-trestle-workspace/` has a `.trestle/` marker and the
+   standard per-model directories, so the agent finds every input by its canonical path and writes
+   the POA&M into place — **you give no file paths**.
+2. **Remediation/risk is consolidated onto the component-definition.** Each *validation* rule-set
+   carries `Remediation_Plan` / `Risk_Rating` / `POC` / `Scheduled_Completion_Date` /
+   `Weakness_Name` / `Weakness_Description` / `Milestone` props, so the component-definition is the
+   **single source** — there is no `remediations.json`. (The **POA&M ID** is *not* on the
+   component-definition — it is assigned when the POA&M is built, so it stays closed within the POA&M.)
+
+The demo ships this ready-made workspace (copy the whole `02-trestle-workspace/` tree into your
+working dir):
+
+```
+02-trestle-workspace/                         # = a trestle workspace (.trestle/ present)
+  component-definitions/k8s-prod/component-definition.json   # remediation/risk consolidated on validation props
+  assessment-results/k8s-prod/assessment-results.json        # the same real PVP assessment as scenario 01
+  plan-of-action-and-milestones/k8s-prod/…                   # where the POA&M is written (and validated in place)
+  catalogs/  profiles/  system-security-plans/  …            # the rest of the workspace skeleton
+```
+
+### Step 1 — Author the POA&M (no paths, no remediations file)
+
+> I'm in a trestle workspace. Build the POA&M from the component-definition and the assessment
+> result in it.
+
+The agent detects the `.trestle/` root, resolves the component-definition and assessment-results
+from their canonical directories, reads remediation/risk **from the component-definition's validation
+props** (no `remediations.json`), pre-defines one item per rule/check, links the assessment, and
+writes straight to `plan-of-action-and-milestones/k8s-prod/` — the location `trestle validate`
+expects, so no copy step. (`poam-authoring`, path C + [trestle-workspace.md])
+
+### What you'll see (process log)
+
+```console
+$ d="$PWD"; while [ "$d" != / ]; do [ -d "$d/.trestle" ] && echo "workspace: $d" && break; d=$(dirname "$d"); done
+workspace: /…/02-trestle-workspace
+# phase 1 — pre-define from the CONSOLIDATED component-definition (note: no --remediations):
+$ uv run --with 'compliance-trestle>=3.0' python build_poam.py from-component-definition \
+    --input component-definitions/k8s-prod/component-definition.json \
+    --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir predefined/
+OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, 7 risk(s), local-definitions filled); re-read validates.
+# phase 2 — link the assessment, writing to the canonical workspace path:
+$ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
+    --poam predefined/plan-of-action-and-milestones.json \
+    --assessment assessment-results/k8s-prod/assessment-results.json \
+    --output-dir plan-of-action-and-milestones/k8s-prod/
+OK: wrote linked plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 7 risk(s): 5 open / 2 closed; 6 linked, 0 unmatched); re-read validates.
+$ trestle validate -t plan-of-action-and-milestones      # no mkdir/cp — already in place
+VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
+```
+
+### Result
+
+The **same weaknesses, remediation, risk, and findings as scenario 01** (7 items / 6 findings; item
+UUIDs are keyed by check-id, so they match too) — the *inputs* differ (consolidated props instead of
+a `remediations.json`, and deterministic workspace discovery instead of supplied paths), and because
+the POA&M ID lives in the POA&M (not on the component-definition) the items are **auto-numbered
+`POAM-001…` in rule order** rather than carrying scenario 01's hand-assigned IDs.
+**[`02-trestle-workspace/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json`](02-trestle-workspace/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json)**
+
+> Prefer keeping remediation in a separate file, or need to tweak a field at build time? Pass
+> `--remediations remediations.json` as well — its fields **override** the consolidated props.
+
+> **Risk conventions.** The generated `risks[]` default to the **generic** (xlsx-style) shape —
+> rating in an `original-risk-rating` prop, no FedRAMP-specific props. For a FedRAMP submission, add
+> `--risk-style fedramp` to emit the rating as `likelihood`/`impact` facets under the
+> `http://fedramp.gov/ns/oscal` namespace instead. Neither style puts a control-id on the risk (the
+> control is already on the poam-item + finding); the agent picks the style from whether the POA&M is
+> for FedRAMP (see [from-component-definition.md](../../skills/poam-authoring/from-component-definition.md)).
+
+**Expected result (validation)** — check these invariants, not exact strings:
+- `trestle validate -t plan-of-action-and-milestones` → **VALID**, with the file written to `plan-of-action-and-milestones/k8s-prod/` (no `mkdir`/`cp` — the workspace's canonical path)
+- inputs were found **with no paths given** (workspace discovery) and with **no `remediations.json`** (rating/remediation came from the CD's validation props)
+- same counts as scenario 01: **7 items / 6 findings (4 open · 2 satisfied) / 7 risks (2 `closed`)**; risks default to the generic `original-risk-rating` shape
+- *Varies:* the title text and the `POAM-001…` numbering order. If run with a weak model, be explicit ("path C: pre-define from the component-definition, then link the assessment") and make sure it installs **`compliance-trestle`** (not the unrelated PyPI `trestle`).
+
+---
+
+## Scenario 03 — FedRAMP POA&M xlsx → POA&M
 
 For teams who already maintain the POA&M in the FedRAMP spreadsheet. This demo ships a sample —
-[`scenario2/sample-poam.xlsx`](scenario2/sample-poam.xlsx) (sheet `Open POA&M Items`, row 5 headers, two k8s weaknesses;
+[`03-fedramp-xlsx/sample-poam.xlsx`](03-fedramp-xlsx/sample-poam.xlsx) (sheet `Open POA&M Items`, row 5 headers, two k8s weaknesses;
 required columns `POAM ID` / `Weakness Name` / `Weakness Description` / `Controls`). Copy it into
 your working dir first.
 
@@ -179,99 +263,17 @@ VALID: Model plan-of-action-and-milestones.json passed the Validator ...
 
 Full validated OSCAL output (2 poam-items; the converter auto-generates a linked observation and
 risk for each, with deterministic UUIDs):
-**[`scenario2/plan-of-action-and-milestones.json`](scenario2/plan-of-action-and-milestones.json)**
+**[`03-fedramp-xlsx/plan-of-action-and-milestones.json`](03-fedramp-xlsx/plan-of-action-and-milestones.json)**
+
+> This path is **control-centric** (the FedRAMP template requires the `Controls` column). If your
+> spreadsheet has no controls (e.g. a scanner export keyed only by check id), use scenario 01
+> instead — there the weakness is the unit and control-id is an optional anchor.
 
 **Expected result (validation)** — check these invariants, not exact strings:
 - `trestle validate -t plan-of-action-and-milestones` → **VALID**
 - **2 poam-items** (one per spreadsheet row), each with a `control-id` prop from the `Controls` column
 - **2 observations** and **2 risks**, one linked to each item (deterministic UUIDs, so a re-run is byte-stable here — this path is the trestle task, not the agent)
 - *Varies:* nothing material — the xlsx converter is deterministic; only the surrounding prose the agent prints will differ.
-
-> This path is **control-centric** (the FedRAMP template requires the `Controls` column). If your
-> spreadsheet has no controls (e.g. a scanner export keyed only by check id), use Scenario 1
-> instead — there the weakness is the unit and control-id is an optional anchor.
-
----
-
-## Scenario 3 — trestle workspace + consolidated component-definition
-
-Same authoring path as scenario 1 (component-definition → pre-defined POA&M → assessment linking),
-but it shows two conveniences that remove all the manual plumbing:
-
-1. **The cwd is a trestle workspace.** `scenario3/` has a `.trestle/` marker and the standard
-   per-model directories, so the agent finds every input by its canonical path and writes the POA&M
-   into place — **you give no file paths**.
-2. **Remediation/risk is consolidated onto the component-definition.** Each *validation* rule-set
-   carries `Remediation_Plan` / `Risk_Rating` / `POC` / `Scheduled_Completion_Date` /
-   `Weakness_Name` / `Weakness_Description` / `Milestone` props, so the component-definition is the
-   **single source** — there is no `remediations.json`. (The **POA&M ID** is *not* on the
-   component-definition — it is assigned when the POA&M is built, so it stays closed within the POA&M.)
-
-The demo ships this ready-made workspace (copy the whole `scenario3/` tree into your working dir):
-
-```
-scenario3/                                   # = a trestle workspace (.trestle/ present)
-  component-definitions/k8s-prod/component-definition.json   # remediation/risk consolidated on validation props
-  assessment-results/k8s-prod/assessment-results.json        # the same real PVP assessment as scenario 1
-  plan-of-action-and-milestones/k8s-prod/…                   # where the POA&M is written (and validated in place)
-  catalogs/  profiles/  system-security-plans/  …            # the rest of the workspace skeleton
-```
-
-### Step 1 — Author the POA&M (no paths, no remediations file)
-
-> I'm in a trestle workspace. Build the POA&M from the component-definition and the assessment
-> result in it.
-
-The agent detects the `.trestle/` root, resolves the component-definition and assessment-results
-from their canonical directories, reads remediation/risk **from the component-definition's validation
-props** (no `remediations.json`), pre-defines one item per rule/check, links the assessment, and
-writes straight to `plan-of-action-and-milestones/k8s-prod/` — the location `trestle validate`
-expects, so no copy step. (`poam-authoring`, path C + [trestle-workspace.md])
-
-### What you'll see (process log)
-
-```console
-$ d="$PWD"; while [ "$d" != / ]; do [ -d "$d/.trestle" ] && echo "workspace: $d" && break; d=$(dirname "$d"); done
-workspace: /…/scenario3
-# phase 1 — pre-define from the CONSOLIDATED component-definition (note: no --remediations):
-$ uv run --with 'compliance-trestle>=3.0' python build_poam.py from-component-definition \
-    --input component-definitions/k8s-prod/component-definition.json \
-    --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir predefined/
-OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, 7 risk(s), local-definitions filled); re-read validates.
-# phase 2 — link the assessment, writing to the canonical workspace path:
-$ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
-    --poam predefined/plan-of-action-and-milestones.json \
-    --assessment assessment-results/k8s-prod/assessment-results.json \
-    --output-dir plan-of-action-and-milestones/k8s-prod/
-OK: wrote linked plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 7 risk(s): 5 open / 2 closed; 6 linked, 0 unmatched); re-read validates.
-$ trestle validate -t plan-of-action-and-milestones      # no mkdir/cp — already in place
-VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
-```
-
-### Result
-
-The **same weaknesses, remediation, risk, and findings as scenario 1** (7 items / 6 findings; item
-UUIDs are keyed by check-id, so they match too) — the *inputs* differ (consolidated props instead of
-a `remediations.json`, and deterministic workspace discovery instead of supplied paths), and because
-the POA&M ID lives in the POA&M (not on the component-definition) the items are **auto-numbered
-`POAM-001…` in rule order** rather than carrying scenario 1's hand-assigned IDs.
-**[`scenario3/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json`](scenario3/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json)**
-
-**Expected result (validation)** — check these invariants, not exact strings:
-- `trestle validate -t plan-of-action-and-milestones` → **VALID**, with the file written to `plan-of-action-and-milestones/k8s-prod/` (no `mkdir`/`cp` — the workspace's canonical path)
-- inputs were found **with no paths given** (workspace discovery) and with **no `remediations.json`** (rating/remediation came from the CD's validation props)
-- same counts as scenario 1: **7 items / 6 findings (4 open · 2 satisfied) / 7 risks (2 `closed`)**; risks default to the generic `original-risk-rating` shape
-- *Varies:* the title text and the `POAM-001…` numbering order. If run with a weak model, be explicit ("path C: pre-define from the component-definition, then link the assessment") and make sure it installs **`compliance-trestle`** (not the unrelated PyPI `trestle`).
-
-> Prefer keeping remediation in a separate file, or need to tweak a field at build time? Pass
-> `--remediations remediations.json` as well — its fields **override** the consolidated props.
-
-> **Risk conventions.** The generated `risks[]` default to the **generic** (xlsx-style) shape —
-> rating in an `original-risk-rating` prop, no FedRAMP-specific props. For a FedRAMP submission, add
-> `--risk-style fedramp` to emit the rating as `likelihood`/`impact` facets under the
-> `http://fedramp.gov/ns/oscal` namespace instead. Neither style puts a control-id on the risk (the
-> control is already on the poam-item + finding); the agent picks the style from whether the POA&M is
-> for FedRAMP (see [from-component-definition.md](../../skills/poam-authoring/from-component-definition.md)).
 
 ## Uninstall
 
