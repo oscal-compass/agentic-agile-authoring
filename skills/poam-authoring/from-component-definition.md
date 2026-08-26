@@ -68,6 +68,15 @@ keyed by check-id (or rule-id). Every field is optional; a good weakness name/de
 If you omit an entry, the builder still creates the poam-item using the check/rule description as a
 generic "Potential weakness: …" name. Fill in whatever the user can provide.
 
+**How remediation lands in OSCAL.** Each item gets a top-level `risk` whose **`remediations[]`** (an
+OSCAL *response*) holds the fix; `remediation_plan` → the response description, and each
+**`milestone` → a response `task` (`type: milestone`, `target_date` → `on-date` timing)**. The
+remediation is **pass-through / reference-driven**: instead of the simple fields above, an entry may
+supply a full `remediations` array (any valid `response` shape — `lifecycle`, `props`, `origins`,
+`required-assets`, `tasks` with timing/responsible-roles), or a whole `risk` object, and it is
+written through verbatim and trestle-validated — no code change for a new remediation format. (This
+is the same pass-through the scan-tool path uses — see [from-scan-remediations.md](from-scan-remediations.md).)
+
 ### Consolidating remediation onto the component-definition (single source)
 
 Instead of a separate `remediations.json`, you can carry the remediation/risk **on the

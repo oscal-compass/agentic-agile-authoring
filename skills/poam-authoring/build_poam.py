@@ -60,15 +60,35 @@ mapping / a component-definition.json / a catalog) provides one — see from-ass
           "scheduled_completion_date": "2026-12-31",  # -> scheduled-completion-date prop
           "milestones": [{"description": "...", "target_date": "2026-10-01"}],  # -> milestone props
           "remediation_plan": "...",       # -> poam-item remarks
+          # --- free-form pass-through (fill these from a customer's reference/sample) ---
+          "extra_props": [                 # -> extra poam-item props, verbatim (any name/ns/value)
+            {"name": "<any>", "ns": "<any-uri>", "value": "..."}
+          ],
           # --- optional evidence/risk carried from the assessment result ---
           "observation": {"description": "...", "methods": ["TEST"], "title": "..."},
-          "risk": {"statement": "...", "status": "open", "title": "...", "description": "..."}
+          # "risk" is written through to OSCAL AS-IS (validated by trestle) — put whatever shape a
+          # customer's remediation reference calls for; only uuid/title/description/statement/status
+          # default in when omitted. This is how an arbitrary remediation format gets filled in:
+          "risk": {
+            "status": "open", "deadline": "2026-12-31T00:00:00+00:00",
+            "props": [{"name": "vendor-finding-id", "ns": "<uri>", "value": "F-42"}],
+            "characterizations": [ ... ],   # e.g. likelihood/impact facets under any system uri
+            "remediations": [               # THE remediation lives here (OSCAL `response`)
+              {"lifecycle": "planned", "title": "...", "description": "...",
+               "props": [ ... ], "origins": [ ... ], "required-assets": [ ... ],
+               "tasks": [ {"type": "milestone", "title": "...", "timing": { ... },
+                           "responsible-roles": [ ... ]} ]}
+            ]
+          }
         }
       ]
     }
 
 If an item includes "observation" and/or "risk", a paired OSCAL Observation/Risk is created at the
-POA&M top level and cross-linked from the poam-item (related-observations / related-risks).
+POA&M top level and cross-linked from the poam-item (related-observations / related-risks). The
+"risk" object (and "extra_props") are pass-through: their exact shape is whatever a mapping/reference
+specifies, so a new scanner or platform remediation format needs no code change — see
+from-scan-remediations.md.
 
 ── from-component-definition (path C, phase 1): --input component-definition.json
    [--remediations remediations.json] [--system-id ID] [--title T] [--version V]
@@ -154,6 +174,30 @@ def _prop(name: str, value: str) -> Property:
     return Property(name=name, value=value, ns=NS_PROP)
 
 
+def _fill_task_uuids(tasks, seed: str) -> None:
+    for j, t in enumerate(tasks or []):
+        if isinstance(t, dict):
+            t.setdefault("uuid", _u5(seed, "task", str(j)))
+            _fill_task_uuids(t.get("tasks"), _u5(seed, str(j)))
+
+
+def _ensure_risk_uuids(rk: dict, seed: str) -> None:
+    """Backfill the uuid on a pass-through risk and its nested remediations/tasks/required-assets
+    so a reference-shaped risk dict validates even when the caller omitted machine ids."""
+    rk.setdefault("uuid", _u5("risk", seed))
+    for i, rem in enumerate(rk.get("remediations") or []):
+        if not isinstance(rem, dict):
+            continue
+        rem.setdefault("uuid", _u5("response", seed, str(i)))
+        for k, ra in enumerate(rem.get("required-assets") or rem.get("required_assets") or []):
+            if isinstance(ra, dict):
+                ra.setdefault("uuid", _u5("asset", seed, str(i), str(k)))
+        _fill_task_uuids(rem.get("tasks"), _u5("rem", seed, str(i)))
+    for m, mf in enumerate(rk.get("mitigating-factors") or rk.get("mitigating_factors") or []):
+        if isinstance(mf, dict):
+            mf.setdefault("uuid", _u5("mf", seed, str(m)))
+
+
 def build_item(raw: dict, index: int, observations: list, risks: list) -> PoamItem:
     name = (raw.get("weakness_name") or "").strip()
     desc = (raw.get("weakness_description") or "").strip()
@@ -192,6 +236,10 @@ def build_item(raw: dict, index: int, observations: list, risks: list) -> PoamIt
             continue
         target = ms.get("target_date")
         props.append(_prop("milestone", f"{d} (target: {target})" if target else d))
+    # pass-through: any additional item props exactly as a reference/mapping specifies them
+    # (free-form name / ns / value — OSCAL props are an extension point).
+    for p in raw.get("extra_props") or []:
+        props.append(Property.model_validate(p))
 
     related_observations = None
     related_risks = None
@@ -209,18 +257,23 @@ def build_item(raw: dict, index: int, observations: list, risks: list) -> PoamIt
         ))
         related_observations = [RelatedObservation(observation_uuid=obs_uuid)]
 
-    # --- optional Risk carried from the assessment result ---
+    # --- optional Risk (pass-through) ---
+    # The `risk` object is written through to OSCAL as-is: whatever shape a reference/mapping gives
+    # it — remediations[] (with lifecycle/props/origins/required-assets/tasks[timing]),
+    # characterizations[], deadline, free-form props, mitigating-factors — is validated by trestle.
+    # So a customer's remediation format is filled here by mapping onto this object, no code change.
+    # Only light defaults (uuid, title, description, statement, status) fill in when omitted.
     rk = raw.get("risk")
     if rk:
-        risk_uuid = _u5("risk", poam_id)
-        risks.append(Risk(
-            uuid=risk_uuid,
-            title=rk.get("title") or f"Risk: {name}",
-            description=rk.get("description") or desc,
-            statement=rk.get("statement") or f"The system does not satisfy the requirement: {name}.",
-            status=rk.get("status") or "open",
-        ))
-        related_risks = [AssociatedRisk(risk_uuid=risk_uuid)]
+        rk = dict(rk)  # don't mutate the caller's input
+        rk.setdefault("title", f"Risk: {name}")
+        rk.setdefault("description", desc)
+        rk.setdefault("statement", rk.get("description") or desc)
+        rk.setdefault("status", "open")
+        _ensure_risk_uuids(rk, poam_id)
+        risk_obj = Risk.model_validate(rk)
+        risks.append(risk_obj)
+        related_risks = [AssociatedRisk(risk_uuid=risk_obj.uuid)]
 
     if not any(raw.get(k) for k in _ANCHOR_KEYS):
         sys.stderr.write(
@@ -333,62 +386,83 @@ def _parse_deadline(s: str):
         return None
 
 
+def _milestones_to_tasks(milestones) -> list:
+    """Map remediation milestones -> OSCAL response `tasks[]` (type=milestone; a `target_date`
+    becomes the task's `on-date` timing)."""
+    tasks = []
+    for ms in milestones or []:
+        d = (ms.get("description") or "").strip()
+        if not d:
+            continue
+        t = {"type": "milestone", "title": d}
+        end = _parse_deadline(ms.get("target_date"))
+        if end:
+            t["timing"] = {"on-date": {"date": end}}
+        tasks.append(t)
+    return tasks
+
+
 def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: dict,
                      style: str = "generic") -> Risk:
-    """Build one top-level OSCAL Risk for a pre-defined weakness. The prop/namespace conventions
-    depend on `style` (chosen by the agent per the deliverable — see from-component-definition.md):
+    """Build one top-level OSCAL Risk for a pre-defined weakness. Built as a dict + `model_validate`
+    so the remediation is **pass-through / reference-driven**: whatever remediation shape the source
+    (remediations.json entry or consolidated props) provides is written through and validated.
 
-    - **generic** (default) — mirror what trestle's own `xlsx-to-oscal-poam` task emits: the rating
-      goes in a plain `original-risk-rating` prop (no namespace), no characterizations, no
-      control-id prop on the risk (the control is already on the poam-item / finding). Remediation
-      lifecycle `planned`.
-    - **fedramp** — the rating as `likelihood` + `impact` characterization facets under the
-      `http://fedramp.gov/ns/oscal` namespace. Remediation lifecycle `recommendation`.
+    Rating conventions depend on `style` (see from-component-definition.md):
+    - **generic** (default) — rating in a plain `original-risk-rating` prop, lifecycle `planned`.
+    - **fedramp** — rating as `likelihood` + `impact` facets under `http://fedramp.gov/ns/oscal`,
+      lifecycle `recommendation`.
 
-    Neither style puts a control-id on the risk (see the NOTE below).
+    Remediation source, in priority order:
+    1. `rem["remediations"]` — a full OSCAL `response[]` (lifecycle/props/origins/required-assets/
+       tasks[timing/responsible-roles]) written through verbatim (reference-driven).
+    2. else `rem["remediation_plan"]` — one Response, with `rem["milestones"]` mapped to its `tasks[]`.
+    A `rem["risk"]` dict can further extend/override the risk (except uuid/status, kept for linking).
 
-    Common to both: status `open` at pre-define time (link-assessment flips it to `closed` for a
-    satisfied finding); remediation_plan -> a Response; scheduled_completion_date -> deadline.
+    No control-id is placed on the risk (it's on the poam-item + finding). Status is `open` at
+    pre-define time; link-assessment flips it to `closed` for a satisfied finding.
     """
     fedramp = style == "fedramp"
     rating = str(rem["risk_rating"]) if rem.get("risk_rating") else None
-    props: list[Property] = []
-    characterizations = None
-    # NOTE: we deliberately do NOT put a control-id on the risk — the impacted control is already on
-    # the poam-item (`control-id` prop) and the finding target. (FedRAMP's poam-risk-impacted-control
-    # rule wants a risk/prop naming the control, but the exact prop name isn't officially published;
-    # add it here only if a user explicitly needs it.)
-    if fedramp:
-        if rating:
-            characterizations = [Characterization(
-                origin=Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)]),
-                facets=[Facet(name=n, system=_FEDRAMP_NS, value=rating.lower())
-                        for n in ("likelihood", "impact")],
-            )]
+    rk: dict = {
+        "uuid": _u5("risk", check_id),
+        "title": f"Risk: {name}",
+        "description": desc,
+        "statement": (f"Until the check '{check_id}' is enforced, this weakness represents an open "
+                      f"risk to the affected control(s): {', '.join(controls) or 'n/a'}."),
+        "status": "open",
+    }
+    dl = _parse_deadline(rem.get("scheduled_completion_date"))
+    if dl:
+        rk["deadline"] = dl
+    if fedramp and rating:
+        rk["characterizations"] = [{
+            "origin": {"actors": [{"type": "tool", "actor-uuid": _BUILDER_ACTOR}]},
+            "facets": [{"name": n, "system": _FEDRAMP_NS, "value": rating.lower()}
+                       for n in ("likelihood", "impact")],
+        }]
     elif rating:  # generic (xlsx-style): a plain rating prop, no namespace, no characterization
-        props.append(_prop("original-risk-rating", rating))
+        rk["props"] = [{"name": "original-risk-rating", "ns": NS_PROP, "value": rating}]
 
-    remediations = None
-    if rem.get("remediation_plan"):
-        remediations = [Response(
-            uuid=_u5("response", check_id),
-            lifecycle="recommendation" if fedramp else "planned",
-            title=f"Remediation for {name}",
-            description=str(rem["remediation_plan"]),
-            origins=[Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)])],
-        )]
-    return Risk(
-        uuid=_u5("risk", check_id),
-        title=f"Risk: {name}",
-        description=desc,
-        statement=(f"Until the check '{check_id}' is enforced, this weakness represents an open "
-                   f"risk to the affected control(s): {', '.join(controls) or 'n/a'}."),
-        status="open",
-        props=props or None,
-        characterizations=characterizations,
-        deadline=_parse_deadline(rem.get("scheduled_completion_date")),
-        remediations=remediations,
-    )
+    if rem.get("remediations"):                 # 1) reference-supplied response(s), verbatim
+        rk["remediations"] = rem["remediations"]
+    elif rem.get("remediation_plan"):           # 2) build one response; milestones -> its tasks
+        resp = {
+            "lifecycle": "recommendation" if fedramp else "planned",
+            "title": f"Remediation for {name}",
+            "description": str(rem["remediation_plan"]),
+            "origins": [{"actors": [{"type": "tool", "actor-uuid": _BUILDER_ACTOR}]}],
+        }
+        tasks = _milestones_to_tasks(rem.get("milestones"))
+        if tasks:
+            resp["tasks"] = tasks
+        rk["remediations"] = [resp]
+
+    if isinstance(rem.get("risk"), dict):       # optional full pass-through extend/override
+        rk.update({k: v for k, v in rem["risk"].items() if k not in ("uuid", "status")})
+
+    _ensure_risk_uuids(rk, check_id)
+    return Risk.model_validate(rk)
 
 
 def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:

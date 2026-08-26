@@ -3,7 +3,7 @@
     "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
     "metadata": {
       "title": "Kubernetes Cluster POA&M",
-      "last-modified": "2026-08-26T00:56:58.406+00:00",
+      "last-modified": "2026-08-26T02:38:14.367+00:00",
       "version": "1.0",
       "oscal-version": "1.2.1"
     },
@@ -2075,7 +2075,7 @@
         "status": "open",
         "remediations": [
           {
-            "uuid": "5078afdd-25f5-5300-a6ff-edd6bd39fd57",
+            "uuid": "14b181ca-691a-54b5-b4d3-8e1945a5f5af",
             "lifecycle": "planned",
             "title": "Remediation for GitHub API version may be unsupported",
             "description": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation.",
@@ -2100,7 +2100,7 @@
         "status": "closed",
         "remediations": [
           {
-            "uuid": "44cc553d-694b-5b0b-be32-0f812cfc1f3c",
+            "uuid": "8311db5e-f8be-59b0-b2c6-c877c3d4168f",
             "lifecycle": "planned",
             "title": "Remediation for GitHub organization may be empty",
             "description": "Alert via Auditree if the GitHub org membership drops to zero.",
@@ -2133,7 +2133,7 @@
         "deadline": "2026-12-31T00:00:00+00:00",
         "remediations": [
           {
-            "uuid": "c1ad0afa-6398-592c-a565-6bf2e1b52980",
+            "uuid": "2e7514c6-0001-506c-8a9c-b96772151681",
             "lifecycle": "planned",
             "title": "Remediation for Base image not restricted to an approved allow list",
             "description": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines.",
@@ -2145,6 +2145,28 @@
                     "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
                   }
                 ]
+              }
+            ],
+            "tasks": [
+              {
+                "uuid": "c98c8d79-add2-5b19-98a1-144dd44b04c3",
+                "type": "milestone",
+                "title": "Publish approved base-image allow list",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-10-01T00:00:00+00:00"
+                  }
+                }
+              },
+              {
+                "uuid": "3c9684ac-7815-5a05-bbf8-e925e4ee5216",
+                "type": "milestone",
+                "title": "Enforce Kyverno allowed-base-images policy in audit->enforce",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-11-15T00:00:00+00:00"
+                  }
+                }
               }
             ]
           }
@@ -2165,7 +2187,7 @@
         "status": "open",
         "remediations": [
           {
-            "uuid": "fde2496b-4f1b-5369-b5ad-5e996729e39c",
+            "uuid": "358888cf-b3c0-5fd6-b012-62912e5aa2a7",
             "lifecycle": "planned",
             "title": "Remediation for Added Linux capabilities not disallowed",
             "description": "Enforce the Kyverno disallow-capabilities policy across all namespaces.",
@@ -2190,7 +2212,7 @@
         "status": "open",
         "remediations": [
           {
-            "uuid": "1acefe6c-ca85-5772-85bb-ca65b6440a06",
+            "uuid": "d5238b4a-cafc-5ab6-9b74-5b06550a1f9e",
             "lifecycle": "planned",
             "title": "Remediation for Deployment minimum-replica policy not guaranteed",
             "description": "Enforce the OCM policy-deployment minimum-replica policy.",
@@ -2223,7 +2245,7 @@
         "deadline": "2026-12-15T00:00:00+00:00",
         "remediations": [
           {
-            "uuid": "3cea7f19-176f-559e-862b-ad78b9b97585",
+            "uuid": "98ad66d0-8dcd-5235-9817-ad1708b49a40",
             "lifecycle": "planned",
             "title": "Remediation for Disallowed cluster roles in use",
             "description": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence.",
@@ -2235,6 +2257,18 @@
                     "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
                   }
                 ]
+              }
+            ],
+            "tasks": [
+              {
+                "uuid": "891e55a6-e398-501a-b870-4b64e332d607",
+                "type": "milestone",
+                "title": "Remediate disallowed RoleBindings",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-11-01T00:00:00+00:00"
+                  }
+                }
               }
             ]
           }
@@ -2256,7 +2290,7 @@
         "deadline": "2026-11-30T00:00:00+00:00",
         "remediations": [
           {
-            "uuid": "637b6576-251d-5562-aafe-ebf66748f93c",
+            "uuid": "1e411c1a-363b-571b-bdd9-34bffedc0ce2",
             "lifecycle": "planned",
             "title": "Remediation for High-level vulnerability scan not enabled",
             "description": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline.",
@@ -2268,6 +2302,18 @@
                     "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
                   }
                 ]
+              }
+            ],
+            "tasks": [
+              {
+                "uuid": "37364959-ddb2-563f-92ef-94eede27bd18",
+                "type": "milestone",
+                "title": "Enable high-level scan profile",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-10-15T00:00:00+00:00"
+                  }
+                }
               }
             ]
           }

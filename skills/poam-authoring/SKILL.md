@@ -26,7 +26,7 @@ A POA&M is **assessment-seeded but authored with the user** — it is NOT a pure
 
 Draft the first half, then ask the user for the second half. Do not invent remediation plans.
 
-## Inputs (three paths)
+## Inputs (four paths)
 
 - **A) Assessment result → POA&M (default).** An `assessment` skill markdown table, or an OSCAL
   `assessment-results.json`. Only its **failed / non-compliant findings** become POA&M items. If no
@@ -46,6 +46,13 @@ Draft the first half, then ask the user for the second half. Do not invent remed
   linked to the matching item, creating no new items ([link-assessment.md](link-assessment.md)).
   This closes the loop `component-definition → POA&M → assessment`. Path A is reactive
   (findings → items); path C is pre-defined (items → then assessed).
+- **D) Scan-tool remediation data → POA&M (reference-driven).** A scanner/security tool emits its own
+  **remediation data** (fix + severity + assets + owners/dates per weakness), to be held as a POA&M
+  (often for another platform). You learn the tool's format and the desired output shape from a
+  **sample/reference the user provides**, then map each record onto a pass-through `risk`
+  (remediation in `risk.remediations[]`, tool-specific fields as free-form props) — **no per-tool
+  code** ([from-scan-remediations.md](from-scan-remediations.md)). Path D is path A with the
+  remediation/props filled from a customer reference rather than fixed fields.
 
 ## Sub-skills (follow in order)
 
@@ -56,20 +63,23 @@ Draft the first half, then ask the user for the second half. Do not invent remed
 3. [poam-model.md](poam-model.md) — What an OSCAL POA&M is; the input JSON the builder consumes.
 4. [build-poam.md](build-poam.md) — (path A) Run `build_poam.py` in the isolated env → generate +
    validate `plan-of-action-and-milestones.json`.
-5. [xlsx-to-oscal-poam.md](xlsx-to-oscal-poam.md) — (path B) Convert a FedRAMP POA&M xlsx via the
+5. [from-scan-remediations.md](from-scan-remediations.md) — (path D) Map a scan tool's remediation
+   export onto pass-through `risk`/props from a user-provided reference/sample, then build via path A.
+   Reference-driven, no per-tool code.
+6. [xlsx-to-oscal-poam.md](xlsx-to-oscal-poam.md) — (path B) Convert a FedRAMP POA&M xlsx via the
    trestle `xlsx-to-oscal-poam` task (MCP tool if wired, else the venv trestle CLI).
-6. [from-component-definition.md](from-component-definition.md) — (path C, phase 1) Join a
+7. [from-component-definition.md](from-component-definition.md) — (path C, phase 1) Join a
    `component-definition.json`'s rules/checks → a **pre-defined POA&M** (one item per rule/check +
    `local-definitions`), via `build_poam.py from-component-definition`.
-7. [link-assessment.md](link-assessment.md) — (path C, phase 2) Layer an `assessment-results.json`
+8. [link-assessment.md](link-assessment.md) — (path C, phase 2) Layer an `assessment-results.json`
    onto the pre-defined POA&M — observations/findings that **reference** the existing items (matched
    by check-id), via `build_poam.py link-assessment`. No new items.
-8. [poam-preview.md](poam-preview.md) — Render the POA&M as a human-readable markdown table for
+9. [poam-preview.md](poam-preview.md) — Render the POA&M as a human-readable markdown table for
    review (there is no reverse trestle task — we build the preview ourselves).
-9. [trestle-workspace.md](trestle-workspace.md) — **(optional)** When the cwd is (or should be) a
-   trestle workspace: detect/`trestle init` it, locate inputs deterministically from the directory
-   layout (don't ask for paths), and write the POA&M straight to its canonical path. Orthogonal to
-   paths A/B/C.
+10. [trestle-workspace.md](trestle-workspace.md) — **(optional)** When the cwd is (or should be) a
+    trestle workspace: detect/`trestle init` it, locate inputs deterministically from the directory
+    layout (don't ask for paths), and write the POA&M straight to its canonical path. Orthogonal to
+    paths A/B/C.
 
 ## Workflow
 
@@ -92,6 +102,10 @@ Draft the first half, then ask the user for the second half. Do not invent remed
 7. **Preview** the result as markdown ([poam-preview.md](poam-preview.md)) and confirm with the user.
 
 (For path B, replace steps 2–6 with [xlsx-to-oscal-poam.md](xlsx-to-oscal-poam.md), then preview.)
+
+(For path D, replace steps 2–4 with [from-scan-remediations.md](from-scan-remediations.md): derive
+the field mapping from the user's remediation export + reference/sample, then write `poam_input.json`
+with pass-through `risk`/`extra_props` and build as in steps 5–7.)
 
 **Path C (component-definition-driven)** — after step 1 (setup-env):
 
