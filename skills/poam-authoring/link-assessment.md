@@ -52,6 +52,10 @@ The pre-defined POA&M is a **catalog of potential weaknesses**. Linking keeps *e
 This is deliberate (the component-definition-driven interpretation): the item set is fixed by the
 component-definition; the assessment only toggles open/closed (or leaves untouched) via findings.
 
+**Risk status follows the finding.** Each pre-defined item already carries a top-level `risk`
+(status `open`). When a check comes back **satisfied**, its risk is flipped to **`closed`**;
+**not-satisfied** (or not assessed) leaves it **`open`**. So the risk register tracks live exposure.
+
 ## Run it
 
 ```bash

@@ -88,6 +88,31 @@ def test_mcp_rename_bad_pair_errors(monkeypatch, _ok_prereqs, source_repo, tmp_p
     assert rc == 1  # OLD=NEW required
 
 
+def test_bob_target_installs_to_dot_bob_with_clean_json(monkeypatch, _ok_prereqs, source_repo, tmp_path):
+    # `--target bob` defaults its root to <project>/.bob and drops transport/registry with no flags.
+    monkeypatch.setattr(policy, "default_source_root", lambda: source_repo)
+    rc = cli.main(
+        ["install", "--skill", "catalog-authoring", "--target", "bob", "--project", str(tmp_path)]
+    )
+    assert rc == 0
+    bob_root = tmp_path / ".bob"
+    assert (bob_root / "skills" / "catalog-authoring" / "SKILL.md").is_file()
+    entry = json.loads((bob_root / "mcp.json").read_text())["mcpServers"]["trestle"]
+    assert set(entry) == {"command", "args"}      # bob's stdio keys only, no preset flags needed
+
+
+def test_bob_extra_drop_unions_with_preset(monkeypatch, _ok_prereqs, source_repo, tmp_path):
+    # an explicit --mcp-drop adds to bob's preset (transport/registry) rather than replacing it.
+    monkeypatch.setattr(policy, "default_source_root", lambda: source_repo)
+    rc = cli.main(
+        ["install", "--skill", "catalog-authoring", "--target", "bob",
+         "--project", str(tmp_path), "--mcp-drop", "args"]
+    )
+    assert rc == 0
+    entry = json.loads((tmp_path / ".bob" / "mcp.json").read_text())["mcpServers"]["trestle"]
+    assert set(entry) == {"command"}              # transport/registry (preset) + args (explicit) all gone
+
+
 def test_shaping_flags_warn_for_apm_target(monkeypatch, _ok_prereqs, source_repo, tmp_path, capsys):
     monkeypatch.setattr(policy, "default_source_root", lambda: source_repo)
     monkeypatch.setattr(

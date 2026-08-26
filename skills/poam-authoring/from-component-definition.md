@@ -6,9 +6,12 @@ assessment's failed findings, you **pre-define** the whole weakness catalog from
 component-definition is a testable assertion that could fail.
 
 The output is a **pre-defined POA&M**: one poam-item per rule/check (each a *potential* weakness)
-with remediation authored up front, and `local-definitions` (components / inventory-items /
-assessment-assets) filled from the component-definition. It carries **no** observations/findings
-yet — those get layered on later by [link-assessment.md](link-assessment.md) (phase 2).
+with remediation authored up front, `local-definitions` (components / inventory-items /
+assessment-assets) filled from the component-definition, and **one top-level `risk` per item** (its
+rating → a characterization facet, remediation plan → a recommendation response, due date →
+`deadline`; status `open`). It carries **no** observations/findings yet — those get layered on later
+by [link-assessment.md](link-assessment.md) (phase 2), which also flips a risk to `closed` when its
+check comes back satisfied.
 
 ## Step 1 — Locate the component-definition
 

@@ -92,12 +92,12 @@ $ command -v uv && echo "→ using uv (isolated)"     # else falls back to pytho
 $ uv run --with 'compliance-trestle>=3.0' python build_poam.py from-component-definition \
     --input component-definition.json --remediations remediations.json \
     --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir predefined/
-OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, local-definitions filled); re-read validates.
+OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, 7 risk(s), local-definitions filled); re-read validates.
 # phase 2 — link the assessment (derive findings from pass/fail, reference existing items):
 $ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
     --poam predefined/plan-of-action-and-milestones.json \
     --assessment assessment-results.json --output-dir poam/
-OK: wrote linked poam/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 6 linked, 0 unmatched); re-read validates.
+OK: wrote linked poam/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 7 risk(s): 5 open / 2 closed; 6 linked, 0 unmatched); re-read validates.
 $ trestle validate -t plan-of-action-and-milestones
 VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
 ```
@@ -124,8 +124,10 @@ assessment didn't cover that rule):
 **Total items:** 7 (4 open · 2 satisfied · 1 not assessed)
 ```
 
-Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; 6 findings/observations
-— derived from the assessment's per-subject pass/fail — cross-linked to the existing items):
+Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; a top-level **`risk`
+per item** — rating → characterization, remediation → response, due date → deadline — of which 2 are
+`closed` once their check passed; 6 findings/observations — derived from the assessment's per-subject
+pass/fail — cross-linked to the existing items):
 **[`scenario1/plan-of-action-and-milestones.json`](scenario1/plan-of-action-and-milestones.json)**
 
 ---
@@ -215,13 +217,13 @@ workspace: /…/scenario3
 $ uv run --with 'compliance-trestle>=3.0' python build_poam.py from-component-definition \
     --input component-definitions/k8s-prod/component-definition.json \
     --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir predefined/
-OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, local-definitions filled); re-read validates.
+OK: wrote pre-defined predefined/plan-of-action-and-milestones.json (7 poam-item(s) from rules/checks, 7 risk(s), local-definitions filled); re-read validates.
 # phase 2 — link the assessment, writing to the canonical workspace path:
 $ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
     --poam predefined/plan-of-action-and-milestones.json \
     --assessment assessment-results/k8s-prod/assessment-results.json \
     --output-dir plan-of-action-and-milestones/k8s-prod/
-OK: wrote linked plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 6 linked, 0 unmatched); re-read validates.
+OK: wrote linked plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 7 risk(s): 5 open / 2 closed; 6 linked, 0 unmatched); re-read validates.
 $ trestle validate -t plan-of-action-and-milestones      # no mkdir/cp — already in place
 VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
 ```
