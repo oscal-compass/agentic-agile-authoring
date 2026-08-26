@@ -76,7 +76,9 @@ POA&M top level and cross-linked from the poam-item (related-observations / rela
    Because each check is a testable assertion, the full weakness catalog is known BEFORE assessment.
    Emits a PRE-DEFINED POA&M: one poam-item per rule/check (each a potential weakness) with
    remediation authored up front, and local-definitions (components / inventory-items /
-   assessment-assets) filled from the component-definition. No observations/findings/risks yet.
+   assessment-assets) filled from the component-definition, plus one top-level Risk per item
+   (rating/remediation/deadline from the consolidated props; status `open` until assessed). No
+   observations/findings yet.
    Remediation/risk can come from two sources (props are the base; the file overrides per field):
      1. Consolidated on the component-definition itself — a validation rule-set's props carry
         Remediation_Plan / Risk_Rating / POC / Scheduled_Completion_Date / Weakness_Name /
@@ -109,9 +111,10 @@ from pathlib import Path
 
 from trestle.oscal import OSCAL_VERSION
 from trestle.oscal.common import (
-    AssessmentAssets, AssessmentPlatform, AssociatedRisk, Finding, FindingTarget,
-    ImplementedComponent, InventoryItem, Metadata, Observation, ObjectiveStatus, Property,
-    RelatedObservation, Risk, Status, SystemComponent, SystemId, UsesComponent,
+    AssessmentAssets, AssessmentPlatform, AssociatedRisk, Characterization, Facet, Finding,
+    FindingTarget, ImplementedComponent, InventoryItem, Metadata, Observation, ObjectiveStatus,
+    Origin, OriginActor, Property, RelatedObservation, Response, Risk, Status, SystemComponent,
+    SystemId, UsesComponent,
 )
 from trestle.oscal.poam import (
     LocalDefinitions, PlanOfActionAndMilestones, PoamItem, RelatedFinding,
@@ -312,6 +315,57 @@ def _remediation_from_slot(slot: dict) -> dict:
     return rem
 
 
+# deterministic actor for risks/remediations authored by this builder from the component-definition
+_BUILDER_ACTOR = _u5("actor", "poam-authoring/build_poam.py")
+_POAM_NS = "https://oscal-compass.github.io/compliance-trestle/ns/poam"
+
+
+def _parse_deadline(s: str):
+    """`YYYY-MM-DD` (or full ISO) -> an aware UTC datetime, or None if unparseable."""
+    if not s:
+        return None
+    try:
+        d = datetime.date.fromisoformat(str(s)[:10])
+        return datetime.datetime(d.year, d.month, d.day, tzinfo=datetime.timezone.utc)
+    except ValueError:
+        return None
+
+
+def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: dict) -> Risk:
+    """Build one top-level OSCAL Risk for a pre-defined weakness, from the consolidated
+    remediation/risk (rating -> characterization facet, remediation_plan -> a recommendation
+    response, scheduled_completion_date -> deadline). Status is `open` at pre-define time;
+    link-assessment flips it to `closed` for a satisfied finding."""
+    props = [_prop("impacted-control-id", str(c)) for c in controls or []]
+    characterizations = None
+    if rem.get("risk_rating"):
+        characterizations = [Characterization(
+            origin=Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)]),
+            facets=[Facet(name="risk-rating", system=_POAM_NS, value=str(rem["risk_rating"]))],
+        )]
+    remediations = None
+    if rem.get("remediation_plan"):
+        remediations = [Response(
+            uuid=_u5("response", check_id),
+            lifecycle="recommendation",
+            title=f"Remediation for {name}",
+            description=str(rem["remediation_plan"]),
+            origins=[Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)])],
+        )]
+    return Risk(
+        uuid=_u5("risk", check_id),
+        title=f"Risk: {name}",
+        description=desc,
+        statement=(f"Until the check '{check_id}' is enforced, this weakness represents an open "
+                   f"risk to the affected control(s): {', '.join(controls) or 'n/a'}."),
+        status="open",
+        props=props or None,
+        characterizations=characterizations,
+        deadline=_parse_deadline(rem.get("scheduled_completion_date")),
+        remediations=remediations,
+    )
+
+
 def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
     """Return (rules, components) from a trestle-style component-definition.json.
 
@@ -429,7 +483,7 @@ def _local_definitions(components: dict, system_id: str | None) -> LocalDefiniti
     return ld
 
 
-def _predefined_item(rule: dict, index: int, remediations: dict) -> PoamItem:
+def _predefined_item(rule: dict, index: int, remediations: dict, risks: list) -> PoamItem:
     rid = rule["rule_id"]
     check_id = rule.get("check_id") or rid
     # Base: remediation consolidated on the component-definition props (if any).
@@ -466,12 +520,18 @@ def _predefined_item(rule: dict, index: int, remediations: dict) -> PoamItem:
         target = ms.get("target_date")
         props.append(_prop("milestone", f"{d} (target: {target})" if target else d))
 
+    # one top-level Risk per pre-defined weakness (the CD's rating/remediation/deadline live here);
+    # the item references it via related-risks.
+    risk = _predefined_risk(check_id, rule.get("controls") or [], name, desc, rem)
+    risks.append(risk)
+
     return PoamItem(
         uuid=_u5("item", check_id),
         title=name,
         description=desc,
         props=props,
         remarks=rem.get("remediation_plan") or None,
+        related_risks=[AssociatedRisk(risk_uuid=risk.uuid)],
     )
 
 
@@ -480,7 +540,8 @@ def build_from_component_definition(cd_doc: dict, remediations: dict, meta: dict
     if not rules:
         raise ValueError("no rules/checks found in the component-definition — nothing to pre-define")
     title = meta.get("title") or "Pre-defined Plan of Action and Milestones"
-    poam_items = [_predefined_item(r, i, remediations) for i, r in enumerate(rules)]
+    risks: list = []
+    poam_items = [_predefined_item(r, i, remediations, risks) for i, r in enumerate(rules)]
     poam = PlanOfActionAndMilestones(
         uuid=_u5("poam", title),
         metadata=Metadata(
@@ -490,6 +551,8 @@ def build_from_component_definition(cd_doc: dict, remediations: dict, meta: dict
         local_definitions=_local_definitions(components, meta.get("system_id")),
         poam_items=poam_items,
     )
+    if risks:
+        poam.risks = risks
     if meta.get("system_id"):
         poam.system_id = SystemId(id=str(meta["system_id"]))
     return poam
@@ -590,8 +653,19 @@ def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int,
     findings_out = list(poam.findings or [])
     seen_obs = {o.uuid for o in observations}
     seen_risk = {r.uuid for r in risks}
+    # pre-defined risks indexed for status sync (distinct name: the per-result loop below reuses
+    # `risk_by_uuid` for the assessment's own risks).
+    predef_risk_by_uuid = {r.uuid: r for r in risks}
     linked = 0
     unmatched = 0
+
+    def _sync_risk(check_key, state):
+        """Flip a pre-defined Risk's status from the assessed finding: satisfied -> closed."""
+        if not check_key:
+            return
+        r = predef_risk_by_uuid.get(_u5("risk", check_key))
+        if r is not None:
+            r.status = "closed" if state == "satisfied" else "open"
 
     def _attach(item, f_uuid, rel_obs, rel_risks):
         if item is None:
@@ -658,6 +732,7 @@ def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int,
             ))
             if _attach(item, f_uuid, related_observations, related_risks):
                 linked += 1
+                _sync_risk(rule_key, state)
             else:
                 unmatched += 1
                 sys.stderr.write(
@@ -693,6 +768,7 @@ def link_assessment(poam: PlanOfActionAndMilestones, ar_doc: dict) -> tuple[int,
             ))
             if _attach(item, f_uuid, [RelatedObservation(observation_uuid=new_uuid)], None):
                 linked += 1
+                _sync_risk(rule_key, state)
             else:
                 unmatched += 1
                 sys.stderr.write(
@@ -754,7 +830,7 @@ def _cmd_from_cd(args: argparse.Namespace) -> int:
     out = _write(poam, args.output_dir)
     print(
         f"OK: wrote pre-defined {out} ({len(poam.poam_items)} poam-item(s) from rules/checks, "
-        f"local-definitions filled); re-read validates."
+        f"{len(poam.risks or [])} risk(s), local-definitions filled); re-read validates."
     )
     print("Next: layer an assessment with `build_poam.py link-assessment` (see link-assessment.md).")
     return 0
@@ -770,11 +846,18 @@ def _cmd_link(args: argparse.Namespace) -> int:
         return getattr(st, "value", st)
 
     n_open = sum(1 for f in (poam.findings or []) if _state(f) == "not-satisfied")
+    def _rstatus(r):
+        s = r.status
+        while hasattr(s, "root"):  # RiskStatus.root -> TokenDatatype.root -> str
+            s = s.root
+        return str(s)
+    n_risk_closed = sum(1 for r in (poam.risks or []) if _rstatus(r) == "closed")
     print(
         f"OK: wrote linked {out} ({len(poam.poam_items)} poam-item(s), "
         f"{len(poam.findings or [])} finding(s): {n_open} open / "
-        f"{len(poam.findings or []) - n_open} satisfied; {linked} linked, {unmatched} unmatched); "
-        "re-read validates."
+        f"{len(poam.findings or []) - n_open} satisfied; "
+        f"{len(poam.risks or [])} risk(s): {len(poam.risks or []) - n_risk_closed} open / "
+        f"{n_risk_closed} closed; {linked} linked, {unmatched} unmatched); re-read validates."
     )
     print("Next: run `trestle validate -t plan-of-action-and-milestones` for authoritative "
           "validation (see build-poam.md).")

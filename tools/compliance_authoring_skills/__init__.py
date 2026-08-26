@@ -28,7 +28,8 @@ Supported targets (claude, opencode, …) delegate to the pinned ``apm`` CLI; My
 in-process. Baseline runtime prerequisite is ``uv`` (no Node).
 """
 
-from importlib.metadata import PackageNotFoundError, version as _version
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _version
 
 try:
     __version__ = _version("compliance-authoring-skills")
