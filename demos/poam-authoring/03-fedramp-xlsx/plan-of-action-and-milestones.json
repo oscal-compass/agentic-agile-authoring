@@ -1,0 +1,177 @@
+{
+  "plan-of-action-and-milestones": {
+    "uuid": "2418ebd2-2928-491f-b870-25e0b35618a6",
+    "metadata": {
+      "title": "Kubernetes Cluster POA&M",
+      "last-modified": "2026-08-25T08:13:55+00:00",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "system-id": {
+      "identifier-type": "https://ietf.org/rfc/rfc4122",
+      "id": "k8s-prod"
+    },
+    "observations": [
+      {
+        "uuid": "23b8cf90-a45d-5edc-9f9d-3fa951226d0e",
+        "description": "Weakness detected: MFA not enforced on admin accounts",
+        "methods": [
+          "TEST"
+        ],
+        "origins": [
+          {
+            "actors": [
+              {
+                "type": "tool",
+                "actor-uuid": "591a2e73-1683-589f-8c4d-7fb49fbedfb0"
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T08:13:55+00:00"
+      },
+      {
+        "uuid": "e59b9780-ff0f-5880-a5bc-070a0c16ac90",
+        "description": "Weakness detected: API server audit logging disabled",
+        "methods": [
+          "TEST"
+        ],
+        "origins": [
+          {
+            "actors": [
+              {
+                "type": "tool",
+                "actor-uuid": "591a2e73-1683-589f-8c4d-7fb49fbedfb0"
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T08:13:55+00:00"
+      }
+    ],
+    "risks": [
+      {
+        "uuid": "53e9aa52-17e0-575c-9951-66437c19897c",
+        "title": "MFA not enforced on admin accounts",
+        "description": "3 cluster-admin accounts can authenticate without MFA.",
+        "statement": "3 cluster-admin accounts can authenticate without MFA.",
+        "props": [
+          {
+            "name": "original-risk-rating",
+            "value": "High"
+          }
+        ],
+        "status": "open",
+        "deadline": "2026-12-31T00:00:00+00:00",
+        "remediations": [
+          {
+            "uuid": "22f0f396-e8c9-534c-a2e0-e02cff2c25a0",
+            "lifecycle": "planned",
+            "title": "Remediation for P-001",
+            "description": "3 cluster-admin accounts can authenticate without MFA.",
+            "tasks": [
+              {
+                "uuid": "fb87cdfa-4940-54bb-bfc7-ebbf2118d925",
+                "type": "milestone",
+                "title": "Enable MFA policy in IdP by 2026-10-01",
+                "description": "Milestone"
+              }
+            ]
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "23b8cf90-a45d-5edc-9f9d-3fa951226d0e"
+          }
+        ]
+      },
+      {
+        "uuid": "f27965aa-b50a-5ec5-a931-60295e81fb69",
+        "title": "API server audit logging disabled",
+        "description": "kube-apiserver started without --audit-policy-file.",
+        "statement": "kube-apiserver started without --audit-policy-file.",
+        "props": [
+          {
+            "name": "original-risk-rating",
+            "value": "Moderate"
+          }
+        ],
+        "status": "open",
+        "deadline": "2026-11-30T00:00:00+00:00",
+        "remediations": [
+          {
+            "uuid": "a6346e8b-7c86-5997-81fd-93b0d47374a1",
+            "lifecycle": "planned",
+            "title": "Remediation for P-002",
+            "description": "kube-apiserver started without --audit-policy-file.",
+            "tasks": [
+              {
+                "uuid": "7d47546c-b051-5657-b845-88fe21385c18",
+                "type": "milestone",
+                "title": "Deploy audit policy by 2026-11-01",
+                "description": "Milestone"
+              }
+            ]
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "e59b9780-ff0f-5880-a5bc-070a0c16ac90"
+          }
+        ]
+      }
+    ],
+    "poam-items": [
+      {
+        "uuid": "c43a4f6d-58e0-5b5e-93f4-e3ccfbc5b4ab",
+        "title": "MFA not enforced on admin accounts",
+        "description": "3 cluster-admin accounts can authenticate without MFA.",
+        "props": [
+          {
+            "name": "poam-id",
+            "value": "P-001"
+          },
+          {
+            "name": "control-id",
+            "value": "AC-2"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "23b8cf90-a45d-5edc-9f9d-3fa951226d0e"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "53e9aa52-17e0-575c-9951-66437c19897c"
+          }
+        ]
+      },
+      {
+        "uuid": "9c4397a7-3d1d-597c-9930-0fc53d7782e3",
+        "title": "API server audit logging disabled",
+        "description": "kube-apiserver started without --audit-policy-file.",
+        "props": [
+          {
+            "name": "poam-id",
+            "value": "P-002"
+          },
+          {
+            "name": "control-id",
+            "value": "AU-2"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "e59b9780-ff0f-5880-a5bc-070a0c16ac90"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "f27965aa-b50a-5ec5-a931-60295e81fb69"
+          }
+        ]
+      }
+    ]
+  }
+}

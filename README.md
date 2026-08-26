@@ -1,8 +1,9 @@
 # Agentic Agile Authoring
 
-An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from NIST
-catalog customization through component definition to assessment result generation — installable
-into multiple agent harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
+An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from framework
+onboarding (compliance PDF → catalog, catalog ↔ catalog mapping) through catalog customization,
+component definition, and assessment to POA&M generation — installable into multiple agent
+harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
 
 The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
 
@@ -20,21 +21,67 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
   harness's native MCP config, with a lockfile and non-destructive uninstall/prune. See
   [tools/README.md](tools/README.md) and [docs/design-spec.md](docs/design-spec.md).
 
+## Skills
+
+Seven portable skills. The **authoring lifecycle** composes left-to-right
+(`catalog-authoring → component-definition → assessment → poam-authoring`); the
+**framework-onboarding** skills sit upstream, turning source documents into the OSCAL Catalogs the
+lifecycle consumes. Each is invoked directly by the harness — there is no orchestrator persona; a
+demo carries any ordering.
+
+### Authoring lifecycle
+
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
+| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
+| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
+| `poam-authoring` | Author an OSCAL POA&M — reactively from an assessment's failed findings, from a FedRAMP xlsx, pre-defined from a `component-definition` then linked to an assessment, or from a scan tool's remediation export (reference-driven, mapped onto pass-through `risk.remediations[]`); generates `risks[]`, defaults to a standalone file (workspace optional) | — |
+
+### Framework onboarding
+
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `compliance-catalog` | Convert a compliance-document PDF (law, regulation, standard) into a validated OSCAL Catalog | — |
+| `compliance-mapping` | Map controls between two OSCAL Catalogs into an OSCAL Mapping Collection + browsable HTML report | — |
+
+### Cross-cutting
+
+| Skill | Description | MCP dep |
+|-------|-------------|---------|
+| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
+
+`compliance-catalog` / `compliance-mapping` use `trestle` as a local CLI/library for validation
+rather than the MCP server, so they wire no MCP dependency. See the [Skills reference](docs/skills.md)
+for per-skill detail.
+
 ## Install
 
 Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`, which also runs `uvx`-based
 MCP servers like trestle). That is the only baseline runtime — no Node required.
 
+Not published to a package index yet — install **git-direct** with `uvx --from`. The
+`--from` points at the `tools/` subdirectory and tracks **`@main`** (the latest). To pin a specific
+release instead, swap `@main` for a tag — see [Pinning a version](#pinning-a-version) below.
+
 ```bash
-# install a demo's skills into Claude Code (skill files + MCP wiring, one step)
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
+# 1) pick specific skills → install (skill files + MCP wiring, one step)
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --skill catalog-authoring,assessment --target claude
 
-# or into OpenCode
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+# 2) install ALL skills (omit any selector) — or all-but-some with --exclude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --exclude git-workflow --target opencode
 
-# subset selection
-uvx compliance-authoring-skills install --exclude git-workflow --target claude
-uvx compliance-authoring-skills install --skill catalog-authoring,assessment --target opencode
+# 3) install a demo's skill set (the skills its demos/<name>/README.md declares)
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target opencode
 ```
 
 Each install copies the selected skills into the harness's native skill dir and wires the
@@ -46,31 +93,48 @@ Uninstall is non-destructive; a shared MCP server is pruned only once no remaini
 skill needs it:
 
 ```bash
-uvx compliance-authoring-skills uninstall --skill assessment --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill assessment --target claude
+```
+
+### Pinning a version
+
+The commands above track `@main`. To install a specific, reproducible release instead, replace
+`@main` with a Git tag (or commit SHA) in the `--from` URL — everything else stays the same:
+
+```bash
+# a release tag
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
+
+# or an exact commit
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@<commit-sha>#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
 ```
 
 > **Status:** the `compliance-authoring-skills` wrapper is being built on top of `apm-cli` (see
 > [docs/design-spec.md](docs/design-spec.md), §8). The underlying APM flow — skill placement +
 > MCP wiring + prune, for Claude Code and OpenCode — is verified working.
 
-## Demo
+## Demos
 
-Tailoring a NIST SP 800-53 catalog, mapping controls to a Kubernetes component, and generating an
-assessment result — all in natural language — is captured as a runnable walkthrough with a demo
-video: **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)**. That
-README carries the install steps, the prompts to give the agent in order, and uninstall.
+Each demo is a runnable walkthrough — install steps, the prompts to give the agent in order,
+uninstall, and a demo video:
 
-## Skills
-
-| Skill | Description | MCP dep |
-|-------|-------------|---------|
-| `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
-| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
-| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
-| `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
-
-Skills are invoked directly by each harness — there is no orchestrator persona. A demo
-carries the orchestration.
+- **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)** — the full authoring
+  lifecycle end-to-end: tailor a NIST SP 800-53 catalog, map its controls to a Kubernetes
+  component, and generate an assessment result (`catalog-authoring → component-definition →
+  assessment`).
+- **[`demos/poam-authoring/`](demos/poam-authoring/README.md)** — author a valid OSCAL Plan of
+  Action and Milestones, in three scenarios: `01-component-definition` (pre-define from a
+  component-definition, then link an assessment — also shows the tasks-bearing, reference-driven
+  remediation shape a scan tool's export maps onto), `02-trestle-workspace` (same path run inside a
+  trestle workspace with remediation/risk consolidated onto the component-definition), and
+  `03-fedramp-xlsx` (convert a FedRAMP spreadsheet). Each scenario lists expected-result invariants,
+  so the demo doubles as validation.
 
 ## Contributing a skill
 

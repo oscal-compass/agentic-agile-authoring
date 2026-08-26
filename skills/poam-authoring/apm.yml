@@ -1,0 +1,40 @@
+# Copyright OSCAL Compass Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# APM package manifest (OpenAPM shape). Read by `apm` and the compliance-authoring-skills wrapper
+# (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md.
+#
+# This skill declares the trestle MCP so the installer wires it into the harness on install (APM's
+# `dependencies.mcp` is binary — declared means wired into EVERY install; there is no "optional MCP"
+# flag). The skill does NOT strictly require it: it builds/validates the POA&M with the trestle
+# library/CLI in an isolated venv, and the MCP is a runtime convenience — SKILL.md still prefers the
+# MCP tools when present and falls back to the venv trestle when absent or failing (0 tools).
+#
+# compliance-trestle-mcp >=0.2.0 ships `trestle_task_xlsx_to_oscal_poam` + `trestle_validate` and
+# self-caps `mcp<2` (so no `--with mcp<2` workaround). `registry: false` is REQUIRED for a
+# self-defined server — without it APM does a registry lookup and the install fails. Do NOT add a
+# `target:` field — APM rejects unknown target tokens at parse time.
+name: poam-authoring
+version: "1.0.0"
+
+dependencies:
+  mcp:
+    - name: trestle
+      registry: false
+      transport: stdio
+      command: uvx
+      args:
+        - "--from"
+        - "compliance-trestle-mcp>=0.2.0"
+        - "trestle-mcp"

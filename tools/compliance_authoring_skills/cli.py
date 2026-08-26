@@ -14,12 +14,13 @@
 
 """``compliance-authoring-skills`` CLI: a thin wrapper over OpenAPM (design-spec §3).
 
-    compliance-authoring-skills install   --target {claude|opencode|myharness} [--demo|--skill|--exclude] …
-    compliance-authoring-skills uninstall --target {claude|opencode|myharness}  --skill a,b | --all
+    compliance-authoring-skills install   --target {claude|opencode|myharness|bob} [--demo|--skill|--exclude] …
+    compliance-authoring-skills uninstall --target {claude|opencode|myharness|bob}  --skill a,b | --all
 
 Flow: resolve a skill selection over *this repo* (policy) → hand it to the right backend
-(``apm`` for supported targets; the MyHarness deployer for the custom harness). APM owns
-placement / MCP wiring / lockfile / prune; we own only selection, UX, prereqs, and MyHarness.
+(``apm`` for supported targets; the MyHarness deployer for the custom harnesses ``myharness`` and
+``bob``). APM owns placement / MCP wiring / lockfile / prune; we own only selection, UX, prereqs,
+and the myharness-family deployment (``bob`` = myharness with bob's root + MCP-entry shape).
 """
 
 from __future__ import annotations
@@ -28,12 +29,18 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import policy
+from . import __version__, policy
 from .backends import apm_cli
 from .targets import myharness
 
 MYHARNESS = "myharness"
-_TARGETS = (*apm_cli.SUPPORTED_TARGETS, MYHARNESS)
+BOB = "bob"
+# Targets deployed by our own myharness deployer (APM has no plugin slot for them). `bob` is
+# myharness with bob's conventions baked in: root at <project>/.bob, and an MCP-entry shape that
+# drops the keys bob's mcp.json schema doesn't use (`transport`/`registry`).
+_MYHARNESS_FAMILY = (MYHARNESS, BOB)
+_BOB_MCP_DROP = frozenset({"transport", "registry"})
+_TARGETS = (*apm_cli.SUPPORTED_TARGETS, *_MYHARNESS_FAMILY)
 
 
 def _split_csv(values) -> list[str]:
@@ -59,7 +66,28 @@ def _add_common(p: argparse.ArgumentParser) -> None:
     )
     p.add_argument(
         "--myharness-root", default=None,
-        help=f"MyHarness root (default: {myharness.DEFAULT_ROOT})",
+        help=f"deploy root for myharness/bob (default: myharness={myharness.DEFAULT_ROOT}, "
+             "bob=<project>/.bob)",
+    )
+    # MCP-entry shaping for the myharness-family targets — reshape APM's normalized keys for a
+    # custom harness. `bob` already drops `transport`/`registry` by default; these flags let any
+    # myharness-family target drop/rename more. Ignored by the APM-backed targets.
+    p.add_argument(
+        "--mcp-drop", action="append", default=[], metavar="KEY[,KEY…]",
+        help="MyHarness: drop these keys from each MCP server entry (comma-ok, repeatable)",
+    )
+    p.add_argument(
+        "--mcp-rename", action="append", default=[], metavar="OLD=NEW[,…]",
+        help="MyHarness: rename MCP entry keys, applied after --mcp-drop (e.g. transport=type)",
+    )
+    p.add_argument(
+        "--provenance-key", default=myharness.DEFAULT_PROVENANCE_KEY, metavar="KEY",
+        help="MyHarness: top-level mcp.json key tracking the servers we wrote "
+             f"(default: {myharness.DEFAULT_PROVENANCE_KEY})",
+    )
+    p.add_argument(
+        "--no-provenance", action="store_true",
+        help="MyHarness: write no provenance block (uninstall can then no longer prune wired MCP)",
     )
     p.add_argument(
         "--keep-apm-files", action="store_true",
@@ -73,6 +101,10 @@ def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="compliance-authoring-skills",
         description="thin wrapper over OpenAPM: install portable skills + wire their MCP deps",
+    )
+    ap.add_argument(
+        "-V", "--version", action="version",
+        version=f"%(prog)s {__version__}",
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
@@ -88,11 +120,63 @@ def build_parser() -> argparse.ArgumentParser:
     unin.add_argument("--all", action="store_true", help="remove the whole selectable skill set")
     unin.add_argument("--source", default=None, help="skills repo the selection is drawn from for --all (default: the bundled skills)")
     _add_common(unin)
+
+    sub.add_parser("version", help="print the version and exit (same as -V/--version)")
     return ap
 
 
 def _myharness_root(args: argparse.Namespace) -> Path:
-    return Path(args.myharness_root).resolve() if args.myharness_root else myharness.DEFAULT_ROOT
+    """Deploy root for a myharness-family target.
+
+    An explicit ``--myharness-root`` always wins. Otherwise ``bob`` defaults to ``<project>/.bob``
+    (or ``~/.bob`` under ``-g``, matching bob's workspace convention); ``myharness`` keeps
+    ``~/.myharness``.
+    """
+    if args.myharness_root:
+        return Path(args.myharness_root).resolve()
+    if args.target == BOB:
+        base = Path.home() if args.global_scope else Path(args.project).resolve()
+        return base / ".bob"
+    return myharness.DEFAULT_ROOT
+
+
+def _parse_renames(values) -> dict[str, str]:
+    """Parse repeatable ``old=new`` (comma-ok) rename pairs into a dict."""
+    out: dict[str, str] = {}
+    for item in _split_csv(values):
+        old, sep, new = item.partition("=")
+        old, new = old.strip(), new.strip()
+        if not sep or not old or not new:
+            raise policy.PolicyError(f"--mcp-rename expects OLD=NEW, got {item!r}")
+        out[old] = new
+    return out
+
+
+def _mcp_shape(args: argparse.Namespace) -> myharness.McpShape:
+    """Build the MCP-entry shape from the shaping flags, plus the target's preset drops.
+
+    ``bob`` contributes its baseline drops (``transport``/``registry``); explicit ``--mcp-drop``
+    values union with them, so a caller can drop more but never accidentally un-drop bob's.
+    """
+    drop = set(_split_csv(args.mcp_drop))
+    if args.target == BOB:
+        drop |= _BOB_MCP_DROP
+    return myharness.McpShape(
+        drop=frozenset(drop),
+        rename=_parse_renames(args.mcp_rename),
+        provenance_key=None if args.no_provenance else args.provenance_key,
+    )
+
+
+def _warn_unused_shaping(args: argparse.Namespace) -> None:
+    """The shaping flags only affect the myharness family; note it if passed to an APM target."""
+    if args.target in _MYHARNESS_FAMILY:
+        return
+    if args.mcp_drop or args.mcp_rename or args.no_provenance or args.provenance_key != myharness.DEFAULT_PROVENANCE_KEY:
+        sys.stderr.write(
+            f"warning: MCP-shaping flags (--mcp-drop/--mcp-rename/--provenance-key/--no-provenance) "
+            f"have no effect for target '{args.target}' — APM owns MCP wiring there\n"
+        )
 
 
 def _emit_prereqs(report: policy.PrereqReport) -> None:
@@ -127,10 +211,13 @@ def _install(args: argparse.Namespace) -> int:
         )
     _emit_prereqs(report)
 
+    _warn_unused_shaping(args)
     sys.stdout.write(f"Installing {len(skills)} skill(s) → {args.target}: {', '.join(skills)}\n")
 
-    if args.target == MYHARNESS:
-        res = myharness.install(skill_dirs, root=_myharness_root(args), dry_run=args.dry_run)
+    if args.target in _MYHARNESS_FAMILY:
+        res = myharness.install(
+            skill_dirs, root=_myharness_root(args), dry_run=args.dry_run, shape=_mcp_shape(args)
+        )
         if args.dry_run:
             sys.stdout.write(f"[dry-run] would deploy skills: {', '.join(res.skills_deployed)}\n")
             if res.mcp_added:
@@ -164,8 +251,12 @@ def _uninstall(args: argparse.Namespace) -> int:
     if args.all:
         picks = policy.resolve_selection(_resolve_source(args))
 
-    if args.target == MYHARNESS:
-        res = myharness.uninstall(picks, root=_myharness_root(args), dry_run=args.dry_run)
+    _warn_unused_shaping(args)
+    if args.target in _MYHARNESS_FAMILY:
+        res = myharness.uninstall(
+            picks, root=_myharness_root(args), dry_run=args.dry_run,
+            provenance_key=None if args.no_provenance else args.provenance_key,
+        )
         prefix = "[dry-run] would remove" if args.dry_run else "  removed"
         sys.stdout.write(f"{prefix}: {', '.join(res.skills_removed) or '(none)'}\n")
         if res.mcp_pruned:
@@ -190,6 +281,9 @@ def _uninstall(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.cmd == "version":
+        sys.stdout.write(f"compliance-authoring-skills {__version__}\n")
+        return 0
     try:
         if args.cmd == "install":
             return _install(args)

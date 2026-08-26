@@ -47,10 +47,41 @@ from pathlib import Path
 DEFAULT_ROOT = Path.home() / ".myharness"
 
 _PROVENANCE_KEY = "_compliance_authoring_skills"  # our ownership marker inside mcp.json (namespaced, non-colliding).
+DEFAULT_PROVENANCE_KEY = _PROVENANCE_KEY  # public alias for callers (e.g. the CLI default).
 
 
 class MyHarnessError(RuntimeError):
     """A MyHarness deployment problem (bad manifest, unreadable config, …)."""
+
+
+@dataclass
+class McpShape:
+    """How to reshape a normalized MCP entry before writing it to a custom harness's mcp.json.
+
+    APM's ``to_dict()`` is target-agnostic, so it emits keys some harnesses don't understand
+    (e.g. ``transport``/``registry``). A harness that wants different keys passes an ``McpShape``:
+
+    - ``drop`` — entry keys to remove (e.g. ``{"transport", "registry"}`` for bob).
+    - ``rename`` — entry key renames applied after ``drop`` (e.g. ``{"transport": "type"}``).
+    - ``provenance_key`` — top-level key used to track servers we wrote; ``None`` writes no
+      provenance block (uninstall can then no longer prune the wired MCP — only skill dirs go).
+    """
+
+    drop: frozenset[str] = frozenset()
+    rename: dict[str, str] = field(default_factory=dict)
+    provenance_key: str | None = _PROVENANCE_KEY
+
+    def apply(self, servers: dict[str, dict]) -> dict[str, dict]:
+        """Return *servers* with each entry's keys dropped/renamed per this shape (server names kept)."""
+        out: dict[str, dict] = {}
+        for name, entry in servers.items():
+            shaped: dict = {}
+            for k, v in entry.items():
+                if k in self.drop:
+                    continue
+                shaped[self.rename.get(k, k)] = v
+            out[name] = shaped
+        return out
 
 
 @dataclass
@@ -103,9 +134,14 @@ def _load_mcp_config(path: Path) -> dict:
     return data
 
 
-def _owned(config: dict) -> set[str]:
-    """Names of MCP servers we (compliance-authoring-skills) previously wrote, per the provenance block."""
-    prov = config.get(_PROVENANCE_KEY) or {}
+def _owned(config: dict, provenance_key: str | None = _PROVENANCE_KEY) -> set[str]:
+    """Names of MCP servers we (compliance-authoring-skills) previously wrote, per the provenance block.
+
+    With ``provenance_key=None`` we keep no provenance, so nothing is claimed as owned.
+    """
+    if not provenance_key:
+        return set()
+    prov = config.get(provenance_key) or {}
     owned = prov.get("owned_mcp") if isinstance(prov, dict) else None
     return set(owned) if isinstance(owned, list) else set()
 
@@ -115,14 +151,15 @@ def _write_mcp_config(path: Path, config: dict) -> None:
     path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
 
 
-def _merge_mcp(config: dict, servers: dict[str, dict]) -> list[str]:
+def _merge_mcp(config: dict, servers: dict[str, dict], provenance_key: str | None = _PROVENANCE_KEY) -> list[str]:
     """Non-destructively merge *servers* into ``config['mcpServers']``; return names added/updated.
 
     User-authored servers (not in our provenance) are never overwritten; we only add new servers
-    or refresh ones we already own.
+    or refresh ones we already own. With ``provenance_key=None`` no provenance block is written
+    (and, lacking one, an existing same-named server is treated as the user's and left untouched).
     """
     servers_block = config.setdefault("mcpServers", {})
-    owned = _owned(config)
+    owned = _owned(config, provenance_key)
     added: list[str] = []
     for name, spec in servers.items():
         if name in servers_block and name not in owned:
@@ -131,7 +168,8 @@ def _merge_mcp(config: dict, servers: dict[str, dict]) -> list[str]:
         servers_block[name] = spec
         owned.add(name)
         added.append(name)
-    config.setdefault(_PROVENANCE_KEY, {})["owned_mcp"] = sorted(owned)
+    if provenance_key:
+        config.setdefault(provenance_key, {})["owned_mcp"] = sorted(owned)
     return added
 
 
@@ -143,20 +181,26 @@ def install(
     *,
     root: Path = DEFAULT_ROOT,
     dry_run: bool = False,
+    shape: McpShape | None = None,
 ) -> DeployResult:
     """Deploy skills to MyHarness: copy each bundle + merge its normalized MCP servers.
 
     *skill_dirs* are absolute local skill-package paths. Skill copy is idempotent (replaces our
-    own prior copy). MCP merge is non-destructive (user servers preserved).
+    own prior copy). MCP merge is non-destructive (user servers preserved). *shape* reshapes each
+    MCP entry (drop/rename keys, provenance-key) for harnesses that want a different key set than
+    APM's normalized form; the default (``None`` → ``McpShape()``) keeps APM's shape verbatim.
     """
+    shape = shape or McpShape()
     result = DeployResult()
     skills_root = root / "skills"
     mcp_path = root / "mcp.json"
 
-    # gather normalized MCP across the selection first (fail fast on a bad manifest).
+    # gather normalized MCP across the selection first (fail fast on a bad manifest), then reshape
+    # to the harness's preferred key set.
     all_servers: dict[str, dict] = {}
     for d in skill_dirs:
         all_servers.update(normalized_mcp(d))
+    all_servers = shape.apply(all_servers)
 
     if dry_run:
         result.skills_deployed = [d.name for d in skill_dirs]
@@ -174,7 +218,7 @@ def install(
 
     if all_servers:
         config = _load_mcp_config(mcp_path)
-        result.mcp_added = _merge_mcp(config, all_servers)
+        result.mcp_added = _merge_mcp(config, all_servers, shape.provenance_key)
         _write_mcp_config(mcp_path, config)
     return result
 
@@ -190,12 +234,14 @@ def uninstall(
     *,
     root: Path = DEFAULT_ROOT,
     dry_run: bool = False,
+    provenance_key: str | None = _PROVENANCE_KEY,
 ) -> DeployResult:
     """Remove named skills from MyHarness + prune MCP servers no surviving skill needs (§3.3).
 
     Reachability prune: after removing the named skills, recompute the required MCP set from the
     *remaining* installed skills' manifests; drop only owned servers absent from that set. User
-    servers (not in our provenance) are never pruned.
+    servers (not in our provenance) are never pruned. *provenance_key* must match what install
+    used; with ``provenance_key=None`` nothing is owned, so no MCP server is pruned (only skills).
     """
     result = DeployResult()
     skills_root = root / "skills"
@@ -218,13 +264,14 @@ def uninstall(
 
     config = _load_mcp_config(mcp_path)
     if config:
-        owned = _owned(config)
+        owned = _owned(config, provenance_key)
         servers_block = config.get("mcpServers", {})
         prunable = sorted(n for n in owned if n not in required and n in servers_block)
         if not dry_run:
             for n in prunable:
                 servers_block.pop(n, None)
-            config[_PROVENANCE_KEY]["owned_mcp"] = sorted(owned - set(prunable))
+            if provenance_key and provenance_key in config:
+                config[provenance_key]["owned_mcp"] = sorted(owned - set(prunable))
             _write_mcp_config(mcp_path, config)
         result.mcp_pruned = prunable
     return result

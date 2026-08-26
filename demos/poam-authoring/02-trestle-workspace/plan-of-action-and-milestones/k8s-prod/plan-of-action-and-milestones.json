@@ -1,0 +1,2811 @@
+{
+  "plan-of-action-and-milestones": {
+    "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
+    "metadata": {
+      "title": "Kubernetes Cluster POA&M",
+      "last-modified": "2026-08-26T02:38:15.512+00:00",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "system-id": {
+      "id": "k8s-prod"
+    },
+    "local-definitions": {
+      "components": [
+        {
+          "uuid": "5d0bc58c-635a-5311-bb2e-9bd16dcf07b8",
+          "type": "service",
+          "title": "GitHub",
+          "description": "GitHub",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            }
+          ],
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "198917d4-b877-545c-8e31-70c66645881f",
+          "type": "service",
+          "title": "Managed Kubernetes",
+          "description": "Managed Kubernetes cluster",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            }
+          ],
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "213ce276-30f2-552c-81a0-91cd712c1848",
+          "type": "validation",
+          "title": "Auditree",
+          "description": "Auditree",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+            }
+          ],
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "2538d29f-695f-5278-85c6-f2d8d2816785",
+          "type": "validation",
+          "title": "Kyverno",
+          "description": "Kyverno as Policy Validation Point",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "allowed-base-images"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "disallow-capabilities"
+            }
+          ],
+          "status": {
+            "state": "operational"
+          }
+        },
+        {
+          "uuid": "41c791fb-03dd-58a3-a1ff-c59ffac0b1a2",
+          "type": "validation",
+          "title": "OCM",
+          "description": "OCM as Policy Validation Point",
+          "props": [
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-deployment"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-disallowed-roles"
+            },
+            {
+              "name": "rule-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            },
+            {
+              "name": "check-id",
+              "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+              "value": "policy-high-scan"
+            }
+          ],
+          "status": {
+            "state": "operational"
+          }
+        }
+      ],
+      "inventory-items": [
+        {
+          "uuid": "ca93096a-c747-5896-a953-d22a2bd5d6b0",
+          "description": "GitHub — GitHub",
+          "implemented-components": [
+            {
+              "component-uuid": "5d0bc58c-635a-5311-bb2e-9bd16dcf07b8"
+            }
+          ]
+        },
+        {
+          "uuid": "2d73b063-b743-51b1-8274-e03f75ce69cb",
+          "description": "Managed Kubernetes — Managed Kubernetes cluster",
+          "implemented-components": [
+            {
+              "component-uuid": "198917d4-b877-545c-8e31-70c66645881f"
+            }
+          ]
+        }
+      ],
+      "assessment-assets": {
+        "assessment-platforms": [
+          {
+            "uuid": "0e4238c1-2bee-50d8-8ce0-ce2abd53de29",
+            "title": "Auditree",
+            "uses-components": [
+              {
+                "component-uuid": "213ce276-30f2-552c-81a0-91cd712c1848"
+              }
+            ]
+          },
+          {
+            "uuid": "f6c319b4-6320-53a9-a480-5da251c77009",
+            "title": "Kyverno",
+            "uses-components": [
+              {
+                "component-uuid": "2538d29f-695f-5278-85c6-f2d8d2816785"
+              }
+            ]
+          },
+          {
+            "uuid": "e34096cd-c412-5480-a03c-e742d7aaa645",
+            "title": "OCM",
+            "uses-components": [
+              {
+                "component-uuid": "41c791fb-03dd-58a3-a1ff-c59ffac0b1a2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "observations": [
+      {
+        "uuid": "51d529c0-2795-41b5-a79a-402da336aa1f",
+        "title": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty",
+        "description": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty",
+        "props": [
+          {
+            "name": "assessment-rule-id",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+          }
+        ],
+        "methods": [
+          "AUTOMATED"
+        ],
+        "subjects": [
+          {
+            "subject-uuid": "49e77fa4-47ac-4a4e-9ddc-f40e9b7945de",
+            "type": "inventory-item",
+            "title": "Auditree Check: demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty_0_nasa",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty_0_nasa"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-06-02T02:18:29.394064+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "{}"
+              }
+            ]
+          },
+          {
+            "subject-uuid": "4d7545c8-561b-444b-a227-713e1b181d48",
+            "type": "inventory-item",
+            "title": "Auditree Check: demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty_1_esa",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty_1_esa"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-06-02T02:18:29.394502+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "{}"
+              }
+            ]
+          }
+        ],
+        "collected": "2024-06-02T02:18:29.394+00:00"
+      },
+      {
+        "uuid": "42b643a1-8edf-4ff8-a43a-fd925fb459f8",
+        "title": "allowed-base-images",
+        "description": "allowed-base-images",
+        "props": [
+          {
+            "name": "assessment-rule-id",
+            "value": "allowed-base-images"
+          }
+        ],
+        "methods": [
+          "AUTOMATED"
+        ],
+        "subjects": [
+          {
+            "subject-uuid": "e3679433-6606-464b-b2db-cd1c694d1d06",
+            "type": "resource",
+            "title": "v1/Pod kube-scheduler-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "5c5d8e06-724c-439f-a9be-3ae34b0c6083"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "7266e658-9602-439e-ad27-1da79518a999",
+            "type": "resource",
+            "title": "v1/Pod coredns-5d78c9869d-gc25q kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "621caa1d-897d-4366-8906-841ba56c1fdd"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "eac42a68-69bc-4e74-88a7-24d9541e8042",
+            "type": "resource",
+            "title": "v1/Pod kindnet-pbb9l kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "74db5c25-74ca-457d-96e3-0d7d0dc39b19"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:19+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "a4cfd790-7c30-4e87-8dcd-4fd742ed6dc4",
+            "type": "resource",
+            "title": "v1/Pod etcd-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "8f2aebd7-7957-4037-8509-34596db786ac"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:16+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "efc58f8d-905c-492a-8a83-7decf78344f4",
+            "type": "resource",
+            "title": "v1/Pod kube-apiserver-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "a0703256-75e4-4bba-83c8-c8df32866156"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:14+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "93297f82-74d9-4531-a533-58c4083a723f",
+            "type": "resource",
+            "title": "v1/Pod kube-proxy-zbddb kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "aee2dfc5-9c05-4b6f-b7a7-6d87bdbd2eab"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "55344907-e344-43d5-97d5-af700a07e04e",
+            "type": "resource",
+            "title": "v1/Pod coredns-5d78c9869d-2rbnq kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d053eefe-8d34-4ffa-9550-8d68e6f37e08"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:14+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "e8f66f6a-ecbf-4bce-b269-e0cf15cd6fa5",
+            "type": "resource",
+            "title": "v1/Pod kube-controller-manager-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d420e878-2ba7-45e3-afb4-af859d0891af"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:18+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "6fb9970a-b37c-41ac-a368-08641807ee83",
+            "type": "resource",
+            "title": "apps/v1/DaemonSet kindnet kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "73917941-f4d3-444f-8d0f-be93ba1e4e2b"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:10+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "1f0b51b7-1ad1-447f-ab31-17924cdb42f6",
+            "type": "resource",
+            "title": "apps/v1/DaemonSet kube-proxy kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "78cf0d9f-c3b2-488d-b596-0e4729025aee"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:10+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "2ddbdafa-6925-4c83-9686-481afbfa6ee1",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet coredns-5d78c9869d kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "919c840d-63cf-4293-8a64-0fd0de15121f"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:18:49+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "3b262cdd-47bd-4ba8-94bd-dc04002baf8e",
+            "type": "resource",
+            "title": "apps/v1/Deployment coredns kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d7418bd6-4c02-4344-864b-d710ee03b7e2"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:10+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "2e63b530-62f0-4731-a8dc-1f8f8fb9f94e",
+            "type": "resource",
+            "title": "v1/Pod kyverno-admission-controller-7cd788c8dd-gdnhp kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "149a831c-bfbd-487e-83f5-59685cc3e7ae"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:15+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "df9cc999-cefb-4148-9c18-c6eb7125f388",
+            "type": "resource",
+            "title": "v1/Pod kyverno-reports-controller-7f94855747-tmnhr kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "3113da8b-778d-4650-a00b-8244f46383b6"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:19+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "756697ff-a67d-4d2e-99cd-8e29be90e159",
+            "type": "resource",
+            "title": "v1/Pod kyverno-cleanup-admission-reports-28551310-cc4k7 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "815cbb34-eeea-43ab-977a-ee509cd3c8b4"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "91dc046a-fcd0-4487-8d1f-6185ada13b24",
+            "type": "resource",
+            "title": "v1/Pod kyverno-cleanup-cluster-admission-reports-28551310-m4ld4 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "ad02a4a0-765d-41fe-ba8d-4d8bc1f4bbb1"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "45e64cc8-287d-4761-98c2-5aefe9abd171",
+            "type": "resource",
+            "title": "v1/Pod kyverno-cleanup-controller-ddf458755-9bnlb kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d593fd38-2d90-4178-acd2-673a6b9dcbe7"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:16+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "724e5180-6c88-4384-a1de-97366dce4b24",
+            "type": "resource",
+            "title": "v1/Pod kyverno-background-controller-74599787cf-s6nm2 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "dd188800-5da7-4449-8e97-4333b5c71762"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:15+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "31fa5c2f-7531-42e6-be43-4db4f7e20861",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-cleanup-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "0ec446db-1759-4c62-b08f-c56cd15ae133"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:12+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "e71fccb8-b9c4-45e3-a601-684e02ed32be",
+            "type": "resource",
+            "title": "batch/v1/Job kyverno-cleanup-cluster-admission-reports-28551310 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "1bbefe68-2a6f-4f98-a578-7830ab2ddba7"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:13+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "b749fa2d-aa70-4095-9d61-2f22d6f3eede",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-admission-controller-7cd788c8dd kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "2dce65ca-0421-4189-a2d9-c5b0f3509eb0"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:18:59+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "1c4e5b7b-c43a-41aa-9b3e-9718b9753ec5",
+            "type": "resource",
+            "title": "batch/v1/Job kyverno-cleanup-admission-reports-28551310 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "7e7fd9ee-2663-45ec-8fc5-2b8224af97be"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:14+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "7414f740-ae9e-4edc-8282-5dac3a8e39e3",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-background-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "a061c459-8d2d-4dfd-95a5-3a74d74be6ad"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:11+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "202ea79c-0092-4213-97b2-04d7e40749dc",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-cleanup-controller-ddf458755 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "b64c38ba-5d41-4b05-85c2-04a0fa92d671"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:00+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "b26d8504-5e81-41b0-841c-fdebcc9daee3",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-background-controller-74599787cf kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "bdd4f14b-5f6b-463d-a5d2-3ee155150f41"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:18:58+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "e5c62ccd-7655-46bd-a983-ae0b4ea2666d",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-reports-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "c07941a1-6078-4f18-bd94-ad1ecbd401b0"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:12+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "5622cbcd-548b-4dc8-92b7-51b6eb74dbe3",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-reports-controller-7f94855747 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "c50add3f-7021-4272-8b17-17dc894a1d14"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:00+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "8af70afc-4661-47cb-8b86-045d3ac4d4ca",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-admission-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d76bafdd-ff22-4179-a8b2-ee74991635fc"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:11+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "f952efac-0d29-441e-ad7e-aa34774c9cac",
+            "type": "resource",
+            "title": "batch/v1/CronJob kyverno-cleanup-cluster-admission-reports kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "61fb66f3-6ae6-4502-9945-f82c37bf1a11"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:09+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "3c95693d-0994-4c64-96be-76459b191abb",
+            "type": "resource",
+            "title": "batch/v1/CronJob kyverno-cleanup-admission-reports kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "88974b3b-c9df-440f-aeb4-039221c8aa6c"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:09+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "5651a0bc-d3ed-4595-b6d3-cad853d49c77",
+            "type": "resource",
+            "title": "v1/Pod local-path-provisioner-6bc4bddd6b-vlmww local-path-storage",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "5863d467-1533-4721-8387-d620c959800e"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:20+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "d6cade91-b7a7-4efc-b002-46aa3783b9de",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet local-path-provisioner-6bc4bddd6b local-path-storage",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "5bc38239-ae62-4d6c-bd51-ffda62e44843"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:18:52+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "0fecfe07-2e71-4c6b-a973-e0bfda5e3d8f",
+            "type": "resource",
+            "title": "apps/v1/Deployment local-path-provisioner local-path-storage",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "94957b8f-76ce-457e-a3ed-628e4403ebc5"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:13+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation failure: This container image's base is not in the approved list or is not specified. Only pre-approved base images may be used. Please contact the platform team for assistance."
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T06:23:07+00:00"
+      },
+      {
+        "uuid": "9aec5181-58b6-493e-b17f-364b330b2bf0",
+        "title": "disallow-capabilities",
+        "description": "disallow-capabilities",
+        "props": [
+          {
+            "name": "assessment-rule-id",
+            "value": "disallow-capabilities"
+          }
+        ],
+        "methods": [
+          "AUTOMATED"
+        ],
+        "subjects": [
+          {
+            "subject-uuid": "421f7386-c3af-4a32-8105-5aa93cd49d29",
+            "type": "resource",
+            "title": "v1/Pod kube-scheduler-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "5c5d8e06-724c-439f-a9be-3ae34b0c6083"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "16bfcb17-e1e7-4101-8f63-ed8bffabff64",
+            "type": "resource",
+            "title": "v1/Pod coredns-5d78c9869d-gc25q kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "621caa1d-897d-4366-8906-841ba56c1fdd"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "b1c63359-7c29-4937-b8cc-3c60f0d01835",
+            "type": "resource",
+            "title": "v1/Pod kindnet-pbb9l kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "74db5c25-74ca-457d-96e3-0d7d0dc39b19"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:19+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "Any capabilities added beyond the allowed list (AUDIT_WRITE, CHOWN, DAC_OVERRIDE, FOWNER, FSETID, KILL, MKNOD, NET_BIND_SERVICE, SETFCAP, SETGID, SETPCAP, SETUID, SYS_CHROOT) are disallowed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "eac52ad3-23b7-4193-8994-6d229f9544b8",
+            "type": "resource",
+            "title": "v1/Pod etcd-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "8f2aebd7-7957-4037-8509-34596db786ac"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:16+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "447e1da6-e2a4-4fbf-98a5-8bfe6407d8c8",
+            "type": "resource",
+            "title": "v1/Pod kube-apiserver-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "a0703256-75e4-4bba-83c8-c8df32866156"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:14+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "ca308a62-90d2-47d5-b4c6-3a4858cc9417",
+            "type": "resource",
+            "title": "v1/Pod kube-proxy-zbddb kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "aee2dfc5-9c05-4b6f-b7a7-6d87bdbd2eab"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "26e0a263-1a95-4ac0-b90e-478df8a2983f",
+            "type": "resource",
+            "title": "v1/Pod coredns-5d78c9869d-2rbnq kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d053eefe-8d34-4ffa-9550-8d68e6f37e08"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:14+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "8164ad11-5d17-450a-9006-71a4dc2c693d",
+            "type": "resource",
+            "title": "v1/Pod kube-controller-manager-kind-control-plane kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d420e878-2ba7-45e3-afb4-af859d0891af"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:18+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "7e20096d-93f8-441e-ae9f-0ea89ef43ef3",
+            "type": "resource",
+            "title": "apps/v1/DaemonSet kindnet kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "73917941-f4d3-444f-8d0f-be93ba1e4e2b"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:10+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "Any capabilities added beyond the allowed list (AUDIT_WRITE, CHOWN, DAC_OVERRIDE, FOWNER, FSETID, KILL, MKNOD, NET_BIND_SERVICE, SETFCAP, SETGID, SETPCAP, SETUID, SYS_CHROOT) are disallowed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "26f62d39-c1f3-45f8-8d68-fbf7d1621b1f",
+            "type": "resource",
+            "title": "apps/v1/DaemonSet kube-proxy kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "78cf0d9f-c3b2-488d-b596-0e4729025aee"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:10+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "2edf926d-d5d7-4998-948e-c0dfeb3ffb82",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet coredns-5d78c9869d kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "919c840d-63cf-4293-8a64-0fd0de15121f"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:19+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "67ffe691-459e-47b0-9cb5-7615e2968110",
+            "type": "resource",
+            "title": "apps/v1/Deployment coredns kube-system",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d7418bd6-4c02-4344-864b-d710ee03b7e2"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:10+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "732ebbf0-2c0e-449c-9df5-1fd4add3fd1b",
+            "type": "resource",
+            "title": "v1/Pod kyverno-admission-controller-7cd788c8dd-gdnhp kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "149a831c-bfbd-487e-83f5-59685cc3e7ae"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:15+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "5bd0ed3f-8d3d-4e15-85f9-10798d0a04cf",
+            "type": "resource",
+            "title": "v1/Pod kyverno-reports-controller-7f94855747-tmnhr kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "3113da8b-778d-4650-a00b-8244f46383b6"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:19+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "c4e7476b-d05b-45a8-b1c6-9a4c4c801a9a",
+            "type": "resource",
+            "title": "v1/Pod kyverno-cleanup-admission-reports-28551310-cc4k7 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "815cbb34-eeea-43ab-977a-ee509cd3c8b4"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "f7ea1708-3c70-425d-a88a-f65cfc691210",
+            "type": "resource",
+            "title": "v1/Pod kyverno-cleanup-cluster-admission-reports-28551310-m4ld4 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "ad02a4a0-765d-41fe-ba8d-4d8bc1f4bbb1"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:17+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "a740e21b-be91-420d-b250-7574ddd82c16",
+            "type": "resource",
+            "title": "v1/Pod kyverno-cleanup-controller-ddf458755-9bnlb kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d593fd38-2d90-4178-acd2-673a6b9dcbe7"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:16+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "f7a60c20-18e4-4956-aab6-f911d216a601",
+            "type": "resource",
+            "title": "v1/Pod kyverno-background-controller-74599787cf-s6nm2 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "dd188800-5da7-4449-8e97-4333b5c71762"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:15+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "0afa8ce7-1e2b-4803-8f60-156aef0e3bf6",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-cleanup-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "0ec446db-1759-4c62-b08f-c56cd15ae133"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:12+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "2c7554d1-933d-450b-b29c-d71b9ee3d230",
+            "type": "resource",
+            "title": "batch/v1/Job kyverno-cleanup-cluster-admission-reports-28551310 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "1bbefe68-2a6f-4f98-a578-7830ab2ddba7"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:13+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "04bb79db-c19b-40e9-8899-2ea675d313d2",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-admission-controller-7cd788c8dd kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "2dce65ca-0421-4189-a2d9-c5b0f3509eb0"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:18:49+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "ad8aa57c-28fa-4b8f-9226-9e4c20312d99",
+            "type": "resource",
+            "title": "batch/v1/Job kyverno-cleanup-admission-reports-28551310 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "7e7fd9ee-2663-45ec-8fc5-2b8224af97be"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:14+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "8822da36-7adb-4b20-80f0-d96754bec660",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-background-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "a061c459-8d2d-4dfd-95a5-3a74d74be6ad"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:11+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "f8b45f26-08de-4545-985b-72b299ce97ba",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-cleanup-controller-ddf458755 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "b64c38ba-5d41-4b05-85c2-04a0fa92d671"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:00+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "58de9cfe-4850-42ac-808e-8b2d1e5b2d33",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-background-controller-74599787cf kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "bdd4f14b-5f6b-463d-a5d2-3ee155150f41"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:18:59+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "9b6ecf03-dd89-4be2-b906-57c978a2247a",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-reports-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "c07941a1-6078-4f18-bd94-ad1ecbd401b0"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:12+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "8cba4b09-858e-47e1-91d0-3f92c1eab452",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet kyverno-reports-controller-7f94855747 kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "c50add3f-7021-4272-8b17-17dc894a1d14"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:00+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "fb25c4a6-6491-4274-b40c-023e5ca37164",
+            "type": "resource",
+            "title": "apps/v1/Deployment kyverno-admission-controller kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "d76bafdd-ff22-4179-a8b2-ee74991635fc"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:11+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "d936bfb8-729e-48cf-8b98-eb67328d4f31",
+            "type": "resource",
+            "title": "batch/v1/CronJob kyverno-cleanup-cluster-admission-reports kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "61fb66f3-6ae6-4502-9945-f82c37bf1a11"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:09+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-cronjob-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "212cd861-d3ea-4d51-a240-4d496c9c794f",
+            "type": "resource",
+            "title": "batch/v1/CronJob kyverno-cleanup-admission-reports kyverno",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "88974b3b-c9df-440f-aeb4-039221c8aa6c"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:09+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-cronjob-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "4826b3b5-6c9d-4f67-b75c-435495c3b571",
+            "type": "resource",
+            "title": "v1/Pod local-path-provisioner-6bc4bddd6b-vlmww local-path-storage",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "5863d467-1533-4721-8387-d620c959800e"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:20+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "fb230f59-fbfd-42cf-b906-f3004773e8bc",
+            "type": "resource",
+            "title": "apps/v1/ReplicaSet local-path-provisioner-6bc4bddd6b local-path-storage",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "5bc38239-ae62-4d6c-bd51-ffda62e44843"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:19+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          },
+          {
+            "subject-uuid": "ae5b743f-d577-4bf2-b517-5eb925eeaaac",
+            "type": "resource",
+            "title": "apps/v1/Deployment local-path-provisioner local-path-storage",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "94957b8f-76ce-457e-a3ed-628e4403ebc5"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2024-04-14T07:19:13+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "validation rule 'autogen-adding-capabilities' passed."
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T06:23:07+00:00"
+      },
+      {
+        "uuid": "08f038db-d44e-4db1-9394-03795c5e91ee",
+        "title": "policy-deployment",
+        "description": "policy-deployment",
+        "props": [
+          {
+            "name": "assessment-rule-id",
+            "value": "policy-deployment"
+          }
+        ],
+        "methods": [
+          "AUTOMATED"
+        ],
+        "subjects": [
+          {
+            "subject-uuid": "648c7e29-a70a-45f9-8be8-a24735177b8c",
+            "type": "cluster",
+            "title": "Cluster \"cluster1\"",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "cluster1"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2023-07-05T23:53:37+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "[c2p.policy-deployment.176f1ddc5591cb1c] NonCompliant; violation - deployments not found: [nginx-deployment] in namespace cluster1 missing; [nginx-deployment] in namespace kube-node-lease missing; [nginx-deployment] in namespace kube-public missing; [nginx-deployment] in namespace local-path-storage missing"
+              }
+            ]
+          },
+          {
+            "subject-uuid": "f21b95ae-f46f-4217-836c-29c0db03a10d",
+            "type": "cluster",
+            "title": "Cluster \"cluster2\"",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "cluster2"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2023-07-05T23:51:56+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "[c2p.policy-deployment.176f1dc4e7de17cb] NonCompliant; violation - deployments not found: [nginx-deployment] in namespace cluster2 missing; [nginx-deployment] in namespace default missing; [nginx-deployment] in namespace kube-node-lease missing; [nginx-deployment] in namespace kube-public missing; [nginx-deployment] in namespace local-path-storage missing"
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T06:23:07+00:00"
+      },
+      {
+        "uuid": "95846605-9887-43dd-807e-7f667dc88752",
+        "title": "policy-disallowed-roles",
+        "description": "policy-disallowed-roles",
+        "props": [
+          {
+            "name": "assessment-rule-id",
+            "value": "policy-disallowed-roles"
+          }
+        ],
+        "methods": [
+          "AUTOMATED"
+        ],
+        "subjects": [
+          {
+            "subject-uuid": "d5ac63de-bc5b-4779-8bc6-f2305953580a",
+            "type": "cluster",
+            "title": "Cluster \"cluster1\"",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "cluster1"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2023-07-05T23:52:34+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "[c2p.policy-disallowed-roles.176f1dcdc4c8d17e] Compliant; notification - roles in namespace cluster1; in namespace default; in namespace kube-node-lease; in namespace kube-public; in namespace local-path-storage missing as expected, therefore this Object template is compliant"
+              }
+            ]
+          },
+          {
+            "subject-uuid": "bbe573d4-8ec1-47df-9adb-06cc3540d3ce",
+            "type": "cluster",
+            "title": "Cluster \"cluster2\"",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "cluster2"
+              },
+              {
+                "name": "result",
+                "value": "pass"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2023-07-05T23:51:50+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "[c2p.policy-disallowed-roles.176f1dc36e36b7b2] Compliant; notification - roles in namespace cluster2; in namespace default; in namespace kube-node-lease; in namespace kube-public; in namespace local-path-storage missing as expected, therefore this Object template is compliant"
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T06:23:07+00:00"
+      },
+      {
+        "uuid": "cbac3309-ad1e-4d25-929c-15cf50a8818a",
+        "title": "policy-high-scan",
+        "description": "policy-high-scan",
+        "props": [
+          {
+            "name": "assessment-rule-id",
+            "value": "policy-high-scan"
+          }
+        ],
+        "methods": [
+          "AUTOMATED"
+        ],
+        "subjects": [
+          {
+            "subject-uuid": "af4a262f-5d22-4c8b-b7b5-83ece2197be9",
+            "type": "cluster",
+            "title": "Cluster \"cluster1\"",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "cluster1"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2023-07-05T23:53:37+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "[c2p.policy-high-scan.176f1ddc441457e5] NonCompliant; violation - couldn't find mapping resource with kind ComplianceCheckResult, please check if you have CRD deployed"
+              }
+            ]
+          },
+          {
+            "subject-uuid": "c5a254da-36e8-41ad-bd78-4ca55ec1b081",
+            "type": "cluster",
+            "title": "Cluster \"cluster2\"",
+            "props": [
+              {
+                "name": "resource-id",
+                "value": "cluster2"
+              },
+              {
+                "name": "result",
+                "value": "failure"
+              },
+              {
+                "name": "evaluated-on",
+                "value": "2023-07-05T23:51:56+00:00"
+              },
+              {
+                "name": "reason",
+                "value": "[c2p.policy-high-scan.176f1dc4e29e1221] NonCompliant; violation - couldn't find mapping resource with kind ComplianceCheckResult, please check if you have CRD deployed"
+              }
+            ]
+          }
+        ],
+        "collected": "2026-08-25T06:23:07+00:00"
+      }
+    ],
+    "risks": [
+      {
+        "uuid": "6df5246f-e745-5e42-908d-dbf8541c13c9",
+        "title": "Risk: GitHub API version may be unsupported",
+        "description": "The GitHub API might not return a supported version (CM-2).",
+        "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_supported_versions' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
+        "status": "open",
+        "remediations": [
+          {
+            "uuid": "14b181ca-691a-54b5-b4d3-8e1945a5f5af",
+            "lifecycle": "planned",
+            "title": "Remediation for GitHub API version may be unsupported",
+            "description": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "70706e81-0ed9-529a-8f2e-6afef69b6b8b",
+        "title": "Risk: GitHub organization may be empty",
+        "description": "The GitHub org might have no members (AC-2, Account Management).",
+        "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty' is enforced, this weakness represents an open risk to the affected control(s): ac-2.",
+        "status": "closed",
+        "remediations": [
+          {
+            "uuid": "8311db5e-f8be-59b0-b2c6-c877c3d4168f",
+            "lifecycle": "planned",
+            "title": "Remediation for GitHub organization may be empty",
+            "description": "Alert via Auditree if the GitHub org membership drops to zero.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "82832e44-6a1e-548a-863a-98e77600bec3",
+        "title": "Risk: Base image not restricted to an approved allow list",
+        "description": "Containers may run base images outside the cluster-wide approved allow list, weakening supply-chain assurance for CM-2 (Baseline Configuration).",
+        "statement": "Until the check 'allowed-base-images' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
+        "props": [
+          {
+            "name": "original-risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          }
+        ],
+        "status": "open",
+        "deadline": "2026-12-31T00:00:00+00:00",
+        "remediations": [
+          {
+            "uuid": "2e7514c6-0001-506c-8a9c-b96772151681",
+            "lifecycle": "planned",
+            "title": "Remediation for Base image not restricted to an approved allow list",
+            "description": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ],
+            "tasks": [
+              {
+                "uuid": "c98c8d79-add2-5b19-98a1-144dd44b04c3",
+                "type": "milestone",
+                "title": "Publish approved base-image allow list",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-10-01T00:00:00+00:00"
+                  }
+                }
+              },
+              {
+                "uuid": "3c9684ac-7815-5a05-bbf8-e925e4ee5216",
+                "type": "milestone",
+                "title": "Enforce Kyverno allowed-base-images policy in audit->enforce",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-11-15T00:00:00+00:00"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "81e92e26-a447-5c27-9994-d373fb3162e7",
+        "title": "Risk: Added Linux capabilities not disallowed",
+        "description": "Containers could add Linux capabilities beyond the policy allow list (CM-2.1).",
+        "statement": "Until the check 'disallow-capabilities' is enforced, this weakness represents an open risk to the affected control(s): cm-2.1.",
+        "props": [
+          {
+            "name": "original-risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          }
+        ],
+        "status": "open",
+        "remediations": [
+          {
+            "uuid": "358888cf-b3c0-5fd6-b012-62912e5aa2a7",
+            "lifecycle": "planned",
+            "title": "Remediation for Added Linux capabilities not disallowed",
+            "description": "Enforce the Kyverno disallow-capabilities policy across all namespaces.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "8d915870-175b-5607-9e06-db301fa5025c",
+        "title": "Risk: Deployment minimum-replica policy not guaranteed",
+        "description": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
+        "statement": "Until the check 'policy-deployment' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
+        "status": "open",
+        "remediations": [
+          {
+            "uuid": "d5238b4a-cafc-5ab6-9b74-5b06550a1f9e",
+            "lifecycle": "planned",
+            "title": "Remediation for Deployment minimum-replica policy not guaranteed",
+            "description": "Enforce the OCM policy-deployment minimum-replica policy.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "c87f3135-f22a-50c1-88b2-9d14f8ce9043",
+        "title": "Risk: Disallowed cluster roles in use",
+        "description": "RoleBindings grant roles outside the allowed set, violating AC-1 (Policy and Procedures) least-privilege expectations.",
+        "statement": "Until the check 'policy-disallowed-roles' is enforced, this weakness represents an open risk to the affected control(s): ac-1.",
+        "props": [
+          {
+            "name": "original-risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          }
+        ],
+        "status": "closed",
+        "deadline": "2026-12-15T00:00:00+00:00",
+        "remediations": [
+          {
+            "uuid": "98ad66d0-8dcd-5235-9817-ad1708b49a40",
+            "lifecycle": "planned",
+            "title": "Remediation for Disallowed cluster roles in use",
+            "description": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ],
+            "tasks": [
+              {
+                "uuid": "891e55a6-e398-501a-b870-4b64e332d607",
+                "type": "milestone",
+                "title": "Remediate disallowed RoleBindings",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-11-01T00:00:00+00:00"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "149b16c8-7829-5752-bd99-0a6262d75f91",
+        "title": "Risk: High-level vulnerability scan not enabled",
+        "description": "The cluster scan profile does not run at the high level required by policy for CM-6 (Configuration Settings).",
+        "statement": "Until the check 'policy-high-scan' is enforced, this weakness represents an open risk to the affected control(s): cm-6.",
+        "props": [
+          {
+            "name": "original-risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          }
+        ],
+        "status": "open",
+        "deadline": "2026-11-30T00:00:00+00:00",
+        "remediations": [
+          {
+            "uuid": "1e411c1a-363b-571b-bdd9-34bffedc0ce2",
+            "lifecycle": "planned",
+            "title": "Remediation for High-level vulnerability scan not enabled",
+            "description": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline.",
+            "origins": [
+              {
+                "actors": [
+                  {
+                    "type": "tool",
+                    "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
+                  }
+                ]
+              }
+            ],
+            "tasks": [
+              {
+                "uuid": "37364959-ddb2-563f-92ef-94eede27bd18",
+                "type": "milestone",
+                "title": "Enable high-level scan profile",
+                "timing": {
+                  "on-date": {
+                    "date": "2026-10-15T00:00:00+00:00"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "uuid": "cfe57555-c91d-56ce-a04b-003095cc3764",
+        "title": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty: satisfied",
+        "description": "Check 'demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty' passed for all 2 evaluated subject(s).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "ac-2",
+          "status": {
+            "state": "satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "51d529c0-2795-41b5-a79a-402da336aa1f"
+          }
+        ]
+      },
+      {
+        "uuid": "c92fcc33-0f6f-5fa5-a996-293a4e00cc31",
+        "title": "allowed-base-images: not satisfied",
+        "description": "Check 'allowed-base-images' failed for 33 of 33 evaluated subject(s).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "42b643a1-8edf-4ff8-a43a-fd925fb459f8"
+          }
+        ]
+      },
+      {
+        "uuid": "91ba3a9f-69b6-53b8-83e2-3d998c0738b1",
+        "title": "disallow-capabilities: not satisfied",
+        "description": "Check 'disallow-capabilities' failed for 2 of 33 evaluated subject(s).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2.1",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "9aec5181-58b6-493e-b17f-364b330b2bf0"
+          }
+        ]
+      },
+      {
+        "uuid": "13c16ba9-c70d-53ab-be66-633560348c37",
+        "title": "policy-deployment: not satisfied",
+        "description": "Check 'policy-deployment' failed for 2 of 2 evaluated subject(s).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-2",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "08f038db-d44e-4db1-9394-03795c5e91ee"
+          }
+        ]
+      },
+      {
+        "uuid": "86d4b4c1-c203-5cdc-8123-2ce54769b6e1",
+        "title": "policy-disallowed-roles: satisfied",
+        "description": "Check 'policy-disallowed-roles' passed for all 2 evaluated subject(s).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "ac-1",
+          "status": {
+            "state": "satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "95846605-9887-43dd-807e-7f667dc88752"
+          }
+        ]
+      },
+      {
+        "uuid": "0ec9ba10-85d9-5ae7-bd59-fe91d33366ac",
+        "title": "policy-high-scan: not satisfied",
+        "description": "Check 'policy-high-scan' failed for 2 of 2 evaluated subject(s).",
+        "target": {
+          "type": "objective-id",
+          "target-id": "cm-6",
+          "status": {
+            "state": "not-satisfied"
+          }
+        },
+        "related-observations": [
+          {
+            "observation-uuid": "cbac3309-ad1e-4d25-929c-15cf50a8818a"
+          }
+        ]
+      }
+    ],
+    "poam-items": [
+      {
+        "uuid": "140d6f6d-b06a-5ac1-924b-d52369c0eb73",
+        "title": "GitHub API version may be unsupported",
+        "description": "The GitHub API might not return a supported version (CM-2).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-001"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Auditree"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "DevOps Team"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "6df5246f-e745-5e42-908d-dbf8541c13c9"
+          }
+        ],
+        "remarks": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation."
+      },
+      {
+        "uuid": "cfa3d133-9dc0-5c6c-97bf-90bb7a27f0b0",
+        "title": "GitHub organization may be empty",
+        "description": "The GitHub org might have no members (AC-2, Account Management).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-002"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "ac-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Auditree"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "DevOps Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "cfe57555-c91d-56ce-a04b-003095cc3764"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "51d529c0-2795-41b5-a79a-402da336aa1f"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "70706e81-0ed9-529a-8f2e-6afef69b6b8b"
+          }
+        ],
+        "remarks": "Alert via Auditree if the GitHub org membership drops to zero."
+      },
+      {
+        "uuid": "dfe8d1ad-0688-5c5b-9874-139c6e0db2e9",
+        "title": "Base image not restricted to an approved allow list",
+        "description": "Containers may run base images outside the cluster-wide approved allow list, weakening supply-chain assurance for CM-2 (Baseline Configuration).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-003"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "allowed-base-images"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Kyverno"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Security Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-12-31"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Publish approved base-image allow list (target: 2026-10-01)"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Enforce Kyverno allowed-base-images policy in audit->enforce (target: 2026-11-15)"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "c92fcc33-0f6f-5fa5-a996-293a4e00cc31"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "42b643a1-8edf-4ff8-a43a-fd925fb459f8"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "82832e44-6a1e-548a-863a-98e77600bec3"
+          }
+        ],
+        "remarks": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines."
+      },
+      {
+        "uuid": "72a1df4d-30f7-5089-88c2-5cf5895e98a0",
+        "title": "Added Linux capabilities not disallowed",
+        "description": "Containers could add Linux capabilities beyond the policy allow list (CM-2.1).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-004"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2.1"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "disallow-capabilities"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Kyverno"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Security Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "91ba3a9f-69b6-53b8-83e2-3d998c0738b1"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "9aec5181-58b6-493e-b17f-364b330b2bf0"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "81e92e26-a447-5c27-9994-d373fb3162e7"
+          }
+        ],
+        "remarks": "Enforce the Kyverno disallow-capabilities policy across all namespaces."
+      },
+      {
+        "uuid": "4310ad0e-e489-5671-b85c-bd545fb1841f",
+        "title": "Deployment minimum-replica policy not guaranteed",
+        "description": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-005"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-2"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-deployment"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "OCM"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "13c16ba9-c70d-53ab-be66-633560348c37"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "08f038db-d44e-4db1-9394-03795c5e91ee"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "8d915870-175b-5607-9e06-db301fa5025c"
+          }
+        ],
+        "remarks": "Enforce the OCM policy-deployment minimum-replica policy."
+      },
+      {
+        "uuid": "fcd23b5e-4eae-5f4a-8a7d-bd634889cae4",
+        "title": "Disallowed cluster roles in use",
+        "description": "RoleBindings grant roles outside the allowed set, violating AC-1 (Policy and Procedures) least-privilege expectations.",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-006"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "ac-1"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-disallowed-roles"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "OCM"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Moderate"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-12-15"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Remediate disallowed RoleBindings (target: 2026-11-01)"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "86d4b4c1-c203-5cdc-8123-2ce54769b6e1"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "95846605-9887-43dd-807e-7f667dc88752"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "c87f3135-f22a-50c1-88b2-9d14f8ce9043"
+          }
+        ],
+        "remarks": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence."
+      },
+      {
+        "uuid": "0261baab-ebee-5485-87a5-296959e3078b",
+        "title": "High-level vulnerability scan not enabled",
+        "description": "The cluster scan profile does not run at the high level required by policy for CM-6 (Configuration Settings).",
+        "props": [
+          {
+            "name": "poam-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "POAM-007"
+          },
+          {
+            "name": "control-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "cm-6"
+          },
+          {
+            "name": "check-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-high-scan"
+          },
+          {
+            "name": "validation-component",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "OCM"
+          },
+          {
+            "name": "risk-rating",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "High"
+          },
+          {
+            "name": "point-of-contact",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Platform Team"
+          },
+          {
+            "name": "scheduled-completion-date",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "2026-11-30"
+          },
+          {
+            "name": "milestone",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "Enable high-level scan profile (target: 2026-10-15)"
+          }
+        ],
+        "related-findings": [
+          {
+            "finding-uuid": "0ec9ba10-85d9-5ae7-bd59-fe91d33366ac"
+          }
+        ],
+        "related-observations": [
+          {
+            "observation-uuid": "cbac3309-ad1e-4d25-929c-15cf50a8818a"
+          }
+        ],
+        "related-risks": [
+          {
+            "risk-uuid": "149b16c8-7829-5752-bd99-0a6262d75f91"
+          }
+        ],
+        "remarks": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline."
+      }
+    ]
+  }
+}
