@@ -61,27 +61,27 @@ Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`, which also
 MCP servers like trestle). That is the only baseline runtime — no Node required.
 
 Not published to a package index yet — install **git-direct** with `uvx --from`. The
-`--from` points at the `tools/` subdirectory of a release tag (`@v0.1.0`); use any newer
-release tag, or `@main` to track the latest:
+`--from` points at the `tools/` subdirectory and tracks **`@main`** (the latest). To pin a specific
+release instead, swap `@main` for a tag — see [Pinning a version](#pinning-a-version) below.
 
 ```bash
-# install a demo's skills into Claude Code (skill files + MCP wiring, one step)
+# 1) pick specific skills → install (skill files + MCP wiring, one step)
 uvx \
-  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
-  compliance-authoring-skills install --demo catalog-to-assessment --target claude
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --skill catalog-authoring,assessment --target claude
 
-# or into OpenCode
+# 2) install ALL skills (omit any selector) — or all-but-some with --exclude
 uvx \
-  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --exclude git-workflow --target opencode
+
+# 3) install a demo's skill set (the skills its demos/<name>/README.md declares)
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
   compliance-authoring-skills install --demo catalog-to-assessment --target opencode
-
-# subset selection
-uvx \
-  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
-  compliance-authoring-skills install --exclude git-workflow --target claude
-uvx \
-  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
-  compliance-authoring-skills install --skill catalog-authoring,assessment --target opencode
 ```
 
 Each install copies the selected skills into the harness's native skill dir and wires the
@@ -94,8 +94,25 @@ skill needs it:
 
 ```bash
 uvx \
-  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
   compliance-authoring-skills uninstall --skill assessment --target claude
+```
+
+### Pinning a version
+
+The commands above track `@main`. To install a specific, reproducible release instead, replace
+`@main` with a Git tag (or commit SHA) in the `--from` URL — everything else stays the same:
+
+```bash
+# a release tag
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@v0.1.0#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
+
+# or an exact commit
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@<commit-sha>#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
 ```
 
 > **Status:** the `compliance-authoring-skills` wrapper is being built on top of `apm-cli` (see
