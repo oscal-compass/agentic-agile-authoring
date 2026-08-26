@@ -3,7 +3,7 @@
     "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
     "metadata": {
       "title": "Kubernetes Cluster POA&M",
-      "last-modified": "2026-08-26T00:26:07.748+00:00",
+      "last-modified": "2026-08-26T00:56:58.406+00:00",
       "version": "1.0",
       "oscal-version": "1.2.1"
     },
@@ -2072,18 +2072,11 @@
         "title": "Risk: GitHub API version may be unsupported",
         "description": "The GitHub API might not return a supported version (CM-2).",
         "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_supported_versions' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
-        "props": [
-          {
-            "name": "impacted-control-id",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "cm-2"
-          }
-        ],
         "status": "open",
         "remediations": [
           {
             "uuid": "5078afdd-25f5-5300-a6ff-edd6bd39fd57",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for GitHub API version may be unsupported",
             "description": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation.",
             "origins": [
@@ -2104,18 +2097,11 @@
         "title": "Risk: GitHub organization may be empty",
         "description": "The GitHub org might have no members (AC-2, Account Management).",
         "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty' is enforced, this weakness represents an open risk to the affected control(s): ac-2.",
-        "props": [
-          {
-            "name": "impacted-control-id",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "ac-2"
-          }
-        ],
         "status": "closed",
         "remediations": [
           {
             "uuid": "44cc553d-694b-5b0b-be32-0f812cfc1f3c",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for GitHub organization may be empty",
             "description": "Alert via Auditree if the GitHub org membership drops to zero.",
             "origins": [
@@ -2138,36 +2124,17 @@
         "statement": "Until the check 'allowed-base-images' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
         "props": [
           {
-            "name": "impacted-control-id",
+            "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "cm-2"
+            "value": "High"
           }
         ],
         "status": "open",
-        "characterizations": [
-          {
-            "origin": {
-              "actors": [
-                {
-                  "type": "tool",
-                  "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
-                }
-              ]
-            },
-            "facets": [
-              {
-                "name": "risk-rating",
-                "system": "https://oscal-compass.github.io/compliance-trestle/ns/poam",
-                "value": "High"
-              }
-            ]
-          }
-        ],
         "deadline": "2026-12-31T00:00:00+00:00",
         "remediations": [
           {
             "uuid": "c1ad0afa-6398-592c-a565-6bf2e1b52980",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for Base image not restricted to an approved allow list",
             "description": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines.",
             "origins": [
@@ -2190,35 +2157,16 @@
         "statement": "Until the check 'disallow-capabilities' is enforced, this weakness represents an open risk to the affected control(s): cm-2.1.",
         "props": [
           {
-            "name": "impacted-control-id",
+            "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "cm-2.1"
+            "value": "Moderate"
           }
         ],
         "status": "open",
-        "characterizations": [
-          {
-            "origin": {
-              "actors": [
-                {
-                  "type": "tool",
-                  "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
-                }
-              ]
-            },
-            "facets": [
-              {
-                "name": "risk-rating",
-                "system": "https://oscal-compass.github.io/compliance-trestle/ns/poam",
-                "value": "Moderate"
-              }
-            ]
-          }
-        ],
         "remediations": [
           {
             "uuid": "fde2496b-4f1b-5369-b5ad-5e996729e39c",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for Added Linux capabilities not disallowed",
             "description": "Enforce the Kyverno disallow-capabilities policy across all namespaces.",
             "origins": [
@@ -2239,18 +2187,11 @@
         "title": "Risk: Deployment minimum-replica policy not guaranteed",
         "description": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
         "statement": "Until the check 'policy-deployment' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
-        "props": [
-          {
-            "name": "impacted-control-id",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "cm-2"
-          }
-        ],
         "status": "open",
         "remediations": [
           {
             "uuid": "1acefe6c-ca85-5772-85bb-ca65b6440a06",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for Deployment minimum-replica policy not guaranteed",
             "description": "Enforce the OCM policy-deployment minimum-replica policy.",
             "origins": [
@@ -2273,36 +2214,17 @@
         "statement": "Until the check 'policy-disallowed-roles' is enforced, this weakness represents an open risk to the affected control(s): ac-1.",
         "props": [
           {
-            "name": "impacted-control-id",
+            "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "ac-1"
+            "value": "Moderate"
           }
         ],
         "status": "closed",
-        "characterizations": [
-          {
-            "origin": {
-              "actors": [
-                {
-                  "type": "tool",
-                  "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
-                }
-              ]
-            },
-            "facets": [
-              {
-                "name": "risk-rating",
-                "system": "https://oscal-compass.github.io/compliance-trestle/ns/poam",
-                "value": "Moderate"
-              }
-            ]
-          }
-        ],
         "deadline": "2026-12-15T00:00:00+00:00",
         "remediations": [
           {
             "uuid": "3cea7f19-176f-559e-862b-ad78b9b97585",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for Disallowed cluster roles in use",
             "description": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence.",
             "origins": [
@@ -2325,36 +2247,17 @@
         "statement": "Until the check 'policy-high-scan' is enforced, this weakness represents an open risk to the affected control(s): cm-6.",
         "props": [
           {
-            "name": "impacted-control-id",
+            "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "cm-6"
+            "value": "High"
           }
         ],
         "status": "open",
-        "characterizations": [
-          {
-            "origin": {
-              "actors": [
-                {
-                  "type": "tool",
-                  "actor-uuid": "7c4040ad-2f3f-5553-8cca-5e0a36a9e490"
-                }
-              ]
-            },
-            "facets": [
-              {
-                "name": "risk-rating",
-                "system": "https://oscal-compass.github.io/compliance-trestle/ns/poam",
-                "value": "High"
-              }
-            ]
-          }
-        ],
         "deadline": "2026-11-30T00:00:00+00:00",
         "remediations": [
           {
             "uuid": "637b6576-251d-5562-aafe-ebf66748f93c",
-            "lifecycle": "recommendation",
+            "lifecycle": "planned",
             "title": "Remediation for High-level vulnerability scan not enabled",
             "description": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline.",
             "origins": [

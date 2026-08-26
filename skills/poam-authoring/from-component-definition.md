@@ -93,6 +93,30 @@ per field. So a check with everything on its props needs no file; a file can sti
 fields at build time. (Demo **scenario 3** ships a component-definition with these props consolidated
 and passes **no** `--remediations` — see [the demo](../../demos/poam-authoring/README.md).)
 
+### Pick the risk style: `--risk-style generic` (default) or `fedramp`
+
+Each pre-defined item gets a top-level OSCAL `risk`. OSCAL fixes the risk *structure* but leaves its
+`props`/characterization `facets` as extension points (name/value under a namespace), so **the agent
+chooses the convention up front** by asking one question: **is this POA&M for FedRAMP?**
+
+| | `--risk-style generic` (default) | `--risk-style fedramp` |
+|---|---|---|
+| When | any non-FedRAMP deliverable | a FedRAMP submission |
+| Rating | `original-risk-rating` prop (no FedRAMP ns) — mirrors what trestle's own `xlsx-to-oscal-poam` task emits | `likelihood` + `impact` characterization facets, `system = http://fedramp.gov/ns/oscal` |
+| Remediation lifecycle | `planned` | `recommendation` |
+
+Neither style puts a control-id **on the risk** — the impacted control is already on the poam-item
+(`control-id` prop) and the finding target, so it isn't duplicated onto the risk.
+
+If you don't know the target, default to **generic** (the xlsx-style shape). Only pass
+`--risk-style fedramp` when the user says the POA&M is for FedRAMP. (Both validate identically; the
+difference is only which namespace/props the risks carry.)
+
+> **On a control-id on the risk.** FedRAMP's rule `poam-risk-impacted-control` wants a `risk/prop`
+> naming the impacted control, but the exact `prop.name` isn't in published FedRAMP sources. Since
+> the control is already traceable via the poam-item and finding, this skill **omits** it from the
+> risk by default; add it (e.g. `impacted-control-id` under the FedRAMP ns) only if a user needs it.
+
 ## Step 4 — Build the pre-defined POA&M
 
 Set up the isolated environment ([setup-env.md](setup-env.md)), then run the
@@ -109,7 +133,8 @@ uv run --with 'compliance-trestle>=3.0' python "$SKILL_DIR/build_poam.py" from-c
   --system-id k8s-prod --title "Kubernetes Cluster POA&M" --output-dir poam/
 ```
 
-`--remediations`, `--system-id`, `--title`, `--version` are all optional. The result
+`--remediations`, `--system-id`, `--title`, `--version`, `--risk-style` are all optional
+(`--risk-style` defaults to `generic`). The result
 (`poam/plan-of-action-and-milestones.json`) is valid OSCAL — one poam-item per rule/check plus
 `local-definitions` — round-tripped through `oscal_read`. Each component in `local-definitions`
 also carries the **`rule-id` / `check-id` props** it declares in the component-definition (a service

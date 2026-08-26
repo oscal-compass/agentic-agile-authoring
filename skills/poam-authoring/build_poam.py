@@ -72,6 +72,7 @@ POA&M top level and cross-linked from the poam-item (related-observations / rela
 
 ── from-component-definition (path C, phase 1): --input component-definition.json
    [--remediations remediations.json] [--system-id ID] [--title T] [--version V]
+   [--risk-style {generic|fedramp}]   (risk[] prop/namespace conventions; default generic)
    A validation component declares CHECKS and a service component declares RULES mapped to controls.
    Because each check is a testable assertion, the full weakness catalog is known BEFORE assessment.
    Emits a PRE-DEFINED POA&M: one poam-item per rule/check (each a potential weakness) with
@@ -317,7 +318,8 @@ def _remediation_from_slot(slot: dict) -> dict:
 
 # deterministic actor for risks/remediations authored by this builder from the component-definition
 _BUILDER_ACTOR = _u5("actor", "poam-authoring/build_poam.py")
-_POAM_NS = "https://oscal-compass.github.io/compliance-trestle/ns/poam"
+_FEDRAMP_NS = "http://fedramp.gov/ns/oscal"  # OSCAL-recognized naming system (NamingSystemValidValues)
+RISK_STYLES = ("generic", "fedramp")
 
 
 def _parse_deadline(s: str):
@@ -331,23 +333,46 @@ def _parse_deadline(s: str):
         return None
 
 
-def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: dict) -> Risk:
-    """Build one top-level OSCAL Risk for a pre-defined weakness, from the consolidated
-    remediation/risk (rating -> characterization facet, remediation_plan -> a recommendation
-    response, scheduled_completion_date -> deadline). Status is `open` at pre-define time;
-    link-assessment flips it to `closed` for a satisfied finding."""
-    props = [_prop("impacted-control-id", str(c)) for c in controls or []]
+def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: dict,
+                     style: str = "generic") -> Risk:
+    """Build one top-level OSCAL Risk for a pre-defined weakness. The prop/namespace conventions
+    depend on `style` (chosen by the agent per the deliverable — see from-component-definition.md):
+
+    - **generic** (default) — mirror what trestle's own `xlsx-to-oscal-poam` task emits: the rating
+      goes in a plain `original-risk-rating` prop (no namespace), no characterizations, no
+      control-id prop on the risk (the control is already on the poam-item / finding). Remediation
+      lifecycle `planned`.
+    - **fedramp** — the rating as `likelihood` + `impact` characterization facets under the
+      `http://fedramp.gov/ns/oscal` namespace. Remediation lifecycle `recommendation`.
+
+    Neither style puts a control-id on the risk (see the NOTE below).
+
+    Common to both: status `open` at pre-define time (link-assessment flips it to `closed` for a
+    satisfied finding); remediation_plan -> a Response; scheduled_completion_date -> deadline.
+    """
+    fedramp = style == "fedramp"
+    rating = str(rem["risk_rating"]) if rem.get("risk_rating") else None
+    props: list[Property] = []
     characterizations = None
-    if rem.get("risk_rating"):
-        characterizations = [Characterization(
-            origin=Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)]),
-            facets=[Facet(name="risk-rating", system=_POAM_NS, value=str(rem["risk_rating"]))],
-        )]
+    # NOTE: we deliberately do NOT put a control-id on the risk — the impacted control is already on
+    # the poam-item (`control-id` prop) and the finding target. (FedRAMP's poam-risk-impacted-control
+    # rule wants a risk/prop naming the control, but the exact prop name isn't officially published;
+    # add it here only if a user explicitly needs it.)
+    if fedramp:
+        if rating:
+            characterizations = [Characterization(
+                origin=Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)]),
+                facets=[Facet(name=n, system=_FEDRAMP_NS, value=rating.lower())
+                        for n in ("likelihood", "impact")],
+            )]
+    elif rating:  # generic (xlsx-style): a plain rating prop, no namespace, no characterization
+        props.append(_prop("original-risk-rating", rating))
+
     remediations = None
     if rem.get("remediation_plan"):
         remediations = [Response(
             uuid=_u5("response", check_id),
-            lifecycle="recommendation",
+            lifecycle="recommendation" if fedramp else "planned",
             title=f"Remediation for {name}",
             description=str(rem["remediation_plan"]),
             origins=[Origin(actors=[OriginActor(type="tool", actor_uuid=_BUILDER_ACTOR)])],
@@ -483,7 +508,8 @@ def _local_definitions(components: dict, system_id: str | None) -> LocalDefiniti
     return ld
 
 
-def _predefined_item(rule: dict, index: int, remediations: dict, risks: list) -> PoamItem:
+def _predefined_item(rule: dict, index: int, remediations: dict, risks: list,
+                     risk_style: str = "generic") -> PoamItem:
     rid = rule["rule_id"]
     check_id = rule.get("check_id") or rid
     # Base: remediation consolidated on the component-definition props (if any).
@@ -522,7 +548,7 @@ def _predefined_item(rule: dict, index: int, remediations: dict, risks: list) ->
 
     # one top-level Risk per pre-defined weakness (the CD's rating/remediation/deadline live here);
     # the item references it via related-risks.
-    risk = _predefined_risk(check_id, rule.get("controls") or [], name, desc, rem)
+    risk = _predefined_risk(check_id, rule.get("controls") or [], name, desc, rem, risk_style)
     risks.append(risk)
 
     return PoamItem(
@@ -540,8 +566,9 @@ def build_from_component_definition(cd_doc: dict, remediations: dict, meta: dict
     if not rules:
         raise ValueError("no rules/checks found in the component-definition — nothing to pre-define")
     title = meta.get("title") or "Pre-defined Plan of Action and Milestones"
+    risk_style = meta.get("risk_style") or "generic"
     risks: list = []
-    poam_items = [_predefined_item(r, i, remediations, risks) for i, r in enumerate(rules)]
+    poam_items = [_predefined_item(r, i, remediations, risks, risk_style) for i, r in enumerate(rules)]
     poam = PlanOfActionAndMilestones(
         uuid=_u5("poam", title),
         metadata=Metadata(
@@ -826,11 +853,12 @@ def _cmd_from_cd(args: argparse.Namespace) -> int:
         remediations = json.loads(Path(args.remediations).read_text(encoding="utf-8"))
     poam = build_from_component_definition(cd_doc, remediations, {
         "title": args.title, "version": args.version, "system_id": args.system_id,
+        "risk_style": args.risk_style,
     })
     out = _write(poam, args.output_dir)
     print(
         f"OK: wrote pre-defined {out} ({len(poam.poam_items)} poam-item(s) from rules/checks, "
-        f"{len(poam.risks or [])} risk(s), local-definitions filled); re-read validates."
+        f"{len(poam.risks or [])} {args.risk_style} risk(s), local-definitions filled); re-read validates."
     )
     print("Next: layer an assessment with `build_poam.py link-assessment` (see link-assessment.md).")
     return 0
@@ -883,6 +911,10 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--system-id", help="system id for the POA&M / inventory")
     c.add_argument("--title", help="POA&M title")
     c.add_argument("--version", help="POA&M version")
+    c.add_argument("--risk-style", choices=RISK_STYLES, default="generic",
+                   help="prop/namespace conventions for the generated risks[]: 'generic' (default; "
+                        "mirrors trestle's xlsx-to-oscal-poam output) or 'fedramp' (FedRAMP ns + "
+                        "impacted-control-id + likelihood/impact facets)")
     c.set_defaults(func=_cmd_from_cd)
 
     lk = sub.add_parser("link-assessment",
