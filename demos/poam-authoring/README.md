@@ -58,6 +58,13 @@ project in the harness so it picks up the skill + `trestle`.
 This closes the loop `component-definition → POA&M → assessment`. The demo ships (copy into your
 working dir first):
 
+> **This scenario also shows the remediation shape.** Each item's fix lands in OSCAL's
+> `risk.remediations[]` (a *response*), with milestones as response **`tasks[]`** (`on-date` timing).
+> That remediation is **pass-through / reference-driven** — the builder writes through whatever
+> remediation shape the source supplies (free-form props, `tasks`, `lifecycle`, …). A scan tool's own
+> remediation export can be mapped in the very same way — see
+> [from-scan-remediations.md](../../skills/poam-authoring/from-scan-remediations.md) (path D).
+
 - [`01-component-definition/component-definition.json`](01-component-definition/component-definition.json) —
   a `k8s-prod` component-definition with **service** components (GitHub, Managed Kubernetes) that map
   rules to controls, and **validation** components (Auditree, Kyverno, OCM) that carry the checks.
@@ -106,8 +113,9 @@ $ uv run --with 'compliance-trestle>=3.0' python build_poam.py link-assessment \
     --poam predefined/plan-of-action-and-milestones.json \
     --assessment assessment-results.json --output-dir poam/
 OK: wrote linked poam/plan-of-action-and-milestones.json (7 poam-item(s), 6 finding(s): 4 open / 2 satisfied; 7 risk(s): 5 open / 2 closed; 6 linked, 0 unmatched); re-read validates.
-$ trestle validate -t plan-of-action-and-milestones
-VALID: Model .../plan-of-action-and-milestones.json passed the Validator ...
+# validate the standalone file — no trestle workspace (MCP trestle_validate if wired, else this):
+$ trestle partial-object-validate -f poam/plan-of-action-and-milestones.json -e plan-of-action-and-milestones
+VALID: .../plan-of-action-and-milestones.json for plan-of-action-and-milestones
 ```
 
 ### Result
@@ -139,7 +147,7 @@ from the assessment's per-subject pass/fail — cross-linked to the existing ite
 **[`01-component-definition/plan-of-action-and-milestones.json`](01-component-definition/plan-of-action-and-milestones.json)**
 
 **Expected result (validation)** — check these invariants, not exact strings:
-- `trestle validate -t plan-of-action-and-milestones` → **VALID**
+- validates **VALID** as a standalone file — no workspace (MCP `trestle_validate`, or `trestle partial-object-validate -e plan-of-action-and-milestones`)
 - **7 poam-items**, each anchored by a `check-id` prop (+ `control-id` where the CD maps one)
 - **6 findings** = **4 `not-satisfied` / 2 `satisfied`** (1 rule — `test_supported_versions` — not assessed, so it keeps its item with no finding)
 - **7 risks**, **2 `closed`** (the satisfied checks) / 5 `open`; generic style → rating in an `original-risk-rating` prop, no characterizations
@@ -242,9 +250,9 @@ your working dir first.
 
 > Convert sample-poam.xlsx (a FedRAMP POA&M spreadsheet) into an OSCAL POA&M and validate it.
 
-The agent sets up the isolated env, ensures a trestle workspace, and runs the trestle
-`xlsx-to-oscal-poam` task (the MCP tool `trestle_task_xlsx_to_oscal_poam` if wired, else the venv
-`trestle` CLI). It produces `plan-of-action-and-milestones.json` — valid OSCAL — with the converter
+The agent sets up the isolated env and runs the trestle `xlsx-to-oscal-poam` task (the MCP tool
+`trestle_task_xlsx_to_oscal_poam` if wired, else the venv `trestle` CLI). It produces a standalone
+`plan-of-action-and-milestones.json` — valid OSCAL, no workspace needed — with the converter
 auto-generating the `observations[]`/`risks[]` and cross-linking each poam-item to them. It then
 shows a markdown preview. (`poam-authoring`, path B)
 
@@ -256,8 +264,9 @@ $ trestle task xlsx-to-oscal-poam --config poam.config
 Created POAM with 2 items
 Output: .../plan-of-action-and-milestones.json
 Task: xlsx-to-oscal-poam executed successfully.
-$ trestle validate -t plan-of-action-and-milestones
-VALID: Model plan-of-action-and-milestones.json passed the Validator ...
+# validate the standalone file — no workspace (MCP trestle_validate if wired, else this):
+$ trestle partial-object-validate -f plan-of-action-and-milestones.json -e plan-of-action-and-milestones
+VALID: plan-of-action-and-milestones.json for plan-of-action-and-milestones
 ```
 
 ### Result
@@ -271,7 +280,7 @@ risk for each, with deterministic UUIDs):
 > instead — there the weakness is the unit and control-id is an optional anchor.
 
 **Expected result (validation)** — check these invariants, not exact strings:
-- `trestle validate -t plan-of-action-and-milestones` → **VALID**
+- validates **VALID** as a standalone file — no workspace (MCP `trestle_validate`, or `trestle partial-object-validate`)
 - **2 poam-items** (one per spreadsheet row), each with a `control-id` prop from the `Controls` column
 - **2 observations** and **2 risks**, one linked to each item (deterministic UUIDs, so a re-run is byte-stable here — this path is the trestle task, not the agent)
 - *Varies:* nothing material — the xlsx converter is deterministic; only the surrounding prose the agent prints will differ.

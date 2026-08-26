@@ -64,7 +64,8 @@ reference* the user provides and fill the POA&M accordingly. OSCAL `props` and t
    tasks. Any valid OSCAL shape inside `risk` is written through and validated by trestle; no builder
    change is needed for a new format.
 4. **Build + validate** ([build-poam.md](build-poam.md)): `build_poam.py build --input poam_input.json`.
-   Confirm `trestle validate` says **VALID**.
+   Default to a **standalone file** (no workspace) and validate it in place with
+   `trestle partial-object-validate` → **VALID**. (Don't `trestle init` the user's dir just to check.)
 5. **Preview** ([poam-preview.md](poam-preview.md)) and confirm with the user.
 
 ## Notes

@@ -98,7 +98,10 @@ Draft the first half, then ask the user for the second half. Do not invent remed
    weakness.
 5. **Write `poam_input.json`** (shape in [poam-model.md](poam-model.md)).
 6. **Generate + validate** with `build_poam.py` ([build-poam.md](build-poam.md)) →
-   `plan-of-action-and-milestones.json`. Confirm `trestle validate` says **VALID**.
+   `plan-of-action-and-milestones.json`. **Default to a standalone file** (no trestle workspace);
+   validate it in place with `trestle partial-object-validate` (the builder also round-trips it via
+   `oscal_read`). Only create a workspace (`trestle init` + `trestle validate -t`) if the user wants
+   the workspace shape — ask if unsure ([trestle-workspace.md](trestle-workspace.md)).
 7. **Preview** the result as markdown ([poam-preview.md](poam-preview.md)) and confirm with the user.
 
 (For path B, replace steps 2–6 with [xlsx-to-oscal-poam.md](xlsx-to-oscal-poam.md), then preview.)
@@ -147,6 +150,12 @@ xlsx conversion: use `mcp__trestle__trestle_task_xlsx_to_oscal_poam` if wired, e
 - **In a trestle workspace, don't ask for paths.** If the cwd is a workspace (`.trestle/` present),
   resolve inputs from the directory layout and write the POA&M to its canonical path
   ([trestle-workspace.md](trestle-workspace.md)). Optional — only when a workspace is in play.
+- **Default to a standalone POA&M file; don't create a workspace unasked.** Most users just want one
+  `plan-of-action-and-milestones.json`. Validate it in place (`trestle partial-object-validate`, plus
+  the builder's `oscal_read` round-trip) — **never `trestle init` the user's directory just to
+  validate** (it litters it with `.trestle/` + model folders + `dist/`). If you need `trestle
+  validate -t`, use a throwaway temp workspace; only make the user's own dir a workspace when it
+  already is one or they explicitly want that shape ([build-poam.md](build-poam.md)).
 - **MCP is optional, never required.** Everything works with the venv trestle (library/CLI). If a
   trestle MCP server is wired, prefer its tools; if it is absent or fails to start (0 tools), fall
   back to the venv — same result either way. See the Validation section.
