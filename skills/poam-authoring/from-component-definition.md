@@ -90,8 +90,8 @@ prop — it is assigned when the POA&M is built (auto `POAM-001…` in rule orde
 
 **Precedence:** the props are the base; a `--remediations` file, if also supplied, **overrides** them
 per field. So a check with everything on its props needs no file; a file can still tweak individual
-fields at build time. (Demo **scenario 3** ships a component-definition with these props consolidated
-and passes **no** `--remediations` — see [the demo](../../demos/poam-authoring/README.md).)
+fields at build time. (The **`02-trestle-workspace`** demo ships a component-definition with these
+props consolidated and passes **no** `--remediations` — see [the demo](../../demos/poam-authoring/README.md).)
 
 ### Pick the risk style: `--risk-style generic` (default) or `fedramp`
 
