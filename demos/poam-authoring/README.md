@@ -25,6 +25,13 @@ input paths:
 > remediation (`poam-authoring`, path A) — is also supported; scenario 1 shows the newer
 > component-definition-driven path (path C) instead.
 
+> **These demos double as validation.** Each scenario lists an **Expected result** — but an agent
+> produces the output, so it varies run-to-run: the **title text, POAM-ID ordering, exact wording,
+> and which isolated-env command (`uv` vs venv) is used will differ**, and a weaker model may need a
+> more explicit prompt. Don't diff byte-for-byte; check the **stable invariants** each scenario
+> lists (they hold regardless): first and foremost `trestle validate … → VALID`, then the item /
+> finding / risk **counts** and each item's anchors.
+
 ## Install
 
 Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`; `poam-authoring` also uses it
@@ -125,10 +132,17 @@ assessment didn't cover that rule):
 ```
 
 Full validated OSCAL output (7 pre-defined poam-items + `local-definitions`; a top-level **`risk`
-per item** — rating → characterization, remediation → response, due date → deadline — of which 2 are
-`closed` once their check passed; 6 findings/observations — derived from the assessment's per-subject
-pass/fail — cross-linked to the existing items):
+per item** — generic/xlsx-style: rating → `original-risk-rating` prop, remediation → response, due
+date → deadline — of which 2 are `closed` once their check passed; 6 findings/observations — derived
+from the assessment's per-subject pass/fail — cross-linked to the existing items):
 **[`scenario1/plan-of-action-and-milestones.json`](scenario1/plan-of-action-and-milestones.json)**
+
+**Expected result (validation)** — check these invariants, not exact strings:
+- `trestle validate -t plan-of-action-and-milestones` → **VALID**
+- **7 poam-items**, each anchored by a `check-id` prop (+ `control-id` where the CD maps one)
+- **6 findings** = **4 `not-satisfied` / 2 `satisfied`** (1 rule — `test_supported_versions` — not assessed, so it keeps its item with no finding)
+- **7 risks**, **2 `closed`** (the satisfied checks) / 5 `open`; generic style → rating in an `original-risk-rating` prop, no characterizations
+- *Varies:* the title text, the POAM-ID ↔ check mapping/order, and whether `uv` or a venv was used.
 
 ---
 
@@ -166,6 +180,12 @@ VALID: Model plan-of-action-and-milestones.json passed the Validator ...
 Full validated OSCAL output (2 poam-items; the converter auto-generates a linked observation and
 risk for each, with deterministic UUIDs):
 **[`scenario2/plan-of-action-and-milestones.json`](scenario2/plan-of-action-and-milestones.json)**
+
+**Expected result (validation)** — check these invariants, not exact strings:
+- `trestle validate -t plan-of-action-and-milestones` → **VALID**
+- **2 poam-items** (one per spreadsheet row), each with a `control-id` prop from the `Controls` column
+- **2 observations** and **2 risks**, one linked to each item (deterministic UUIDs, so a re-run is byte-stable here — this path is the trestle task, not the agent)
+- *Varies:* nothing material — the xlsx converter is deterministic; only the surrounding prose the agent prints will differ.
 
 > This path is **control-centric** (the FedRAMP template requires the `Controls` column). If your
 > spreadsheet has no controls (e.g. a scanner export keyed only by check id), use Scenario 1
@@ -237,8 +257,21 @@ the POA&M ID lives in the POA&M (not on the component-definition) the items are 
 `POAM-001…` in rule order** rather than carrying scenario 1's hand-assigned IDs.
 **[`scenario3/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json`](scenario3/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json)**
 
+**Expected result (validation)** — check these invariants, not exact strings:
+- `trestle validate -t plan-of-action-and-milestones` → **VALID**, with the file written to `plan-of-action-and-milestones/k8s-prod/` (no `mkdir`/`cp` — the workspace's canonical path)
+- inputs were found **with no paths given** (workspace discovery) and with **no `remediations.json`** (rating/remediation came from the CD's validation props)
+- same counts as scenario 1: **7 items / 6 findings (4 open · 2 satisfied) / 7 risks (2 `closed`)**; risks default to the generic `original-risk-rating` shape
+- *Varies:* the title text and the `POAM-001…` numbering order. If run with a weak model, be explicit ("path C: pre-define from the component-definition, then link the assessment") and make sure it installs **`compliance-trestle`** (not the unrelated PyPI `trestle`).
+
 > Prefer keeping remediation in a separate file, or need to tweak a field at build time? Pass
 > `--remediations remediations.json` as well — its fields **override** the consolidated props.
+
+> **Risk conventions.** The generated `risks[]` default to the **generic** (xlsx-style) shape —
+> rating in an `original-risk-rating` prop, no FedRAMP-specific props. For a FedRAMP submission, add
+> `--risk-style fedramp` to emit the rating as `likelihood`/`impact` facets under the
+> `http://fedramp.gov/ns/oscal` namespace instead. Neither style puts a control-id on the risk (the
+> control is already on the poam-item + finding); the agent picks the style from whether the POA&M is
+> for FedRAMP (see [from-component-definition.md](../../skills/poam-authoring/from-component-definition.md)).
 
 ## Uninstall
 
