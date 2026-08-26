@@ -143,6 +143,7 @@ from the assessment's per-subject pass/fail — cross-linked to the existing ite
 - **7 poam-items**, each anchored by a `check-id` prop (+ `control-id` where the CD maps one)
 - **6 findings** = **4 `not-satisfied` / 2 `satisfied`** (1 rule — `test_supported_versions` — not assessed, so it keeps its item with no finding)
 - **7 risks**, **2 `closed`** (the satisfied checks) / 5 `open`; generic style → rating in an `original-risk-rating` prop, no characterizations
+- each risk's **`remediations[]`** holds the fix (lifecycle `planned`), with the remediation's milestones as response **`tasks[]`** (`type: milestone`, `on-date` timing)
 - *Varies:* the title text, the POAM-ID ↔ check mapping/order, and whether `uv` or a venv was used.
 
 ---
@@ -225,7 +226,7 @@ the POA&M ID lives in the POA&M (not on the component-definition) the items are 
 **Expected result (validation)** — check these invariants, not exact strings:
 - `trestle validate -t plan-of-action-and-milestones` → **VALID**, with the file written to `plan-of-action-and-milestones/k8s-prod/` (no `mkdir`/`cp` — the workspace's canonical path)
 - inputs were found **with no paths given** (workspace discovery) and with **no `remediations.json`** (rating/remediation came from the CD's validation props)
-- same counts as scenario 01: **7 items / 6 findings (4 open · 2 satisfied) / 7 risks (2 `closed`)**; risks default to the generic `original-risk-rating` shape
+- same counts as scenario 01: **7 items / 6 findings (4 open · 2 satisfied) / 7 risks (2 `closed`)**; risks default to the generic `original-risk-rating` shape, each with a `remediations[]` whose milestones are response **`tasks[]`** (`on-date` timing)
 - *Varies:* the title text and the `POAM-001…` numbering order. If run with a weak model, be explicit ("path C: pre-define from the component-definition, then link the assessment") and make sure it installs **`compliance-trestle`** (not the unrelated PyPI `trestle`).
 
 ---
