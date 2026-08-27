@@ -472,8 +472,11 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
       - a SERVICE component's implemented-requirements give Rule_Id -> control-id(s)
         (control-id == "na" means "not a control mapping" and is skipped);
       - a VALIDATION component's props give Rule_Id -> Check_Id + validation-component title.
-    Each returned rule dict = {rule_id, description, check_id, controls[], validation_components[],
-    service_components[]}. `components` = {title: {"type", "description"}} for local-definitions.
+        A rule may be associated with MANY checks (one rule_set per check, all sharing Rule_Id);
+        every distinct check is collected.
+    Each returned rule dict = {rule_id, description, checks[{check_id, description}], controls[],
+    validation_components[], service_components[]}. `components` = {title: {"type", "description"}}
+    for local-definitions.
     """
     cd = cd_doc.get("component-definition") or cd_doc
     rules: dict[str, dict] = {}
@@ -481,9 +484,21 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
 
     def rule(rid: str) -> dict:
         return rules.setdefault(rid, {
-            "rule_id": rid, "description": "", "check_id": None,
+            "rule_id": rid, "description": "", "checks": [],
             "controls": [], "validation_components": [], "service_components": [],
         })
+
+    def add_check(r: dict, cid: str, cdesc: str | None) -> None:
+        # A rule may be associated with MANY checks (each a separate rule_set sharing the
+        # Rule_Id). Collect every distinct check; fill in a description if a later rule_set
+        # supplies one for a check we first saw without it.
+        cid = str(cid)
+        for c in r["checks"]:
+            if c["check_id"] == cid:
+                if cdesc and not c.get("description"):
+                    c["description"] = cdesc
+                return
+        r["checks"].append({"check_id": cid, "description": cdesc or ""})
 
     for comp in cd.get("components") or []:
         title = comp.get("title") or "component"
@@ -515,10 +530,8 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
             r = rule(rid)
             if slot.get("Rule_Description") and not r["description"]:
                 r["description"] = slot["Rule_Description"]
-            if slot.get("Check_Description"):
-                r["description"] = slot["Check_Description"] or r["description"]
             if slot.get("Check_Id"):
-                r["check_id"] = slot["Check_Id"]
+                add_check(r, slot["Check_Id"], slot.get("Check_Description"))
             if ctype == "validation" and title not in r["validation_components"]:
                 r["validation_components"].append(title)
             # consolidated remediation carried on the rule-set props (single-source path C).
@@ -540,8 +553,8 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
                     if cid and cid.lower() != "na" and cid not in r["controls"]:
                         r["controls"].append(cid)
 
-    # keep only rules that are actually checked (have a check_id or a validation component)
-    checked = [r for r in rules.values() if r["check_id"] or r["validation_components"]]
+    # keep only rules that are actually checked (have at least one check or a validation component)
+    checked = [r for r in rules.values() if r["checks"] or r["validation_components"]]
     return (checked or list(rules.values())), components
 
 
@@ -582,19 +595,23 @@ def _local_definitions(components: dict, system_id: str | None) -> LocalDefiniti
     return ld
 
 
-def _predefined_item(rule: dict, index: int, remediations: dict, risks: list,
+def _predefined_item(rule: dict, check: dict | None, index: int, remediations: dict, risks: list,
                      risk_style: str = "generic") -> PoamItem:
     rid = rule["rule_id"]
-    check_id = rule.get("check_id") or rid
+    check_id = (check or {}).get("check_id") or rid
+    check_desc = (check or {}).get("description") or ""
     # Base: remediation consolidated on the component-definition props (if any).
-    # Overlay: an optional --remediations file entry, which wins per field.
+    # Overlay: an optional --remediations file entry, which wins per field (keyed by this
+    # specific check-id first, then the rule-id).
     file_rem = remediations.get(check_id) or remediations.get(rid) or {}
     rem = {**(rule.get("remediation") or {}), **file_rem}
 
     poam_id = str(rem.get("poam_id") or f"POAM-{index + 1:03d}")
+    # Prefer this check's own description for the weakness text; fall back to the rule's.
+    base_desc = check_desc or rule.get("description") or rid
     name = (rem.get("weakness_name")
-            or f"Potential weakness: {rule.get('description') or rid}").strip()
-    desc = (rem.get("weakness_description") or rule.get("description")
+            or f"Potential weakness: {base_desc}").strip()
+    desc = (rem.get("weakness_description") or check_desc or rule.get("description")
             or f"The check '{check_id}' may fail, indicating this weakness.").strip()
 
     props: list[Property] = [_prop("poam-id", poam_id)]
@@ -642,7 +659,15 @@ def build_from_component_definition(cd_doc: dict, remediations: dict, meta: dict
     title = meta.get("title") or "Pre-defined Plan of Action and Milestones"
     risk_style = meta.get("risk_style") or "generic"
     risks: list = []
-    poam_items = [_predefined_item(r, i, remediations, risks, risk_style) for i, r in enumerate(rules)]
+    # One poam-item per (rule, check): a rule associated with N checks yields N items, each a
+    # distinct potential weakness. A rule with no checks (validation-component only) yields one
+    # item anchored on the rule-id.
+    poam_items = []
+    idx = 0
+    for r in rules:
+        for check in (r.get("checks") or [None]):
+            poam_items.append(_predefined_item(r, check, idx, remediations, risks, risk_style))
+            idx += 1
     poam = PlanOfActionAndMilestones(
         uuid=_u5("poam", title),
         metadata=Metadata(

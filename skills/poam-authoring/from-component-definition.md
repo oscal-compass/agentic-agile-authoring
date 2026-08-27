@@ -35,10 +35,14 @@ Ask the user for the path if it is not obvious. (A `.csv` sibling is the authori
 - **Service** components' `implemented-requirements` give **`Rule_Id → control-id`(s)**
   (a `control-id` of `na` means "not a control mapping" and is skipped).
 - **Validation** components' props give **`Rule_Id → Check_Id` + the validation-component title**
-  (the tool that performs the check, e.g. Kyverno / Auditree / OCM).
+  (the tool that performs the check, e.g. Kyverno / Auditree / OCM). A single rule may be
+  associated with **multiple checks** — trestle emits one rule-set (same `Rule_Id`, different
+  `Check_Id`) per check, and the tool keeps **every** check.
 
 So each rule/check becomes one pre-defined weakness anchored by **`check-id`** (the stable link key
 used in phase 2) plus its **`control-id`(s)** and the **`validation-component`(s)** that test it.
+A rule with N checks therefore yields N poam-items — one per check — all sharing that rule's
+controls and validation components.
 
 Example (from the demo component-definition): `allowed-base-images` → control `cm-2`, checked by
 `Kyverno`; `policy-high-scan` → `cm-6` / `OCM`; `test_members_is_not_empty` → `ac-2` / `Auditree`.
