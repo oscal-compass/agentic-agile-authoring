@@ -88,15 +88,36 @@ Input is a trestle-style `component-definition.json`. The builder joins every co
 `Rule_Id → Check_Id` + the validation-component title. It emits a **pre-defined POA&M**:
 
 - `local-definitions.components` — one `SystemComponent` per component (type `service`/`validation`,
-  status `operational`), each carrying the **`rule-id` / `check-id` props** it declares in the
-  component-definition (a service component lists all its rules; a validation component lists the
-  checks it runs).
+  status `operational`), each carrying the **`rule-id` / `check-id` props** it declares, **grouped by
+  the component-definition's verbatim `remarks` rule-set token** (e.g. `rule_set_09`) — the props of
+  one rule-set share one `remarks` value, mirroring the CD. **This is the consolidated home for the
+  static content**: on a **validation** component, each rule-set also carries its
+  `Weakness_Name`/`Weakness_Description`/`Risk_Rating`/`POC`/`Scheduled_Completion_Date`/
+  `Remediation_Plan`/`Milestone` props **verbatim from the CD** (no `ns`, so they mirror the CD
+  exactly), under the same token. (These land here only when the CD carries them — the `remarks`
+  token is unique *within one component*, and the consolidated props live only on the validation
+  rule-sets, so the validation token is the home.)
 - `local-definitions.inventory-items` — one per service component (with an `implemented-component`
   back-reference).
 - `local-definitions.assessment-assets.assessment-platforms` — one per validation component.
 - `poam-items` — one per rule/check, anchored by a **`check-id`** prop (the phase-2 link key) plus
-  `control-id`(s) and `validation-component`(s). `uuid` is `uuid5` of the check-id (stable so phase
-  2 can find it). No observations/findings/risks yet.
+  `control-id`(s), `validation-component`(s), and a **`rule-set-id`** prop = the validation rule-set's
+  verbatim `remarks` token, relating the item back to its consolidated local-definitions group.
+  `uuid` is `uuid5` of the check-id (stable so phase 2 can find it). No observations/findings yet.
+- `risks` — one top-level OSCAL `risk` per item (OSCAL forbids risks *inside* `local-definitions`, so
+  the risk object stays top-level). It carries the same **`rule-set-id`** join prop and holds the
+  remediation (`remediations[]`). Its `description`/`statement` are OSCAL-required.
+
+**No duplication (the goal).** The static weakness/risk/remediation content lives in **one place** —
+the local-definitions rule-set group (+ the top-level `risk`). A poam-item does **not** repeat it:
+it carries only the anchors (`poam-id`/`control-id`/`check-id`/`rule-set-id`/`validation-component`)
+and the OSCAL-required `title`/`description` (the human-readable weakness name/description — the one
+unavoidable overlap), and **references** its group by `rule-set-id`. The item's `risk-rating`/
+`point-of-contact`/`scheduled-completion-date`/`milestone` props and remediation `remarks` are gone
+from path C; a reader (or the markdown preview) recovers them by dereferencing `rule-set-id` → the
+group / the linked risk. (**Fallback:** a rule with *no* validation rule-set has no group to point
+at, so such an item inlines the descriptive props itself — nothing is lost. Path A always inlines,
+since it has no local-definitions.)
 
 Optional **`remediations.json`** maps a check-id (or rule-id) to remediation fields — the same
 per-item fields as path A (`weakness_name`, `weakness_description`, `remediation_plan`,
@@ -140,6 +161,12 @@ no finding.
   `AssociatedRisk` — do **not** use a bare `associated-risks` field on the poam-item).
 - `Observation` requires `methods` (list) + `collected` (tz-aware datetime); `Risk` requires
   `statement` + `status` (e.g. `"open"`).
+- `Property` carries an optional **`remarks`** field — used to carry the CD's rule-set token onto
+  local-definitions props so they group into rule-sets. `Property.value` must be non-empty
+  (`^\S(.*\S)?$`) — strip and skip empties. Consolidated props are emitted with **no `ns`** (mirror
+  the CD verbatim); anchors (`rule-id`/`check-id`/`rule-set-id`) keep the skill's `NS_PROP`.
+- `local-definitions` legally holds only components / inventory-items / assessment-assets / remarks —
+  **not `risk`**; the risk object is top-level and links back via the `rule-set-id` prop.
 - `metadata.last_modified` must be a timezone-aware `datetime`.
 - There is **no reverse task** (OSCAL → xlsx / human view) — the markdown preview is built by us
   (see [poam-preview.md](poam-preview.md)).

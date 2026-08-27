@@ -33,6 +33,66 @@ def one(item, name, default=""):
     return v[0] if v else default
 
 
+def _localdef_static(p):
+    """Map rule-set token -> its consolidated static props from local-definitions (path C).
+
+    Poam-items don't duplicate the weakness/risk/remediation content — they reference their rule-set
+    group by a `rule-set-id` prop, and the content lives on the local-definitions validation
+    component's props (grouped by the same `remarks` token, verbatim CD names). Returns
+    {token: {"Risk_Rating": .., "POC": .., "Scheduled_Completion_Date": .., "Remediation_Plan": ..,
+             "Milestone": [..]}}."""
+    out = {}
+    ld = p.get("local-definitions") or {}
+    for comp in ld.get("components", []):
+        for pr in comp.get("props") or []:
+            tok = pr.get("remarks")
+            if not tok:
+                continue
+            g = out.setdefault(tok, {})
+            if pr["name"] == "Milestone":
+                g.setdefault("Milestone", []).append(pr["value"])
+            else:
+                g[pr["name"]] = pr["value"]
+    return out
+
+
+def _risk_by_uuid(p):
+    return {r["uuid"]: r for r in p.get("risks", [])}
+
+
+def _item_remediation(it, ld_static, risks):
+    """Remediation text for an item: its own `remarks` if inlined (fallback items), else the
+    local-def group's `Remediation_Plan`, else the linked risk's first remediation description."""
+    if it.get("remarks"):
+        return it["remarks"]
+    tok = one(it, "rule-set-id")
+    grp = ld_static.get(tok, {})
+    if grp.get("Remediation_Plan"):
+        return grp["Remediation_Plan"]
+    for rr in it.get("related-risks", []):
+        risk = risks.get(rr.get("risk-uuid"))
+        for resp in (risk or {}).get("remediations", []):
+            if resp.get("description"):
+                return resp["description"]
+    return "—"
+
+
+def _item_field(it, ld_static, cd_name, prop_name):
+    """A descriptive field for an item: the inlined item prop if present (fallback items), else the
+    local-def rule-set group's verbatim CD prop."""
+    v = one(it, prop_name)
+    if v:
+        return v
+    return ld_static.get(one(it, "rule-set-id"), {}).get(cd_name, "—")
+
+
+def _item_milestones(it, ld_static):
+    ms = props(it, "milestone")
+    if ms:
+        return ms
+    return ld_static.get(one(it, "rule-set-id"), {}).get("Milestone", [])
+
+
 def _status_by_item(p):
     """Map poam-item uuid -> "open"/"satisfied"/"" using linked top-level findings (path C)."""
     fstate = {}
@@ -61,6 +121,8 @@ def render(poam_json: str) -> str:
     md.append(f"**Version:** {p['metadata']['version']} · **OSCAL:** {p['metadata']['oscal-version']}")
     md.append("")
     status = _status_by_item(p)
+    ld_static = _localdef_static(p)   # rule-set token -> consolidated static props (path C)
+    risks = _risk_by_uuid(p)
     has_status = any(status.values())
     header = "| POAM ID | Weakness | Controls |"
     sep = "|---|---|---|"
@@ -74,8 +136,8 @@ def render(poam_json: str) -> str:
     n_open = 0
     for it in p.get("poam-items", []):
         controls = ", ".join(props(it, "control-id")) or "—"
-        milestones = "<br>".join(props(it, "milestone")) or "—"
-        remediation = (it.get("remarks") or "—").replace("|", "\\|")
+        milestones = "<br>".join(_item_milestones(it, ld_static)) or "—"
+        remediation = _item_remediation(it, ld_static, risks).replace("|", "\\|")
         desc = it.get("description", "").replace("|", "\\|")
         row = [
             one(it, "poam-id", "—"),
@@ -88,9 +150,9 @@ def render(poam_json: str) -> str:
                 n_open += 1
             row.append(st)
         row += [
-            one(it, "risk-rating", "—"),
-            one(it, "point-of-contact", "—"),
-            one(it, "scheduled-completion-date", "—"),
+            _item_field(it, ld_static, "Risk_Rating", "risk-rating"),
+            _item_field(it, ld_static, "POC", "point-of-contact"),
+            _item_field(it, ld_static, "Scheduled_Completion_Date", "scheduled-completion-date"),
             remediation,
             milestones.replace("|", "\\|"),
         ]
@@ -119,6 +181,14 @@ if __name__ == "__main__":
 ```
 
 ## Use
+
+> **Where the columns come from (path C).** Path-C poam-items do **not** duplicate the static
+> weakness/risk/remediation content — they reference their rule-set group via a `rule-set-id` prop,
+> and the content lives once in `local-definitions` (grouped by that token) plus the top-level `risk`.
+> The renderer dereferences it: for each item it reads Risk/POC/Due/Remediation/Milestones from the
+> `rule-set-id` → local-definitions group (remediation also falls back to the linked risk's
+> `remediations[]`). For path-A POA&Ms (no `local-definitions`) the same columns are read from the
+> item's own props/`remarks` — so both shapes render full detail.
 
 1. After [build-poam.md](build-poam.md) produces `plan-of-action-and-milestones.json`, run the
    script to get a markdown table.
