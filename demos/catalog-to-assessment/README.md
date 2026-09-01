@@ -18,15 +18,25 @@ Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`; also runs 
 
 ```bash
 # skills + MCP wiring, one step — into Claude Code:
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
 
 # …or into OpenCode:
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+
+# …or into IBM Bob:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target bob
 ```
 
 This copies `catalog-authoring`, `component-definition`, and `assessment` into the harness's
 native skill dir and wires the `trestle` MCP server (declared by the first two) into the harness's
-native MCP config. Open the target project in the harness so it picks up the skills + `trestle`.
+native MCP config (`.mcp.json` for Claude, `opencode.json` for OpenCode, `<project>/.bob/mcp.json` for Bob).
+Open the target project in the harness so it picks up the skills + `trestle`.
 
 ## Walkthrough
 
@@ -69,9 +79,18 @@ Non-destructive — a shared MCP server is pruned only once no remaining install
 user-authored skills and user-defined MCP servers are never touched.
 
 ```bash
-# remove one skill:
-uvx compliance-authoring-skills uninstall --skill assessment --target claude
+# remove one skill (Claude):
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill assessment --target claude
 
-# remove the whole demo set:
-uvx compliance-authoring-skills uninstall --skill catalog-authoring,component-definition,assessment --target claude
+# remove the whole demo set (Claude):
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill catalog-authoring,component-definition,assessment --target claude
+
+# …or from Bob:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill catalog-authoring,component-definition,assessment --target bob
 ```

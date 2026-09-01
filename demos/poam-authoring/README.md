@@ -38,10 +38,20 @@ Prerequisite: **[`uv`](https://docs.astral.sh/uv/)** (provides `uvx`; `poam-auth
 to run the `trestle` library/CLI in an isolated environment — no global install). No Node required.
 
 ```bash
-# into OpenCode:
-uvx compliance-authoring-skills install --demo poam-authoring --target opencode
-# …or into Claude Code:
-uvx compliance-authoring-skills install --demo poam-authoring --target claude
+# into Claude Code:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo poam-authoring --target claude
+
+# …or into OpenCode:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo poam-authoring --target opencode
+
+# …or into IBM Bob:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo poam-authoring --target bob
 ```
 
 This copies `poam-authoring` into the harness's native skill dir **and wires the `trestle` MCP
@@ -290,5 +300,18 @@ risk for each, with deterministic UUIDs):
 Non-destructive — user-authored skills and user-defined MCP servers are never touched.
 
 ```bash
-uvx compliance-authoring-skills uninstall --skill poam-authoring --target opencode
+# from Claude Code:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill poam-authoring --target claude
+
+# …or from OpenCode:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill poam-authoring --target opencode
+
+# …or from Bob:
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill poam-authoring --target bob
 ```

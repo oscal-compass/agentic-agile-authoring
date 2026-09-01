@@ -37,12 +37,17 @@ See [../docs/design-spec.md](../docs/design-spec.md) for the full design and dec
 
 ```bash
 # Skills come from the copy bundled in this package — run from ANY directory, no checkout needed:
-compliance-authoring-skills install   [--demo <name> | --exclude a,b | --skill a,b] --target {claude|opencode|myharness}
-compliance-authoring-skills uninstall [--skill a,b | --all] --target {claude|opencode|myharness}
+compliance-authoring-skills install   [--demo <name> | --exclude a,b | --skill a,b] --target {claude|opencode|bob|myharness}
+compliance-authoring-skills uninstall [--skill a,b | --all] --target {claude|opencode|bob|myharness}
 
-#   --project <dir>   where to install (default: cwd); --global for user scope (~/.claude/…)
+#   --project <dir>   where to install (default: cwd); --global for user scope (~/.claude/… or ~/.bob)
 #   --source  <repo>  install from an external skills repo instead of the bundled skills
 ```
+
+> **`bob` target**: deploys skills to `<project>/.bob/skills/` and wires MCP into
+> `<project>/.bob/mcp.json`. Equivalent to `myharness` with Bob's directory conventions
+> (`transport`/`registry` keys stripped from MCP entries as Bob's schema doesn't use them).
+> Use `--global` to install into `~/.bob/` (user scope) instead of the project.
 
 The skills + demos are packaged into the wheel (`compliance_authoring_skills/_bundled/`) at build time from
 the repo's top-level `skills/`/`demos/` — those stay the single source of truth (no committed

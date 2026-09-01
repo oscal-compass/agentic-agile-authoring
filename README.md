@@ -3,7 +3,7 @@
 An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from framework
 onboarding (compliance PDF → catalog, catalog ↔ catalog mapping) through catalog customization,
 component definition, and assessment to POA&M generation — installable into multiple agent
-harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
+harnesses (**Claude Code**, **OpenCode**, **IBM Bob**, custom harnesses, …).
 
 The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
 
@@ -77,16 +77,22 @@ uvx \
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
   compliance-authoring-skills install --exclude git-workflow --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --exclude git-workflow --target bob
 
 # 3) install a demo's skill set (the skills its demos/<name>/README.md declares)
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
   compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target bob
 ```
 
 Each install copies the selected skills into the harness's native skill dir and wires the
 `trestle` MCP server — declared by `catalog-authoring` / `component-definition` — into the
-harness's native MCP config (`.mcp.json` for Claude, `opencode.json` for OpenCode). User-authored
+harness's native MCP config (`.mcp.json` for Claude, `opencode.json` for OpenCode, `<project>/.bob/mcp.json` for Bob). User-authored
 skills and user-defined MCP servers are never touched.
 
 Uninstall is non-destructive; a shared MCP server is pruned only once no remaining installed
@@ -96,6 +102,9 @@ skill needs it:
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
   compliance-authoring-skills uninstall --skill assessment --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills uninstall --skill assessment --target bob
 ```
 
 ### Pinning a version
