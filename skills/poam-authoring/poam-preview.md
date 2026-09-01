@@ -34,26 +34,29 @@ def one(item, name, default=""):
 
 
 def _localdef_static(p):
-    """Map rule-set token -> its consolidated static props from local-definitions (path C).
+    """Map rule-id -> its consolidated static props from local-definitions (path C).
 
-    Poam-items don't duplicate the weakness/risk/remediation content — they reference their rule-set
-    group by a `rule-set-id` prop, and the content lives on the local-definitions validation
-    component's props (grouped by the same `remarks` token, verbatim CD names). Returns
-    {token: {"Risk_Rating": .., "POC": .., "Scheduled_Completion_Date": .., "Remediation_Plan": ..,
+    Poam-items don't duplicate the weakness/risk/remediation content — they reference their rule
+    group by a `rule-id` prop, and the content lives on the local-definitions validation
+    component's props (grouped by the CD's `remarks` token, verbatim CD names). We re-key that
+    grouping by the group's own `rule-id` prop, so items dereference by `rule-id` (the `remarks`
+    token is trestle-internal grouping and never leaves local-definitions). Returns
+    {rule_id: {"Risk_Rating": .., "POC": .., "Scheduled_Completion_Date": .., "Remediation_Plan": ..,
              "Milestone": [..]}}."""
-    out = {}
+    by_token = {}
     ld = p.get("local-definitions") or {}
     for comp in ld.get("components", []):
         for pr in comp.get("props") or []:
             tok = pr.get("remarks")
             if not tok:
                 continue
-            g = out.setdefault(tok, {})
+            g = by_token.setdefault(tok, {})
             if pr["name"] == "Milestone":
                 g.setdefault("Milestone", []).append(pr["value"])
             else:
                 g[pr["name"]] = pr["value"]
-    return out
+    # re-key each rule-set group by its own `rule-id` prop (the join key items reference)
+    return {g["rule-id"]: g for g in by_token.values() if g.get("rule-id")}
 
 
 def _risk_by_uuid(p):
@@ -65,8 +68,7 @@ def _item_remediation(it, ld_static, risks):
     local-def group's `Remediation_Plan`, else the linked risk's first remediation description."""
     if it.get("remarks"):
         return it["remarks"]
-    tok = one(it, "rule-set-id")
-    grp = ld_static.get(tok, {})
+    grp = ld_static.get(one(it, "rule-id"), {})
     if grp.get("Remediation_Plan"):
         return grp["Remediation_Plan"]
     for rr in it.get("related-risks", []):
@@ -83,14 +85,14 @@ def _item_field(it, ld_static, cd_name, prop_name):
     v = one(it, prop_name)
     if v:
         return v
-    return ld_static.get(one(it, "rule-set-id"), {}).get(cd_name, "—")
+    return ld_static.get(one(it, "rule-id"), {}).get(cd_name, "—")
 
 
 def _item_milestones(it, ld_static):
     ms = props(it, "milestone")
     if ms:
         return ms
-    return ld_static.get(one(it, "rule-set-id"), {}).get("Milestone", [])
+    return ld_static.get(one(it, "rule-id"), {}).get("Milestone", [])
 
 
 def _status_by_item(p):
@@ -183,12 +185,12 @@ if __name__ == "__main__":
 ## Use
 
 > **Where the columns come from (path C).** Path-C poam-items do **not** duplicate the static
-> weakness/risk/remediation content — they reference their rule-set group via a `rule-set-id` prop,
-> and the content lives once in `local-definitions` (grouped by that token) plus the top-level `risk`.
-> The renderer dereferences it: for each item it reads Risk/POC/Due/Remediation/Milestones from the
-> `rule-set-id` → local-definitions group (remediation also falls back to the linked risk's
-> `remediations[]`). For path-A POA&Ms (no `local-definitions`) the same columns are read from the
-> item's own props/`remarks` — so both shapes render full detail.
+> weakness/risk/remediation content — they reference their rule group via a `rule-id` prop,
+> and the content lives once in `local-definitions` (grouped by the CD's `remarks` token, re-keyed
+> by `rule-id`) plus the top-level `risk`. The renderer dereferences it: for each item it reads
+> Risk/POC/Due/Remediation/Milestones from the `rule-id` → local-definitions group (remediation also
+> falls back to the linked risk's `remediations[]`). For path-A POA&Ms (no `local-definitions`) the
+> same columns are read from the item's own props/`remarks` — so both shapes render full detail.
 
 1. After [build-poam.md](build-poam.md) produces `plan-of-action-and-milestones.json`, run the
    script to get a markdown table.

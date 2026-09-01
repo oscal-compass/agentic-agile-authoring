@@ -99,7 +99,7 @@ is the *single source* for pre-defining the POA&M and no `--remediations` file i
 
 All of these land in **one place** — the check's rule-set group in `local-definitions` (plus the
 top-level risk) — **not** duplicated onto the poam-item; the item just references the group by
-`rule-set-id` (see below).
+`rule-id` (see below).
 
 **Not on the component-definition:** the **POA&M ID** is deliberately *not* a component-definition
 prop — it is assigned when the POA&M is built (auto `POAM-001…` in rule order, or from a
@@ -127,13 +127,13 @@ static content lives only in an external `remediations.json`** — not on the co
 (this is **scenario 1**) — the agent's data still lands in `local-definitions`; the CD file need not
 carry it.
 
-**De-duplication (the goal).** Each **poam-item** carries only the anchors + a **`rule-set-id`** prop
-(= the validation rule-set's verbatim token) and references the group; it does **not** repeat the
-`risk-rating`/`point-of-contact`/`scheduled-completion-date`/`milestone` props or the remediation
-`remarks`. Its OSCAL-required `title`/`description` stay (the weakness name/description). The
-**top-level `risk`** (OSCAL forbids risks *inside* `local-definitions`) also carries the `rule-set-id`
-join and holds the remediation. A reader traces `poam-item → rule-set-id → local-definitions group`
-(and → the risk) to recover everything.
+**De-duplication (the goal).** Each **poam-item** carries only the anchors + a **`rule-id`** prop
+(the rule's `Rule_Id`; the item's `check-id` pins the exact check for a multi-check rule) and
+references the group; it does **not** repeat the `risk-rating`/`point-of-contact`/
+`scheduled-completion-date`/`milestone` props or the remediation `remarks`. Its OSCAL-required
+`title`/`description` stay (the weakness name/description). The **top-level `risk`** (OSCAL forbids
+risks *inside* `local-definitions`) also carries the `rule-id` join and holds the remediation. A
+reader traces `poam-item → rule-id → local-definitions group` (and → the risk) to recover everything.
 
 > Only the **validation** component's token is used (the same rule has a *different* `remarks` token
 > on the service component, and the consolidated props live only on the validation rule-sets).
@@ -199,7 +199,7 @@ valid OSCAL — one poam-item per rule/check plus `local-definitions` — round-
 declares, **grouped by the CD's verbatim `remarks` rule-set token**; a validation component
 additionally carries that rule-set's consolidated weakness/risk/remediation props (verbatim, merged
 from the CD props and any `--remediations` entry), and every poam-item and risk carries a
-**`rule-set-id`** prop linking back to its group rather than duplicating the content — so the
+**`rule-id`** prop linking back to its group rather than duplicating the content — so the
 component's scope *and* its static content are traceable once, on the local-definitions entry.
 
 ## Next

@@ -463,7 +463,7 @@ def _milestones_to_tasks(milestones) -> list:
 
 
 def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: dict,
-                     style: str = "generic", rule_set_id: str | None = None) -> Risk:
+                     style: str = "generic", rule_id: str | None = None) -> Risk:
     """Build one top-level OSCAL Risk for a pre-defined weakness. Built as a dict + `model_validate`
     so the remediation is **pass-through / reference-driven**: whatever remediation shape the source
     (remediations.json entry or consolidated props) provides is written through and validated.
@@ -519,15 +519,15 @@ def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: d
     if isinstance(rem.get("risk"), dict):       # optional full pass-through extend/override
         rk.update({k: v for k, v in rem["risk"].items() if k not in ("uuid", "status")})
 
-    # Props assembled AFTER the pass-through merge so neither the generic rating nor the rule-set-id
+    # Props assembled AFTER the pass-through merge so neither the generic rating nor the rule-id
     # join is clobbered by a reference-supplied `risk.props`. generic style → an `original-risk-rating`
-    # prop (fedramp puts the rating in facets, above); rule-set-id relates the risk back to its
+    # prop (fedramp puts the rating in facets, above); rule-id relates the risk back to its
     # consolidated local-definitions group. Both preserve any pass-through props already present.
     extra_props = list(rk.get("props") or [])
     if rating and not fedramp:
         extra_props.append({"name": "original-risk-rating", "ns": NS_PROP, "value": rating})
-    if rule_set_id:
-        extra_props.append({"name": "rule-set-id", "ns": NS_PROP, "value": str(rule_set_id)})
+    if rule_id:
+        extra_props.append({"name": "rule-id", "ns": NS_PROP, "value": str(rule_id)})
     if extra_props:
         rk["props"] = extra_props
 
@@ -655,7 +655,7 @@ def _local_definitions(components: dict, system_id: str | None,
         # the CONSOLIDATED HOME for the static weakness/risk/remediation content — merged from the CD
         # rule-set props AND any --remediations file entry (file wins per field), carried under the
         # same token (verbatim CD prop names, no ns). This is the single place the static content
-        # lives; poam-items reference it by `rule-set-id` instead of duplicating it.
+        # lives; poam-items reference it by `rule-id` instead of duplicating it.
         cprops: list[Property] = []
         for pair in meta.get("rules") or []:
             tok = pair.get("remarks")
@@ -697,8 +697,11 @@ def _predefined_item(rule: dict, check: dict | None, index: int, remediations: d
     rid = rule["rule_id"]
     check_id = (check or {}).get("check_id") or rid
     check_desc = (check or {}).get("description") or ""
-    # the validation rule-set token — the join key back to the consolidated local-definitions group
-    rule_set_id = (check or {}).get("validation_remarks") or rule.get("validation_remarks")
+    # presence of a validation rule-set = there IS a consolidated local-definitions group to
+    # reference (via `rule-id`); its absence triggers the inline fallback below. The rule-set
+    # `remarks` token itself is trestle-internal grouping and is never exposed — the join is by
+    # the rule's meaningful `rule-id` (see review on #12).
+    has_group = bool((check or {}).get("validation_remarks") or rule.get("validation_remarks"))
     # Base: remediation consolidated on the component-definition props (if any).
     # Overlay: an optional --remediations file entry, which wins per field (keyed by this
     # specific check-id first, then the rule-id).
@@ -714,16 +717,17 @@ def _predefined_item(rule: dict, check: dict | None, index: int, remediations: d
             or f"The check '{check_id}' may fail, indicating this weakness.").strip()
 
     # The static weakness/risk/remediation content is consolidated in local-definitions (grouped by
-    # this check's `rule-set-id`) and in the top-level risk. To avoid duplicating it on every item,
-    # the item carries only ANCHORS + the `rule-set-id` reference. title/description are OSCAL-required
-    # so they stay (the human-readable weakness name/description — the one unavoidable overlap).
+    # this rule's `rule-id`) and in the top-level risk. To avoid duplicating it on every item,
+    # the item carries only ANCHORS + the `rule-id` reference (plus `check-id`, which pins the exact
+    # check for a multi-check rule). title/description are OSCAL-required so they stay (the
+    # human-readable weakness name/description — the one unavoidable overlap).
     props: list[Property] = [_prop("poam-id", poam_id)]
     for cid in rule.get("controls") or []:
         props.append(_prop("control-id", str(cid)))
     props.append(_prop("check-id", str(check_id)))
     item_remarks = None
-    if rule_set_id:  # relate this item back to its consolidated local-definitions rule-set
-        props.append(_prop("rule-set-id", str(rule_set_id)))
+    if has_group:  # relate this item back to its consolidated local-definitions group by rule-id
+        props.append(_prop("rule-id", str(rid)))
     else:
         # Fallback: no validation rule-set → no local-def group to reference, so inline the
         # descriptive props + remediation here to avoid losing the content.
@@ -750,7 +754,7 @@ def _predefined_item(rule: dict, check: dict | None, index: int, remediations: d
     # one top-level Risk per pre-defined weakness (the CD's rating/remediation/deadline live here);
     # the item references it via related-risks.
     risk = _predefined_risk(check_id, rule.get("controls") or [], name, desc, rem, risk_style,
-                            rule_set_id)
+                            rid if has_group else None)
     risks.append(risk)
 
     return PoamItem(
@@ -773,7 +777,7 @@ def build_from_component_definition(cd_doc: dict, remediations: dict, meta: dict
     # One poam-item per (rule, check): a rule associated with N checks yields N items, each a
     # distinct potential weakness. A rule with no checks (validation-component only) yields one
     # item anchored on the rule-id. Each item references its consolidated content in
-    # local-definitions by `rule-set-id` rather than duplicating it (see _predefined_item).
+    # local-definitions by `rule-id` rather than duplicating it (see _predefined_item).
     poam_items = []
     idx = 0
     for r in rules:

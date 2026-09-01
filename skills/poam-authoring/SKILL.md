@@ -118,7 +118,7 @@ with pass-through `risk`/`extra_props` and build as in steps 5–7.)
   The static weakness/risk/remediation content is **consolidated once into `local-definitions`**,
   grouped per check by the CD's verbatim `remarks` rule-set token (merged from the CD props and any
   `--remediations` file, so it lands there even when the content came from an external file); each
-  poam-item and risk links back via a **`rule-set-id`** prop instead of duplicating the content.
+  poam-item and risk links back via a **`rule-id`** prop instead of duplicating the content.
 - **Phase 2 — link (when an assessment exists).** Layer an `assessment-results.json` onto the
   pre-defined POA&M with `build_poam.py link-assessment` — each finding references the existing
   poam-item for its check ([link-assessment.md](link-assessment.md)). No new items are created.

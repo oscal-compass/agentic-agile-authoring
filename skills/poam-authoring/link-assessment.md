@@ -39,8 +39,8 @@ In both shapes the item is matched by the observation's rule identifier —
 assessment need only name each observation's rule via any of those props (the demo's real assessment
 uses `assessment-rule-id`).
 
-The matcher keys on `check-id` (unchanged). The pre-defined item also carries a **`rule-set-id`**
-prop (the CD's verbatim `remarks` token) that is *not* used for matching but lets a reader trace a
+The matcher keys on `check-id` (unchanged). The pre-defined item also carries a **`rule-id`**
+prop (the rule's `Rule_Id`) that is *not* used for matching but lets a reader trace a
 linked item → its risk → the consolidated `local-definitions` rule-set group. It is preserved
 through linking untouched.
 

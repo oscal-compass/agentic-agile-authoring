@@ -3,7 +3,7 @@
     "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
     "metadata": {
       "title": "Kubernetes Cluster POA&M",
-      "last-modified": "2026-08-27T08:40:01.404+00:00",
+      "last-modified": "2026-09-01T02:31:52.774+00:00",
       "version": "1.0",
       "oscal-version": "1.2.1"
     },
@@ -2297,9 +2297,9 @@
         "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_supported_versions' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
         "props": [
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_07"
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
           }
         ],
         "status": "open",
@@ -2329,9 +2329,9 @@
         "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty' is enforced, this weakness represents an open risk to the affected control(s): ac-2.",
         "props": [
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_08"
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
           }
         ],
         "status": "closed",
@@ -2366,9 +2366,9 @@
             "value": "High"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_09"
+            "value": "allowed-base-images"
           }
         ],
         "status": "open",
@@ -2426,9 +2426,9 @@
             "value": "Moderate"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_10"
+            "value": "disallow-capabilities"
           }
         ],
         "status": "open",
@@ -2458,9 +2458,9 @@
         "statement": "Until the check 'policy-deployment' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
         "props": [
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_11"
+            "value": "policy-deployment"
           }
         ],
         "status": "open",
@@ -2495,9 +2495,9 @@
             "value": "Moderate"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_12"
+            "value": "policy-disallowed-roles"
           }
         ],
         "status": "closed",
@@ -2545,9 +2545,9 @@
             "value": "High"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_13"
+            "value": "policy-high-scan"
           }
         ],
         "status": "open",
@@ -2710,9 +2710,9 @@
             "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_07"
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
           },
           {
             "name": "validation-component",
@@ -2747,9 +2747,9 @@
             "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_08"
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
           },
           {
             "name": "validation-component",
@@ -2794,9 +2794,9 @@
             "value": "allowed-base-images"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_09"
+            "value": "allowed-base-images"
           },
           {
             "name": "validation-component",
@@ -2841,9 +2841,9 @@
             "value": "disallow-capabilities"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_10"
+            "value": "disallow-capabilities"
           },
           {
             "name": "validation-component",
@@ -2888,9 +2888,9 @@
             "value": "policy-deployment"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_11"
+            "value": "policy-deployment"
           },
           {
             "name": "validation-component",
@@ -2935,9 +2935,9 @@
             "value": "policy-disallowed-roles"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_12"
+            "value": "policy-disallowed-roles"
           },
           {
             "name": "validation-component",
@@ -2982,9 +2982,9 @@
             "value": "policy-high-scan"
           },
           {
-            "name": "rule-set-id",
+            "name": "rule-id",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "rule_set_13"
+            "value": "policy-high-scan"
           },
           {
             "name": "validation-component",
