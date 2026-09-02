@@ -3,7 +3,7 @@
 An **ecosystem of portable authoring skills** for OSCAL-based compliance work — from framework
 onboarding (compliance PDF → catalog, catalog ↔ catalog mapping) through catalog customization,
 component definition, and assessment to POA&M generation — installable into multiple agent
-harnesses (**Claude Code**, **OpenCode**, custom harnesses, …).
+harnesses (**Claude Code**, **OpenCode**, **IBM Bob**, custom harnesses, …).
 
 The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (CNCF)](https://cncf.io).
 
@@ -25,14 +25,21 @@ Skills are installed by `compliance-authoring-skills`, a thin CLI (in `tools/`) 
 [`uv`](https://docs.astral.sh/uv/) (provides `uvx`) — no Node required.
 
 ```bash
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target claude
-uvx compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target claude
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target opencode
+uvx \
+  --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
+  compliance-authoring-skills install --demo catalog-to-assessment --target bob
 ```
 
 This copies the selected skills into the target's native skill dir (`.claude/skills/` for Claude,
-`.agents/skills/` for OpenCode) and wires the
+`.agents/skills/` for OpenCode, `.bob/skills/` for Bob) and wires the
 [trestle MCP server](https://github.com/oscal-compass/compliance-trestle-mcp) into the target's
-native MCP config (`.mcp.json` / `opencode.json`) — non-destructively. See the
+native MCP config (`.mcp.json` / `opencode.json` / `.bob/mcp.json`) — non-destructively. See the
 [Development guide](development.md) and the [Design Spec](design-spec.md) for the full model,
 subset selection, uninstall/prune, and the custom-harness path.
 
