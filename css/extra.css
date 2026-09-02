@@ -1,0 +1,7 @@
+/* Show/hide CNCF logo based on active color scheme */
+[data-md-color-scheme="default"] .cncf-logo-dark {
+  display: none;
+}
+[data-md-color-scheme="slate"] .cncf-logo-light {
+  display: none;
+}
