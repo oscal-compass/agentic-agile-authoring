@@ -170,8 +170,10 @@ def _props_by_name(item: dict, name: str) -> list[str]:
     return [p.get("value") for p in item.get("props") or [] if p.get("name") == name]
 
 
-def _prop(name: str, value: str) -> Property:
-    return Property(name=name, value=value, ns=NS_PROP)
+def _prop(name: str, value: str, *, ns: str | None = NS_PROP, remarks: str | None = None) -> Property:
+    # `ns=None` omits the namespace (used for consolidated props carried verbatim from the CD, which
+    # have no ns); `remarks` carries the CD rule-set token so props group into rule-sets in the POA&M.
+    return Property(name=name, value=value, ns=ns, remarks=remarks)
 
 
 def _fill_task_uuids(tasks, seed: str) -> None:
@@ -369,6 +371,64 @@ def _remediation_from_slot(slot: dict) -> dict:
     return rem
 
 
+def _static_from_slot(slot: dict) -> list[tuple[str, str]]:
+    """Collect the consolidated static props of one validation rule-set VERBATIM (CD prop name +
+    value), so they can be carried into the POA&M's local-definitions unchanged. Order is stable
+    (declaration order of `_REMEDIATION_PROPS`, then repeatable `Milestone`s). Empty/whitespace-only
+    values are skipped (OSCAL `Property.value` must be non-empty)."""
+    out: list[tuple[str, str]] = []
+    for name in _REMEDIATION_PROPS:  # keys are the CD prop names
+        val = slot.get(name)
+        if val is not None and str(val).strip():
+            out.append((name, str(val).strip()))
+    for mval in slot.get("__milestones__") or []:
+        m = (mval or "").strip()
+        if m:
+            out.append(("Milestone", m))
+    return out
+
+
+def _file_rem_for(pair: dict, remediations: dict) -> dict:
+    """The --remediations entry for one rule-set, keyed by its check-id then rule-id."""
+    return remediations.get(pair.get("check_id")) or remediations.get(pair.get("rule_id")) or {}
+
+
+def _merged_static_props(pair: dict, remediations: dict) -> list[tuple[str, str]]:
+    """Static props for one VALIDATION rule-set, for local-definitions. Merges two sources so the
+    consolidated home is complete regardless of where the author put the content:
+      base   — the CD rule-set's own props (`pair["static"]`, verbatim);
+      override — a `remediations.json` entry (keyed by check-id then rule-id), winning PER FIELD.
+    So even when the static content lives only in an external `remediations.json` (scenario 1, not on
+    the component-definition), the agent's data still lands in local-definitions. Order is stable
+    (`_REMEDIATION_PROPS` order, then Milestones). Returns list[(CD-prop-name, value)]; POA&M ID is
+    intentionally never included (it is not CD/local-def content)."""
+    cd_pairs = pair.get("static") or []
+    cd_scalar = {n: v for n, v in cd_pairs if n != "Milestone"}     # unique names; last wins
+    cd_milestones = [v for n, v in cd_pairs if n == "Milestone"]
+    file_rem = _file_rem_for(pair, remediations)
+
+    out: list[tuple[str, str]] = []
+    for cd_name, file_key in _REMEDIATION_PROPS.items():
+        fval = file_rem.get(file_key)
+        if fval is not None and str(fval).strip():          # file overrides the CD prop
+            out.append((cd_name, str(fval).strip()))
+        elif str(cd_scalar.get(cd_name, "")).strip():       # else the CD prop verbatim
+            out.append((cd_name, str(cd_scalar[cd_name]).strip()))
+    # Milestones: the file's list wins if present, else the CD's `Milestone` props verbatim.
+    if file_rem.get("milestones"):
+        for ms in file_rem["milestones"]:
+            d = (ms.get("description") or "").strip()
+            if not d:
+                continue
+            target = (ms.get("target_date") or "").strip()
+            out.append(("Milestone", f"{target}: {d}" if target else d))
+    else:
+        for m in cd_milestones:
+            if str(m).strip():
+                out.append(("Milestone", str(m).strip()))
+    return out
+
+
 # deterministic actor for risks/remediations authored by this builder from the component-definition
 _BUILDER_ACTOR = _u5("actor", "poam-authoring/build_poam.py")
 _FEDRAMP_NS = "http://fedramp.gov/ns/oscal"  # OSCAL-recognized naming system (NamingSystemValidValues)
@@ -403,7 +463,7 @@ def _milestones_to_tasks(milestones) -> list:
 
 
 def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: dict,
-                     style: str = "generic") -> Risk:
+                     style: str = "generic", rule_id: str | None = None) -> Risk:
     """Build one top-level OSCAL Risk for a pre-defined weakness. Built as a dict + `model_validate`
     so the remediation is **pass-through / reference-driven**: whatever remediation shape the source
     (remediations.json entry or consolidated props) provides is written through and validated.
@@ -441,8 +501,6 @@ def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: d
             "facets": [{"name": n, "system": _FEDRAMP_NS, "value": rating.lower()}
                        for n in ("likelihood", "impact")],
         }]
-    elif rating:  # generic (xlsx-style): a plain rating prop, no namespace, no characterization
-        rk["props"] = [{"name": "original-risk-rating", "ns": NS_PROP, "value": rating}]
 
     if rem.get("remediations"):                 # 1) reference-supplied response(s), verbatim
         rk["remediations"] = rem["remediations"]
@@ -461,6 +519,18 @@ def _predefined_risk(check_id: str, controls: list, name: str, desc: str, rem: d
     if isinstance(rem.get("risk"), dict):       # optional full pass-through extend/override
         rk.update({k: v for k, v in rem["risk"].items() if k not in ("uuid", "status")})
 
+    # Props assembled AFTER the pass-through merge so neither the generic rating nor the rule-id
+    # join is clobbered by a reference-supplied `risk.props`. generic style → an `original-risk-rating`
+    # prop (fedramp puts the rating in facets, above); rule-id relates the risk back to its
+    # consolidated local-definitions group. Both preserve any pass-through props already present.
+    extra_props = list(rk.get("props") or [])
+    if rating and not fedramp:
+        extra_props.append({"name": "original-risk-rating", "ns": NS_PROP, "value": rating})
+    if rule_id:
+        extra_props.append({"name": "rule-id", "ns": NS_PROP, "value": str(rule_id)})
+    if extra_props:
+        rk["props"] = extra_props
+
     _ensure_risk_uuids(rk, check_id)
     return Risk.model_validate(rk)
 
@@ -472,8 +542,11 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
       - a SERVICE component's implemented-requirements give Rule_Id -> control-id(s)
         (control-id == "na" means "not a control mapping" and is skipped);
       - a VALIDATION component's props give Rule_Id -> Check_Id + validation-component title.
-    Each returned rule dict = {rule_id, description, check_id, controls[], validation_components[],
-    service_components[]}. `components` = {title: {"type", "description"}} for local-definitions.
+        A rule may be associated with MANY checks (one rule_set per check, all sharing Rule_Id);
+        every distinct check is collected.
+    Each returned rule dict = {rule_id, description, checks[{check_id, description}], controls[],
+    validation_components[], service_components[]}. `components` = {title: {"type", "description"}}
+    for local-definitions.
     """
     cd = cd_doc.get("component-definition") or cd_doc
     rules: dict[str, dict] = {}
@@ -481,9 +554,26 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
 
     def rule(rid: str) -> dict:
         return rules.setdefault(rid, {
-            "rule_id": rid, "description": "", "check_id": None,
+            "rule_id": rid, "description": "", "checks": [],
             "controls": [], "validation_components": [], "service_components": [],
         })
+
+    def add_check(r: dict, cid: str, cdesc: str | None, val_remarks: str | None = None) -> None:
+        # A rule may be associated with MANY checks (each a separate rule_set sharing the
+        # Rule_Id). Collect every distinct check; fill in a description if a later rule_set
+        # supplies one for a check we first saw without it. `val_remarks` = the VALIDATION rule-set
+        # token for this check (the join key back to local-definitions); recorded only from the
+        # validation component (the service component's token for the same rule is different).
+        cid = str(cid)
+        for c in r["checks"]:
+            if c["check_id"] == cid:
+                if cdesc and not c.get("description"):
+                    c["description"] = cdesc
+                if val_remarks and not c.get("validation_remarks"):
+                    c["validation_remarks"] = val_remarks
+                return
+        r["checks"].append({"check_id": cid, "description": cdesc or "",
+                            "validation_remarks": val_remarks})
 
     for comp in cd.get("components") or []:
         title = comp.get("title") or "component"
@@ -505,22 +595,29 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
                 slot.setdefault("__milestones__", []).append(p.get("value"))
             else:
                 slot[name] = p.get("value")
-        for slot in by_set.values():
+        for token, slot in by_set.items():
             rid = slot.get("Rule_Id")
             if not rid:
                 continue
-            pair = {"rule_id": rid, "check_id": slot.get("Check_Id")}
+            # `token` = this rule-set's `remarks` value (e.g. "rule_set_09"), carried verbatim.
+            is_validation = ctype == "validation"
+            pair = {"rule_id": rid, "check_id": slot.get("Check_Id"), "remarks": token}
+            if is_validation:  # consolidated static content lives only on validation rule-sets
+                static = _static_from_slot(slot)
+                if static:
+                    pair["static"] = static
             if pair not in components[title]["rules"]:
                 components[title]["rules"].append(pair)
             r = rule(rid)
             if slot.get("Rule_Description") and not r["description"]:
                 r["description"] = slot["Rule_Description"]
-            if slot.get("Check_Description"):
-                r["description"] = slot["Check_Description"] or r["description"]
             if slot.get("Check_Id"):
-                r["check_id"] = slot["Check_Id"]
-            if ctype == "validation" and title not in r["validation_components"]:
-                r["validation_components"].append(title)
+                add_check(r, slot["Check_Id"], slot.get("Check_Description"),
+                          val_remarks=token if is_validation else None)
+            if is_validation:
+                if title not in r["validation_components"]:
+                    r["validation_components"].append(title)
+                r.setdefault("validation_remarks", token)
             # consolidated remediation carried on the rule-set props (single-source path C).
             # Only keys that are present are set, so it merges cleanly with a --remediations file
             # (the file overrides these per field). First non-empty rule-set wins per key.
@@ -540,24 +637,37 @@ def parse_component_definition(cd_doc: dict) -> tuple[list[dict], dict]:
                     if cid and cid.lower() != "na" and cid not in r["controls"]:
                         r["controls"].append(cid)
 
-    # keep only rules that are actually checked (have a check_id or a validation component)
-    checked = [r for r in rules.values() if r["check_id"] or r["validation_components"]]
+    # keep only rules that are actually checked (have at least one check or a validation component)
+    checked = [r for r in rules.values() if r["checks"] or r["validation_components"]]
     return (checked or list(rules.values())), components
 
 
-def _local_definitions(components: dict, system_id: str | None) -> LocalDefinitions:
+def _local_definitions(components: dict, system_id: str | None,
+                       remediations: dict | None = None) -> LocalDefinitions:
+    remediations = remediations or {}
     sys_components: list[SystemComponent] = []
     inv_items: list[InventoryItem] = []
     platforms: list[AssessmentPlatform] = []
     for title, meta in components.items():
         cuuid = _u5("comp", title)
-        # carry the rule-id / check-id this component declares (from the component-definition)
+        # Carry the rule-id / check-id this component declares (from the component-definition),
+        # each stamped with its verbatim rule-set `remarks` token. On a validation component this is
+        # the CONSOLIDATED HOME for the static weakness/risk/remediation content — merged from the CD
+        # rule-set props AND any --remediations file entry (file wins per field), carried under the
+        # same token (verbatim CD prop names, no ns). This is the single place the static content
+        # lives; poam-items reference it by `rule-id` instead of duplicating it.
         cprops: list[Property] = []
         for pair in meta.get("rules") or []:
+            tok = pair.get("remarks")
             if pair.get("rule_id"):
-                cprops.append(_prop("rule-id", str(pair["rule_id"])))
+                cprops.append(_prop("rule-id", str(pair["rule_id"]), remarks=tok))
             if pair.get("check_id"):
-                cprops.append(_prop("check-id", str(pair["check_id"])))
+                cprops.append(_prop("check-id", str(pair["check_id"]), remarks=tok))
+            if meta["type"] == "validation":
+                for name, val in _merged_static_props(pair, remediations):
+                    v = str(val).strip()
+                    if v:
+                        cprops.append(_prop(name, v, ns=None, remarks=tok))
         sys_components.append(SystemComponent(
             uuid=cuuid, type=meta["type"], title=title,
             description=meta["description"], status=Status(state="operational"),
@@ -582,47 +692,69 @@ def _local_definitions(components: dict, system_id: str | None) -> LocalDefiniti
     return ld
 
 
-def _predefined_item(rule: dict, index: int, remediations: dict, risks: list,
+def _predefined_item(rule: dict, check: dict | None, index: int, remediations: dict, risks: list,
                      risk_style: str = "generic") -> PoamItem:
     rid = rule["rule_id"]
-    check_id = rule.get("check_id") or rid
+    check_id = (check or {}).get("check_id") or rid
+    check_desc = (check or {}).get("description") or ""
+    # presence of a validation rule-set = there IS a consolidated local-definitions group to
+    # reference (via `rule-id`); its absence triggers the inline fallback below. The rule-set
+    # `remarks` token itself is trestle-internal grouping and is never exposed — the join is by
+    # the rule's meaningful `rule-id` (see review on #12).
+    has_group = bool((check or {}).get("validation_remarks") or rule.get("validation_remarks"))
     # Base: remediation consolidated on the component-definition props (if any).
-    # Overlay: an optional --remediations file entry, which wins per field.
+    # Overlay: an optional --remediations file entry, which wins per field (keyed by this
+    # specific check-id first, then the rule-id).
     file_rem = remediations.get(check_id) or remediations.get(rid) or {}
     rem = {**(rule.get("remediation") or {}), **file_rem}
 
     poam_id = str(rem.get("poam_id") or f"POAM-{index + 1:03d}")
+    # Prefer this check's own description for the weakness text; fall back to the rule's.
+    base_desc = check_desc or rule.get("description") or rid
     name = (rem.get("weakness_name")
-            or f"Potential weakness: {rule.get('description') or rid}").strip()
-    desc = (rem.get("weakness_description") or rule.get("description")
+            or f"Potential weakness: {base_desc}").strip()
+    desc = (rem.get("weakness_description") or check_desc or rule.get("description")
             or f"The check '{check_id}' may fail, indicating this weakness.").strip()
 
+    # The static weakness/risk/remediation content is consolidated in local-definitions (grouped by
+    # this rule's `rule-id`) and in the top-level risk. To avoid duplicating it on every item,
+    # the item carries only ANCHORS + the `rule-id` reference (plus `check-id`, which pins the exact
+    # check for a multi-check rule). title/description are OSCAL-required so they stay (the
+    # human-readable weakness name/description — the one unavoidable overlap).
     props: list[Property] = [_prop("poam-id", poam_id)]
     for cid in rule.get("controls") or []:
         props.append(_prop("control-id", str(cid)))
     props.append(_prop("check-id", str(check_id)))
+    item_remarks = None
+    if has_group:  # relate this item back to its consolidated local-definitions group by rule-id
+        props.append(_prop("rule-id", str(rid)))
+    else:
+        # Fallback: no validation rule-set → no local-def group to reference, so inline the
+        # descriptive props + remediation here to avoid losing the content.
+        if rem.get("risk_rating"):
+            props.append(_prop("risk-rating", str(rem["risk_rating"])))
+        if rem.get("severity"):
+            props.append(_prop("severity", str(rem["severity"])))
+        if rem.get("phase"):
+            props.append(_prop("phase", str(rem["phase"])))
+        if rem.get("poc"):
+            props.append(_prop("point-of-contact", str(rem["poc"])))
+        if rem.get("scheduled_completion_date"):
+            props.append(_prop("scheduled-completion-date", str(rem["scheduled_completion_date"])))
+        for ms in rem.get("milestones") or []:
+            d = (ms.get("description") or "").strip()
+            if not d:
+                continue
+            target = ms.get("target_date")
+            props.append(_prop("milestone", f"{d} (target: {target})" if target else d))
+        item_remarks = rem.get("remediation_plan") or None
     for vc in rule.get("validation_components") or []:
         props.append(_prop("validation-component", str(vc)))
-    if rem.get("risk_rating"):
-        props.append(_prop("risk-rating", str(rem["risk_rating"])))
-    if rem.get("severity"):
-        props.append(_prop("severity", str(rem["severity"])))
-    if rem.get("phase"):
-        props.append(_prop("phase", str(rem["phase"])))
-    if rem.get("poc"):
-        props.append(_prop("point-of-contact", str(rem["poc"])))
-    if rem.get("scheduled_completion_date"):
-        props.append(_prop("scheduled-completion-date", str(rem["scheduled_completion_date"])))
-    for ms in rem.get("milestones") or []:
-        d = (ms.get("description") or "").strip()
-        if not d:
-            continue
-        target = ms.get("target_date")
-        props.append(_prop("milestone", f"{d} (target: {target})" if target else d))
 
     # one top-level Risk per pre-defined weakness (the CD's rating/remediation/deadline live here);
     # the item references it via related-risks.
-    risk = _predefined_risk(check_id, rule.get("controls") or [], name, desc, rem, risk_style)
+    risk = _predefined_risk(check_id, rule.get("controls") or [], name, desc, rem, risk_style,
+                            rid if has_group else None)
     risks.append(risk)
 
     return PoamItem(
@@ -630,7 +762,7 @@ def _predefined_item(rule: dict, index: int, remediations: dict, risks: list,
         title=name,
         description=desc,
         props=props,
-        remarks=rem.get("remediation_plan") or None,
+        remarks=item_remarks,
         related_risks=[AssociatedRisk(risk_uuid=risk.uuid)],
     )
 
@@ -642,14 +774,23 @@ def build_from_component_definition(cd_doc: dict, remediations: dict, meta: dict
     title = meta.get("title") or "Pre-defined Plan of Action and Milestones"
     risk_style = meta.get("risk_style") or "generic"
     risks: list = []
-    poam_items = [_predefined_item(r, i, remediations, risks, risk_style) for i, r in enumerate(rules)]
+    # One poam-item per (rule, check): a rule associated with N checks yields N items, each a
+    # distinct potential weakness. A rule with no checks (validation-component only) yields one
+    # item anchored on the rule-id. Each item references its consolidated content in
+    # local-definitions by `rule-id` rather than duplicating it (see _predefined_item).
+    poam_items = []
+    idx = 0
+    for r in rules:
+        for check in (r.get("checks") or [None]):
+            poam_items.append(_predefined_item(r, check, idx, remediations, risks, risk_style))
+            idx += 1
     poam = PlanOfActionAndMilestones(
         uuid=_u5("poam", title),
         metadata=Metadata(
             title=title, last_modified=_now(),
             version=str(meta.get("version") or "1.0"), oscal_version=OSCAL_VERSION,
         ),
-        local_definitions=_local_definitions(components, meta.get("system_id")),
+        local_definitions=_local_definitions(components, meta.get("system_id"), remediations),
         poam_items=poam_items,
     )
     if risks:

@@ -158,9 +158,10 @@ from the assessment's per-subject pass/fail — cross-linked to the existing ite
 
 **Expected result (validation)** — check these invariants, not exact strings:
 - validates **VALID** as a standalone file — no workspace (MCP `trestle_validate`, or `trestle partial-object-validate -e plan-of-action-and-milestones`)
-- **7 poam-items**, each anchored by a `check-id` prop (+ `control-id` where the CD maps one)
+- **7 poam-items**, each anchored by a `check-id` prop (+ `control-id` where the CD maps one) and a `rule-id` prop (the rule's `Rule_Id`), relating the item back to its `local-definitions` group. The items **do not duplicate** the static content — no `risk-rating`/`point-of-contact`/`scheduled-completion-date`/`milestone` props and no remediation `remarks`; that lives once in the local-def group (+ the risk)
+- `local-definitions` validation components carry the consolidated weakness/risk/remediation props **grouped by the CD's verbatim `remarks` token**, alongside `rule-id`/`check-id`. Here the CD carries none — they come from **`remediations.json`** — but the builder still merges the file's fields **into local-definitions**, so the groups are fully populated (same shape as scenario 02, which sources them from the CD)
 - **6 findings** = **4 `not-satisfied` / 2 `satisfied`** (1 rule — `test_supported_versions` — not assessed, so it keeps its item with no finding)
-- **7 risks**, **2 `closed`** (the satisfied checks) / 5 `open`; generic style → rating in an `original-risk-rating` prop, no characterizations
+- **7 risks**, **2 `closed`** (the satisfied checks) / 5 `open`; generic style → rating in an `original-risk-rating` prop, no characterizations; each risk also carries the `rule-id` join prop and holds the remediation
 - each risk's **`remediations[]`** holds the fix (lifecycle `planned`), with the remediation's milestones as response **`tasks[]`** (`type: milestone`, `on-date` timing)
 - *Varies:* the title text, the POAM-ID ↔ check mapping/order, and whether `uv` or a venv was used.
 
@@ -229,6 +230,15 @@ UUIDs are keyed by check-id, so they match too) — the *inputs* differ (consoli
 a `remediations.json`, and deterministic workspace discovery instead of supplied paths), and because
 the POA&M ID lives in the POA&M (not on the component-definition) the items are **auto-numbered
 `POAM-001…` in rule order** rather than carrying scenario 01's hand-assigned IDs.
+
+Because the CD here **consolidates the weakness/remediation/risk props on its validation rule-sets**,
+those props are carried **verbatim into `local-definitions`** — each validation component's rule-set
+group (keyed by its `remarks` token, e.g. `rule_set_09`) holds `Weakness_Name`/`Weakness_Description`/
+`Risk_Rating`/`POC`/`Scheduled_Completion_Date`/`Remediation_Plan`/`Milestone` alongside its
+`Rule_Id`/`Check_Id`. This is the **same fully-populated `local-definitions`** as scenario 01 — the
+two just source the content differently (scenario 01 merges it from `remediations.json`, scenario 02
+from the CD props); either way the poam-items reference the group by `rule-id` and never duplicate
+it, and all counts and item/risk UUIDs match.
 **[`02-trestle-workspace/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json`](02-trestle-workspace/plan-of-action-and-milestones/k8s-prod/plan-of-action-and-milestones.json)**
 
 > Prefer keeping remediation in a separate file, or need to tweak a field at build time? Pass
@@ -244,6 +254,7 @@ the POA&M ID lives in the POA&M (not on the component-definition) the items are 
 **Expected result (validation)** — check these invariants, not exact strings:
 - `trestle validate -t plan-of-action-and-milestones` → **VALID**, with the file written to `plan-of-action-and-milestones/k8s-prod/` (no `mkdir`/`cp` — the workspace's canonical path)
 - inputs were found **with no paths given** (workspace discovery) and with **no `remediations.json`** (rating/remediation came from the CD's validation props)
+- `local-definitions` is **fully consolidated**: each validation component's rule-set group (keyed by its verbatim `remarks` token) carries the `Weakness_Name`/`Weakness_Description`/`Risk_Rating`/`POC`/`Scheduled_Completion_Date`/`Remediation_Plan`/`Milestone` props verbatim (no `ns`) alongside `rule-id`/`check-id`; every poam-item and risk carries a matching `rule-id` prop and the items **do not duplicate** the static content (same de-duplicated shape as scenario 01)
 - same counts as scenario 01: **7 items / 6 findings (4 open · 2 satisfied) / 7 risks (2 `closed`)**; risks default to the generic `original-risk-rating` shape, each with a `remediations[]` whose milestones are response **`tasks[]`** (`on-date` timing)
 - *Varies:* the title text and the `POAM-001…` numbering order. If run with a weak model, be explicit ("path C: pre-define from the component-definition, then link the assessment") and make sure it installs **`compliance-trestle`** (not the unrelated PyPI `trestle`).
 

@@ -3,7 +3,7 @@
     "uuid": "d6d55f61-cf40-5ec1-a7d6-0be4d3c8798d",
     "metadata": {
       "title": "Kubernetes Cluster POA&M",
-      "last-modified": "2026-08-26T02:38:15.512+00:00",
+      "last-modified": "2026-09-01T02:31:52.774+00:00",
       "version": "1.0",
       "oscal-version": "1.2.1"
     },
@@ -21,22 +21,26 @@
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions",
+              "remarks": "rule_set_00"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions",
+              "remarks": "rule_set_00"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty",
+              "remarks": "rule_set_01"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty",
+              "remarks": "rule_set_01"
             }
           ],
           "status": {
@@ -52,52 +56,62 @@
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "allowed-base-images"
+              "value": "allowed-base-images",
+              "remarks": "rule_set_02"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "allowed-base-images"
+              "value": "allowed-base-images",
+              "remarks": "rule_set_02"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "disallow-capabilities"
+              "value": "disallow-capabilities",
+              "remarks": "rule_set_03"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "disallow-capabilities"
+              "value": "disallow-capabilities",
+              "remarks": "rule_set_03"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-deployment"
+              "value": "policy-deployment",
+              "remarks": "rule_set_04"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-deployment"
+              "value": "policy-deployment",
+              "remarks": "rule_set_04"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-disallowed-roles"
+              "value": "policy-disallowed-roles",
+              "remarks": "rule_set_05"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-disallowed-roles"
+              "value": "policy-disallowed-roles",
+              "remarks": "rule_set_05"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-high-scan"
+              "value": "policy-high-scan",
+              "remarks": "rule_set_06"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-high-scan"
+              "value": "policy-high-scan",
+              "remarks": "rule_set_06"
             }
           ],
           "status": {
@@ -113,22 +127,66 @@
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions",
+              "remarks": "rule_set_07"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions",
+              "remarks": "rule_set_07"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation.",
+              "remarks": "rule_set_07"
+            },
+            {
+              "name": "POC",
+              "value": "DevOps Team",
+              "remarks": "rule_set_07"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "GitHub API version may be unsupported",
+              "remarks": "rule_set_07"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "The GitHub API might not return a supported version (CM-2).",
+              "remarks": "rule_set_07"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty",
+              "remarks": "rule_set_08"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+              "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty",
+              "remarks": "rule_set_08"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Alert via Auditree if the GitHub org membership drops to zero.",
+              "remarks": "rule_set_08"
+            },
+            {
+              "name": "POC",
+              "value": "DevOps Team",
+              "remarks": "rule_set_08"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "GitHub organization may be empty",
+              "remarks": "rule_set_08"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "The GitHub org might have no members (AC-2, Account Management).",
+              "remarks": "rule_set_08"
             }
           ],
           "status": {
@@ -144,22 +202,91 @@
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "allowed-base-images"
+              "value": "allowed-base-images",
+              "remarks": "rule_set_09"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "allowed-base-images"
+              "value": "allowed-base-images",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines.",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Risk_Rating",
+              "value": "High",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "POC",
+              "value": "Platform Security Team",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Scheduled_Completion_Date",
+              "value": "2026-12-31",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "Base image not restricted to an approved allow list",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "Containers may run base images outside the cluster-wide approved allow list, weakening supply-chain assurance for CM-2 (Baseline Configuration).",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Milestone",
+              "value": "2026-10-01: Publish approved base-image allow list",
+              "remarks": "rule_set_09"
+            },
+            {
+              "name": "Milestone",
+              "value": "2026-11-15: Enforce Kyverno allowed-base-images policy in audit->enforce",
+              "remarks": "rule_set_09"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "disallow-capabilities"
+              "value": "disallow-capabilities",
+              "remarks": "rule_set_10"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "disallow-capabilities"
+              "value": "disallow-capabilities",
+              "remarks": "rule_set_10"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Enforce the Kyverno disallow-capabilities policy across all namespaces.",
+              "remarks": "rule_set_10"
+            },
+            {
+              "name": "Risk_Rating",
+              "value": "Moderate",
+              "remarks": "rule_set_10"
+            },
+            {
+              "name": "POC",
+              "value": "Platform Security Team",
+              "remarks": "rule_set_10"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "Added Linux capabilities not disallowed",
+              "remarks": "rule_set_10"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "Containers could add Linux capabilities beyond the policy allow list (CM-2.1).",
+              "remarks": "rule_set_10"
             }
           ],
           "status": {
@@ -175,32 +302,128 @@
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-deployment"
+              "value": "policy-deployment",
+              "remarks": "rule_set_11"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-deployment"
+              "value": "policy-deployment",
+              "remarks": "rule_set_11"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Enforce the OCM policy-deployment minimum-replica policy.",
+              "remarks": "rule_set_11"
+            },
+            {
+              "name": "POC",
+              "value": "Platform Team",
+              "remarks": "rule_set_11"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "Deployment minimum-replica policy not guaranteed",
+              "remarks": "rule_set_11"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
+              "remarks": "rule_set_11"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-disallowed-roles"
+              "value": "policy-disallowed-roles",
+              "remarks": "rule_set_12"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-disallowed-roles"
+              "value": "policy-disallowed-roles",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence.",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "Risk_Rating",
+              "value": "Moderate",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "POC",
+              "value": "Platform Team",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "Scheduled_Completion_Date",
+              "value": "2026-12-15",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "Disallowed cluster roles in use",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "RoleBindings grant roles outside the allowed set, violating AC-1 (Policy and Procedures) least-privilege expectations.",
+              "remarks": "rule_set_12"
+            },
+            {
+              "name": "Milestone",
+              "value": "2026-11-01: Remediate disallowed RoleBindings",
+              "remarks": "rule_set_12"
             },
             {
               "name": "rule-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-high-scan"
+              "value": "policy-high-scan",
+              "remarks": "rule_set_13"
             },
             {
               "name": "check-id",
               "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-              "value": "policy-high-scan"
+              "value": "policy-high-scan",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "Remediation_Plan",
+              "value": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline.",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "Risk_Rating",
+              "value": "High",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "POC",
+              "value": "Platform Team",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "Scheduled_Completion_Date",
+              "value": "2026-11-30",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "Weakness_Name",
+              "value": "High-level vulnerability scan not enabled",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "Weakness_Description",
+              "value": "The cluster scan profile does not run at the high level required by policy for CM-6 (Configuration Settings).",
+              "remarks": "rule_set_13"
+            },
+            {
+              "name": "Milestone",
+              "value": "2026-10-15: Enable high-level scan profile",
+              "remarks": "rule_set_13"
             }
           ],
           "status": {
@@ -2072,6 +2295,13 @@
         "title": "Risk: GitHub API version may be unsupported",
         "description": "The GitHub API might not return a supported version (CM-2).",
         "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_supported_versions' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
+        "props": [
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+          }
+        ],
         "status": "open",
         "remediations": [
           {
@@ -2097,6 +2327,13 @@
         "title": "Risk: GitHub organization may be empty",
         "description": "The GitHub org might have no members (AC-2, Account Management).",
         "statement": "Until the check 'demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty' is enforced, this weakness represents an open risk to the affected control(s): ac-2.",
+        "props": [
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+          }
+        ],
         "status": "closed",
         "remediations": [
           {
@@ -2127,6 +2364,11 @@
             "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "High"
+          },
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "allowed-base-images"
           }
         ],
         "status": "open",
@@ -2182,6 +2424,11 @@
             "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "Moderate"
+          },
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "disallow-capabilities"
           }
         ],
         "status": "open",
@@ -2209,6 +2456,13 @@
         "title": "Risk: Deployment minimum-replica policy not guaranteed",
         "description": "NGINX deployment could fall below the configured minimum replica count (CM-2).",
         "statement": "Until the check 'policy-deployment' is enforced, this weakness represents an open risk to the affected control(s): cm-2.",
+        "props": [
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-deployment"
+          }
+        ],
         "status": "open",
         "remediations": [
           {
@@ -2239,6 +2493,11 @@
             "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "Moderate"
+          },
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-disallowed-roles"
           }
         ],
         "status": "closed",
@@ -2284,6 +2543,11 @@
             "name": "original-risk-rating",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "High"
+          },
+          {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-high-scan"
           }
         ],
         "status": "open",
@@ -2446,22 +2710,21 @@
             "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_supported_versions"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "Auditree"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "DevOps Team"
           }
         ],
         "related-risks": [
           {
             "risk-uuid": "6df5246f-e745-5e42-908d-dbf8541c13c9"
           }
-        ],
-        "remarks": "Monitor GitHub API version via Auditree; upgrade integrations before deprecation."
+        ]
       },
       {
         "uuid": "cfa3d133-9dc0-5c6c-97bf-90bb7a27f0b0",
@@ -2484,14 +2747,14 @@
             "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "demo_examples.checks.test_github.GitHubOrgs.test_members_is_not_empty"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "Auditree"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "DevOps Team"
           }
         ],
         "related-findings": [
@@ -2508,8 +2771,7 @@
           {
             "risk-uuid": "70706e81-0ed9-529a-8f2e-6afef69b6b8b"
           }
-        ],
-        "remarks": "Alert via Auditree if the GitHub org membership drops to zero."
+        ]
       },
       {
         "uuid": "dfe8d1ad-0688-5c5b-9874-139c6e0db2e9",
@@ -2532,34 +2794,14 @@
             "value": "allowed-base-images"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "allowed-base-images"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "Kyverno"
-          },
-          {
-            "name": "risk-rating",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "High"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Platform Security Team"
-          },
-          {
-            "name": "scheduled-completion-date",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "2026-12-31"
-          },
-          {
-            "name": "milestone",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Publish approved base-image allow list (target: 2026-10-01)"
-          },
-          {
-            "name": "milestone",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Enforce Kyverno allowed-base-images policy in audit->enforce (target: 2026-11-15)"
           }
         ],
         "related-findings": [
@@ -2576,8 +2818,7 @@
           {
             "risk-uuid": "82832e44-6a1e-548a-863a-98e77600bec3"
           }
-        ],
-        "remarks": "Define a cluster-wide allowed base image list and enforce it with the Kyverno allowed-base-images policy; add the OCI base annotation to all build pipelines."
+        ]
       },
       {
         "uuid": "72a1df4d-30f7-5089-88c2-5cf5895e98a0",
@@ -2600,19 +2841,14 @@
             "value": "disallow-capabilities"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "disallow-capabilities"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "Kyverno"
-          },
-          {
-            "name": "risk-rating",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Moderate"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Platform Security Team"
           }
         ],
         "related-findings": [
@@ -2629,8 +2865,7 @@
           {
             "risk-uuid": "81e92e26-a447-5c27-9994-d373fb3162e7"
           }
-        ],
-        "remarks": "Enforce the Kyverno disallow-capabilities policy across all namespaces."
+        ]
       },
       {
         "uuid": "4310ad0e-e489-5671-b85c-bd545fb1841f",
@@ -2653,14 +2888,14 @@
             "value": "policy-deployment"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-deployment"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "OCM"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Platform Team"
           }
         ],
         "related-findings": [
@@ -2677,8 +2912,7 @@
           {
             "risk-uuid": "8d915870-175b-5607-9e06-db301fa5025c"
           }
-        ],
-        "remarks": "Enforce the OCM policy-deployment minimum-replica policy."
+        ]
       },
       {
         "uuid": "fcd23b5e-4eae-5f4a-8a7d-bd634889cae4",
@@ -2701,29 +2935,14 @@
             "value": "policy-disallowed-roles"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-disallowed-roles"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "OCM"
-          },
-          {
-            "name": "risk-rating",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Moderate"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Platform Team"
-          },
-          {
-            "name": "scheduled-completion-date",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "2026-12-15"
-          },
-          {
-            "name": "milestone",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Remediate disallowed RoleBindings (target: 2026-11-01)"
           }
         ],
         "related-findings": [
@@ -2740,8 +2959,7 @@
           {
             "risk-uuid": "c87f3135-f22a-50c1-88b2-9d14f8ce9043"
           }
-        ],
-        "remarks": "Remove disallowed RoleBindings; enforce the OCM policy-disallowed-roles policy to prevent recurrence."
+        ]
       },
       {
         "uuid": "0261baab-ebee-5485-87a5-296959e3078b",
@@ -2764,29 +2982,14 @@
             "value": "policy-high-scan"
           },
           {
+            "name": "rule-id",
+            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
+            "value": "policy-high-scan"
+          },
+          {
             "name": "validation-component",
             "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
             "value": "OCM"
-          },
-          {
-            "name": "risk-rating",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "High"
-          },
-          {
-            "name": "point-of-contact",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Platform Team"
-          },
-          {
-            "name": "scheduled-completion-date",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "2026-11-30"
-          },
-          {
-            "name": "milestone",
-            "ns": "https://oscal-compass.github.io/compliance-authoring-skills/ns/poam",
-            "value": "Enable high-level scan profile (target: 2026-10-15)"
           }
         ],
         "related-findings": [
@@ -2803,8 +3006,7 @@
           {
             "risk-uuid": "149b16c8-7829-5752-bd99-0a6262d75f91"
           }
-        ],
-        "remarks": "Set the scan profile to high and schedule recurring high-level scans; wire results into the compliance pipeline."
+        ]
       }
     ]
   }

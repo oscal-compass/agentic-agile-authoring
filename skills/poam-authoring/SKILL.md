@@ -115,9 +115,15 @@ with pass-through `risk`/`extra_props` and build as in steps 5–7.)
 - **Phase 1 — pre-define.** Read the `component-definition.json`, join its rules/checks to controls
   and validation components, author remediation up front, and build the **pre-defined POA&M** with
   `build_poam.py from-component-definition` ([from-component-definition.md](from-component-definition.md)).
+  The static weakness/risk/remediation content is **consolidated once into `local-definitions`**,
+  grouped per check by the CD's verbatim `remarks` rule-set token (merged from the CD props and any
+  `--remediations` file, so it lands there even when the content came from an external file); each
+  poam-item and risk links back via a **`rule-id`** prop instead of duplicating the content.
 - **Phase 2 — link (when an assessment exists).** Layer an `assessment-results.json` onto the
   pre-defined POA&M with `build_poam.py link-assessment` — each finding references the existing
   poam-item for its check ([link-assessment.md](link-assessment.md)). No new items are created.
+- **Filling optional fields** (weakness/risk/remediation) resolves in order: (1) CD rule-set props,
+  (2) the assessment-results after linking, (3) ask the user per missing field — never invent them.
 - Validate + preview each artifact as in steps 6–7. Both the pre-defined and the linked POA&M are
   independently valid OSCAL.
 
