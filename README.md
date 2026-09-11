@@ -144,6 +144,103 @@ uninstall, and a demo video:
   trestle workspace with remediation/risk consolidated onto the component-definition), and
   `03-fedramp-xlsx` (convert a FedRAMP spreadsheet). Each scenario lists expected-result invariants,
   so the demo doubles as validation.
+- **[`demos/pdf-to-catalog-and-mapping/`](demos/pdf-to-catalog-and-mapping/README.md)** — framework
+  onboarding end-to-end: convert a compliance PDF into a validated OSCAL Catalog, then map it
+  against an existing framework catalog. Two scenarios driven by `make`: `catalog` converts NIST SP
+  800-171 Rev 3 into `catalog.json` (`compliance-catalog`); `mapping` maps the result against NIST
+  SP 800-53 Rev 5 High baseline to produce `mapping_collection.json` + a browsable `report.html`
+  (`compliance-mapping`). Includes a progress monitor, cost reporting, and hard timeout.
+  Reference outputs from a real run:
+  [`expected-output/800-171-catalog/catalog.json`](demos/pdf-to-catalog-and-mapping/expected-output/800-171-catalog/catalog.json) ·
+  [`expected-output/800-171-to-800-53/mapping_collection.json`](demos/pdf-to-catalog-and-mapping/expected-output/800-171-to-800-53/mapping_collection.json)
+
+  <details>
+  <summary><code>$ make all</code> — example run</summary>
+
+  ```
+  Select harness:
+    1) bob      (IBM Bob Shell)
+    2) claude   (Claude Code)
+    3) opencode (OpenCode)
+  Choice [1]: 1
+
+  Enter BOB_API_KEY:
+
+  === Scenario 1: Building OSCAL Catalog from PDF ===
+    task    : Convert NIST SP 800-171r3 PDF → validated OSCAL catalog.json
+    skill   : compliance-catalog  (skills/compliance-catalog/SKILL.md)
+    harness : bob
+    input   : ../../demos/resources/pdfs/NIST.SP.800-171r3.pdf
+    output  : ../../demos/pdf-to-catalog-and-mapping/output/800-171-catalog/
+
+    command : bob run --trust --accept-license --format stream-json \
+                "Follow `skills/compliance-catalog/SKILL.md` to build an OSCAL Catalog from a PDF. - input_pdf: ../../demos/resources/pdfs/NIST.SP.800-171r3.pdf - output_dir: ../../demos/pdf-to-catalog-and-mapping/output/800-171-catalog"
+
+    started : 16:09:16
+    log     : ../../demos/pdf-to-catalog-and-mapping/output/800-171-catalog/agent.jsonl
+    timeout : 45 min  (deadline 16:54:16)
+
+    [catalog] 1m00s  | 44 min left | Now proceeding to Phase 2.
+    [catalog] 2m00s  | 43 min left | Now proceeding to Phase 2.
+    [catalog] 3m00s  | 42 min left | Now proceeding to Phase 2.
+    [catalog] 4m00s  | 41 min left | Now proceeding to Phase 3.
+    [catalog] 5m00s  | 40 min left | Empty control titles in groups 4 and 17
+    [catalog] 6m00s  | 39 min left | Empty control titles in groups 4 and 17
+    [catalog] 7m00s  | 38 min left | Empty control titles in groups 4 and 17
+    [catalog] 8m00s  | 37 min left | Building fix prompt 2.
+    [catalog] 9m00s  | 36 min left | Building fix prompt 2.
+    [catalog] 10m00s | 35 min left | Retry iteration 2 with a fresh subagent.
+    [catalog] 11m00s | 34 min left | Retry iteration 2 with a fresh subagent.
+    [catalog] 12m00s | 33 min left | Retry iteration 2 with a fresh subagent.
+    [catalog] 13m00s | 32 min left | Let me check what the validate_config.py says:
+    [catalog] 14m00s | 31 min left | Now proceeding to Phase 5 — spot-check.
+
+    [catalog] finished in 15m0s
+    [catalog] cost: $14.0791  (bob session_costs; 14m37s)
+
+    OK: ../../demos/pdf-to-catalog-and-mapping/output/800-171-catalog/catalog.json written.
+
+  === Scenario 2: Mapping NIST SP 800-171 → NIST SP 800-53 ===
+    task    : Map 800-171 controls against 800-53 High baseline → mapping_collection.json + report.html
+    skill   : compliance-mapping  (skills/compliance-mapping/SKILL.md)
+    harness : bob
+    source  : ../../demos/pdf-to-catalog-and-mapping/output/800-171-catalog/catalog.json
+    target  : ../../demos/resources/oscal/NIST_SP-800-53_rev5_HIGH-baseline-resolved-profile_catalog.json
+    output  : ../../demos/pdf-to-catalog-and-mapping/output/800-171-to-800-53/
+
+    command : bob run --trust --accept-license --format stream-json \
+                "Follow `skills/compliance-mapping/SKILL.md` to map two OSCAL Catalogs. - source_catalog: ../../demos/pdf-to-catalog-and-mapping/output/800-171-catalog/catalog.json - target_catalog: ../../demos/resources/oscal/NIST_SP-800-53_rev5_HIGH-baseline-resolved-profile_catalog.json - output_dir: ../../demos/pdf-to-catalog-and-mapping/output/800-171-to-800-53"
+
+    started : 16:24:16
+    log     : ../../demos/pdf-to-catalog-and-mapping/output/800-171-to-800-53/agent.jsonl
+    timeout : 30 min  (deadline 16:54:16)
+
+    [mapping] 1m00s  | 29 min left | Now Stage 3 — blocking:
+    [mapping] 2m00s  | 28 min left | Starting batch 1 — chunks 0–19 in parallel:
+    [mapping] 3m00s  | 27 min left | Starting batch 1 — chunks 0–19 in parallel:
+    [mapping] 4m00s  | 26 min left | Starting batch 1 — chunks 0–19 in parallel:
+    [mapping] 5m00s  | 25 min left | Starting batch 1 — chunks 0–19 in parallel:
+    [mapping] 6m00s  | 24 min left | Now batch 2 — chunks 20–39:
+    [mapping] 7m00s  | 23 min left | Now batch 2 — chunks 20–39:
+    [mapping] 8m00s  | 22 min left | Now batch 2 — chunks 20–39:
+    [mapping] 9m00s  | 21 min left | Let me verify and re-spawn it, then continue with batch 3 (chunks 40–59):
+    [mapping] 10m00s | 20 min left | Let me verify and re-spawn it, then continue with batch 3 (chunks 40–59):Chunk 29 is missing — re-sp
+    [mapping] 11m00s | 19 min left | Let me verify and re-spawn it, then continue with batch 3 (chunks 40–59):Chunk 29 is missing — re-sp
+    [mapping] 12m00s | 18 min left | Let me verify and re-spawn it, then continue with batch 3 (chunks 40–59):Chunk 29 is missing — re-sp
+    [mapping] 13m00s | 17 min left | Let me verify and re-spawn it, then continue with batch 3 (chunks 40–59):Chunk 29 is missing — re-sp
+    [mapping] 14m01s | 15 min left | Now batch 4 (chunks 60–73) plus retry of chunk 40:
+    [mapping] 15m01s | 14 min left | Now batch 4 (chunks 60–73) plus retry of chunk 40:
+    [mapping] 16m01s | 13 min left | Now batch 4 (chunks 60–73) plus retry of chunk 40:
+    [mapping] 17m01s | 12 min left | Now batch 4 (chunks 60–73) plus retry of chunk 40:
+
+    [mapping] finished in 18m1s
+    [mapping] cost: $18.5980  (bob session_costs; 17m32s)
+
+    OK: mapping_collection.json and report.html written.
+    Open: ../../demos/pdf-to-catalog-and-mapping/output/800-171-to-800-53/report.html
+  ```
+
+  </details>
 
 ## Contributing a skill
 
