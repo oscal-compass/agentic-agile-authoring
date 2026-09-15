@@ -73,6 +73,49 @@ output_dir/
   report.html                          # final Stage 8 output
 ```
 
+### Stage 0 — Start the live progress view (main agent, deterministic)
+
+**Run this FIRST, before Stage 1.** The `scripts/live_server/` package is a small FastAPI + SPA that observes `<output_dir>` and shows the operator, in a browser, the same stage-by-stage progress you're about to produce. It exists only for the operator's benefit — no pipeline decision depends on it — so if it fails to start, log the failure and continue.
+
+```bash
+mkdir -p "$OUT"
+# Decide the launcher's lifecycle mode from the harness we're running in.
+# Two shapes matter:
+#   * Interactive TUI (`opencode`, `claude`, `bob` — the operator is
+#     watching a terminal). The launcher should die when the TUI dies,
+#     so a Ctrl-C on the TUI cleans up the browser tab's server too.
+#   * `opencode run "…"` and similar one-shot invocations. The caller
+#     exits the instant the pipeline finishes; if the launcher died with
+#     it, the operator's browser would show the results for ~0 seconds.
+#     Keep the launcher alive in persistent mode; a 3-hour loitering
+#     guard inside the launcher makes sure it can't linger forever.
+#
+# The launcher's --die-with-parent walks its own PPID chain to find the
+# harness process to watch, so this shell does NOT need to pass a PID —
+# the harness's `sh -c` wrapper we live under is too short-lived to be
+# useful. All this snippet decides is TUI-vs-one-shot.
+LIFECYCLE_FLAGS=""
+if pgrep -af "opencode.*\brun\b" >/dev/null 2>&1; then
+    :   # `opencode run …` detected → persistent (no --die-with-parent)
+else
+    LIFECYCLE_FLAGS="--die-with-parent"
+fi
+python3 scripts/live_server/launcher.py \
+    --output-dir "$OUT" $LIFECYCLE_FLAGS \
+    > "$OUT/.live_server.log" 2>&1 &
+echo $! > "$OUT/.live_server.pid"
+disown 2>/dev/null || true
+```
+
+Rules:
+
+- The launcher is **fire-and-forget from your perspective**. Do not `wait` on it; do not check its exit status; do not poll for the URL. The URL is printed to `$OUT/.live_server.log` within ~1 second — the operator will also see their browser open automatically.
+- Do NOT run the launcher without the trailing `&` — it blocks on uvicorn's main loop and would freeze your session. The `& … disown` pattern above is the only supported invocation shape.
+- If `fastapi` / `uvicorn` are not installed, the launcher exits immediately and writes an error to `$OUT/.live_server.log`. That is **not a fatal error** for the pipeline; keep going with Stage 1. Tell the operator (once the pipeline finishes) they can `pip install -r scripts/requirements.txt` and re-run to get the view next time.
+- Do NOT try to teardown the server yourself when the pipeline finishes. In TUI mode it dies with the shell; in one-shot mode the operator either clicks "Shutdown server" in the browser, calls `kill "$(cat $OUT/.live_server.pid)"`, or waits for the 3-hour loitering guard to fire — never your job as the agent.
+
+The live view is a **skill-owned local viewer**, not a review workflow. There is no assignment, no persistence beyond `$OUT/.reviewed.json`, no GitHub integration. That intentional narrowness is what distinguishes this from Downstream's `compliance-mapping-agents` runtime — mention it to the operator if they ask.
+
 ### Stage 1 — Ingest / Normalize (deterministic)
 
 ```bash
@@ -127,7 +170,7 @@ Do NOT re-run 4b multiple times with different sizes back-to-back; that overwrit
 
 ### Stage 4d — fan out to subagents (one per chunk)
 
-For each `work/judge_chunk_<N>_prompt.txt` file, spawn a subagent via your harness's native subagent tool. Issue multiple spawn calls **in the same turn** to fan out in parallel — that is the throughput lever for this stage.
+For each `work/judge_chunk_<N>_prompt.txt` file, spawn a subagent via your harness's native subagent tool. Issue up to **5 spawn calls in the same turn** to fan out in parallel — that is the throughput lever for this stage. See "Batch size" below for why 5 (rate-limit + harness caps).
 
 Each subagent's prompt should be exactly this (interpolate `<N>` and the absolute path to `work/`):
 
@@ -138,10 +181,14 @@ Read the prompt file at <WORK_DIR>/judge_chunk_<N>_prompt.txt and follow its ins
 Notes:
 
 - **Idempotent skip.** Before spawning, list `<WORK_DIR>/agent_verdicts_*.jsonl` and skip any chunk `<N>` whose file already exists and is non-empty. Only spawn subagents for missing/empty ones.
-- **Batch size — cap at your harness's concurrent-subagent limit.** Claude Code caps at **20 concurrent subagents** per session (raise via `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`). Opencode and bob have similar limits. Do NOT issue more than 20 spawn calls in a single turn — the extra ones fail with a "concurrent subagent limit reached" tool error and you cannot retry them from that same turn. If you have more than 20 chunks, issue the first 20 in one turn, wait for them to return, then issue the next batch — the API keeps track of "concurrent" count, not "total issued this run".
+- **Batch size — cap at 5 concurrent subagents.** Spawn at most **5** subagents in the same turn, wait for all 5 to return, then issue the next batch of up to 5. This cap exists for two independent reasons and BOTH matter:
+  1. **Provider API rate limits.** The harness's concurrent-subagent ceiling (Claude Code: 20; opencode / bob: similar) does NOT protect you from the model provider's per-minute token / request quota (Anthropic TPM, AWS Bedrock RPM, etc.). Fanning out 20 judge subagents at once has repeatedly triggered `429 rate_limit_exceeded` mid-run, killing chunks whose verdicts you then have to re-spawn. 5 is the empirically-safe ceiling across the harnesses and providers we test — do NOT raise it just because your harness lets you.
+  2. **Harness concurrency ceiling** (unchanged from earlier drafts). Even without rate limits, going above the harness cap (Claude Code: 20, opencode / bob: similar) produces "concurrent subagent limit reached" tool errors that cannot be retried in the same turn.
+
+  If you have more than 5 chunks, issue the first 5 in one turn, wait for them all to return, then issue the next 5, and so on. The pipeline is idempotent (Stage 4d's "Idempotent skip" above), so batching does not lose work.
 - **After each batch, verify.** Once the batch's subagents have all returned, list `agent_verdicts_*.jsonl` again and re-spawn any chunk whose file is missing or empty (only those — successful ones stay).
 - **Do NOT** shell out to another `bob run` / `opencode run` / `claude` process to launch subagents. The point of using the harness's native subagent tool is that no new CLI invocation is involved — the subagent lives inside the parent's process.
-- **Read tool cap — the subagent prompt already tells the subagent to avoid `Read` on the chunk file** (Claude Code's Read tool caps at 256 KB and chunk files can exceed that). If you see subagents failing with "File content exceeds maximum allowed size", they're ignoring that guidance — the fix is to make the prompt more emphatic; do NOT lower `--size` first, because more chunks means more parallel-fan-out pressure against the concurrent-subagent limit above.
+- **Read tool cap — the subagent prompt already tells the subagent to avoid `Read` on the chunk file** (Claude Code's Read tool caps at 256 KB and chunk files can exceed that). If you see subagents failing with "File content exceeds maximum allowed size", they're ignoring that guidance — the fix is to make the prompt more emphatic; do NOT lower `--size` first, because more chunks means more batches to issue at the 5-per-batch cap above (which lengthens wall time without helping the underlying Read failure).
 
 When every chunk has a non-empty `agent_verdicts_<N>.jsonl`, proceed to Stage 4e.
 

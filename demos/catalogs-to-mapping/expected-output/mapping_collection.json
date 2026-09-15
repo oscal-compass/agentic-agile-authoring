@@ -1,0 +1,5528 @@
+{
+  "mapping-collection": {
+    "uuid": "08f86389-77be-4da2-9411-1230f6e01613",
+    "metadata": {
+      "title": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 MODERATE IMPACT BASELINE to Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations",
+      "last-modified": "2026-09-09T06:47:58Z",
+      "version": "1.0",
+      "oscal-version": "1.2.1"
+    },
+    "provenance": {
+      "method": "automation",
+      "matching-rationale": "semantic",
+      "status": "complete",
+      "mapping-description": "Mapping collection from Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 MODERATE IMPACT BASELINE to Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations"
+    },
+    "mappings": [
+      {
+        "uuid": "d3dc261b-29fb-47eb-8c70-ec405114718c",
+        "source-resource": {
+          "type": "catalog",
+          "href": "/Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/skills/compliance-mapping/examples/NIST_SP-800-53_rev5_MODERATE-baseline-resolved-profile_catalog.json",
+          "props": [
+            {
+              "name": "catalog_uuid",
+              "value": "b5477d23-54c2-442e-a3ad-f3810cacf460",
+              "ns": "https://example.com/custom/ns/oscal"
+            }
+          ]
+        },
+        "target-resource": {
+          "type": "catalog",
+          "href": "/Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-catalog-nist-800-171/catalog.json",
+          "props": [
+            {
+              "name": "catalog_uuid",
+              "value": "2d256a8c-790a-40ab-aa60-8f0ac7867dfe",
+              "ns": "https://example.com/custom/ns/oscal"
+            }
+          ]
+        },
+        "maps": [
+          {
+            "uuid": "a8e33e07-c7ef-4c6e-98be-11a1a69b98a6",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ca-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "pl-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ps-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ra-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sa-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-15-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 0.9
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-1 develops, disseminates, and reviews the access control policy and procedures — one of the family-specific -01 policies the target aggregates. | AU-1 develops/reviews the audit and accountability policy and procedures — a per-family -01 policy in the target's list. | CA-1 develops/reviews assessment, authorization, and monitoring policy and procedures — one of the family-specific -01 policies aggregated by the target. | CM-1 develops/reviews the configuration management policy and procedures — a family-specific -01 policy in the target's list. | IA-1 develops/reviews the identification and authentication policy and procedures — the same -01 policy pattern collectively required by the target. | IR-1 develops/reviews the incident response policy and procedures — a family-specific policy the target explicitly aggregates. | PL-1 develops/reviews the planning policy and procedures — an explicit -01 policy the target aggregates. | PS-1 develops/reviews the personnel security policy and procedures — exactly the -01 policy pattern the target aggregates across all families. | RA-1 develops and reviews the risk assessment policy and procedures — a per-family policy of the type the target aggregates. | SA-1 develops/reviews the system and services acquisition policy and procedures — an explicit -01 policy the target aggregates. | SC-1 develops/disseminates system and communications protection policy and procedures — a per-family instance of the target's cross-family requirement. | SI-1 develops/reviews the system and information integrity policy and procedures — a family-specific policy instance of the target's aggregate requirement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "871a46da-91b7-47b7-9cd1-6ef18e47d9d2",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-2.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-2.4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.5"
+              },
+              {
+                "type": "control",
+                "id-ref": "ps-4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ps-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.83
+            },
+            "coverage": {
+              "target-coverage": 0.22
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-2(1) automated create/enable/modify/disable/remove and account-manager notifications directly automate the account lifecycle and notifications in 800-171 items b and g. | AC-2(4) automatic auditing of account creation, modification, disable and removal directly supports 800-171 item e monitoring of account use and account lifecycle. | AC-6(5) restricting privileged accounts to specific roles supports 800-171 items c and d on specifying account privileges and authorized users. | PS-4 disabling system access upon termination directly implements 800-171 item g.2 notifying and revoking access when users are terminated. | PS-5 modifying access authorization on personnel transfer directly implements 800-171 item g.3 notifying when system usage or need-to-know changes.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "bf3aa9ea-4312-499b-9cac-1ee1d4e4745c",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-2.13"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-2.3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.935
+            },
+            "coverage": {
+              "target-coverage": 0.175
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-2(13) disabling accounts of high-risk individuals directly implements 800-171 item f.5 on disabling accounts when significant individual risks are discovered. | AC-2(3) disable expired, inactive, unassociated, or policy-violating accounts directly implements 800-171 item f enumeration of when to disable accounts.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3eb6791c-8817-4f92-b861-403afd4282cc",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-2.4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.9"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.817
+            },
+            "coverage": {
+              "target-coverage": 0.467
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-12 selects and generates records for the event types defined per event logging selection, directly implementing the logging capability. | Auditing account creation/modification/removal is a concrete event type contributing to the logging selection required by 03.03.01. | Logging execution of privileged functions is an explicit example event type cited in the 800-171 discussion for what to log.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8236838a-c3fe-44ac-be95-e5fa3402c222",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-3 and 03.01.02 both enforce approved authorizations for logical access to information/CUI and system resources per applicable access control policies — near-identical text.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b00b0781-05b4-462f-8e4b-51521337b95f",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-4 and 03.01.03 both enforce approved authorizations for information flow within a system and between connected systems — virtually identical requirement statements and discussion.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b54a0386-ef9f-439f-818e-e2af1db009d9",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-5 and 03.01.04 both require identifying duties for separation and defining system access authorizations to support separation of duties — near-identical.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c4d816ed-fe07-437b-b65c-d2b5113567e4",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 0.6
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6 and 03.01.05 item a both employ the principle of least privilege, allowing only authorized accesses necessary to accomplish organizational tasks — near-identical text.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "ea10b47e-262f-4e2d-aa85-c9af263ec1c8",
+            "relationship": "superset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6 least-privilege base control encompasses restricting privileged access and use of non-privileged accounts as required by 03-01-06.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "4713e7b7-0a9b-46da-8578-344d1e7aea72",
+            "relationship": "superset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6 least-privilege base subsumes preventing non-privileged users from executing privileged functions.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "bab0b947-e96a-4d14-982e-1431a2625fcb",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.7"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-9.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 0.233
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6(1) authorizes access to specified security functions and security-relevant information — directly implements 03.01.05 item b. | AC-6(7) periodically reviews assigned privileges and reassigns/removes them as necessary — directly implements 03.01.05 items c and d. | AU-9(4) restricting audit-logging management to a subset of privileged users is a direct application of least privilege to security functions per 03.01.05 item b.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "ac36f55f-4d3e-4550-b0df-ca4e860e9665",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Authorizing access to security functions (configuring access authorizations, audit settings) restricts who can change security-relevant components.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "04b9605d-4b11-464d-87d9-24ed5cac7754",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.10"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.833
+            },
+            "coverage": {
+              "target-coverage": 0.2
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6(10) preventing non-privileged users from executing privileged functions directly enforces the least-privilege authorization boundary defined in 03.01.05. | AC-6(2) requiring non-privileged accounts for nonsecurity functions directly implements the least-privilege principle articulated in 03.01.05. | AC-6(5) restricting privileged accounts to specific personnel/roles is a direct application of the least-privilege principle in 03.01.05.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "f41733ea-4a81-4f75-9476-e535f7f51d8c",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.975
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6(2) requires users with privileged accounts to use non-privileged accounts for nonsecurity functions, matching 03-01-06 part b. | AC-6(5) 'Restrict privileged accounts on the system to [personnel/roles]' is textually identical to 800-171 03-01-06 part a.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c22a27bd-92b8-4619-85d6-0bc312bc1c28",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Restricting privileged accounts to specific personnel prevents non-privileged users from executing privileged functions.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6d90b456-2d0d-4c70-864a-2b45ac6f358c",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.10"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-6.9"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-6(10) 'Prevent non-privileged users from executing privileged functions' matches 03-01-07 part a verbatim. | AC-6(9) 'Log the execution of privileged functions' is textually identical to 03-01-07 part b.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2d90cc1d-cbfa-4d73-8f9e-438cb4108325",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-6.10"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Preventing non-privileged users from executing privileged functions reinforces the restriction of privileged accounts to authorized personnel.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d0ddeeeb-ee01-471f-86e4-297a0e6f687d",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-7 'Enforce a limit of consecutive invalid logon attempts...automatically [action]' is textually identical to 03-01-08.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "28d7b702-3e06-40d5-9374-4fd880321b26",
+            "relationship": "superset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-09"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-8 mandates displaying a system-use notification with privacy/security notices before granting access, covering 03-01-09 and adding acknowledgment and public-system provisions.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a4cb997e-3f3e-4aa3-80da-1ffd04883e3b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-11"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-11.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-10"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-11 device lock text matches 03-01-10 parts a and b nearly verbatim, including retention until re-authentication. | AC-11(1) 'Conceal, via the device lock, information previously visible...with a publicly viewable image' is verbatim 03-01-10 part c.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a54c01a7-c978-42c2-ac9c-5b15a6d11f22",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-12 is the named source control; both require automatic termination of user logical sessions after organization-defined trigger events.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "98d49eaf-8e10-4d93-b139-938737b6356b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-17"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-17.3"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-17.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.957
+            },
+            "coverage": {
+              "target-coverage": 0.917
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-17 is the named source control; both establish usage restrictions and authorize each type of remote access prior to connection (items a and b). | AC-17(3) requires routing remote access through authorized/managed access control points—exactly matching item c of the target. | AC-17(4) is a named source control; directly implements item d—authorizing remote execution of privileged commands and access to security-relevant information.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "659918f2-7a6d-4629-9b95-a6c6fd1a5f97",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-17.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-17(1) mandates automated monitoring and control of remote access methods, directly supporting the target's monitoring/enforcement of remote access policies.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8e36330d-aaff-4798-a582-c209a6e89477",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-17.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-6"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-7"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-4.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-4.4"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-4.5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.275
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-17(1) monitors and controls remote access methods to detect attacks—a specific instance of 03.14.06's system-monitoring for unauthorized connections. | AU-6 audit record review analyzes logged system events for inappropriate/unusual activity, the same observation-of-events approach cited in 03.14.06 discussion. | SC-7 boundary protection monitors and controls communications at managed interfaces—the external monitoring vantage point 03.14.06 describes. | SI-4(2) provides automated real-time analysis of events—one of the audit-monitoring-software tools 03.14.06 lists for its monitoring capability. | SI-4(4) directly requires monitoring inbound/outbound communications traffic for unusual activity, matching 03.14.06.c verbatim. | SI-4(5) alerts on system-generated indications of compromise from IDS/firewall/audit sources—the alerting output of the monitoring 03.14.06 requires.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "93ec5d98-ea02-43d1-bfa8-e65d402d9814",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-17.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "cp-9.8"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-28"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-17(2) implements cryptographic mechanisms (VPN/TLS) to protect confidentiality of remote-access sessions—a specific case of transmission encryption. | CP-9(8) requires cryptographic mechanisms to prevent unauthorized disclosure of backup information at rest—same crypto-at-rest mechanism applied to a specific dataset. | SC-28 protects the confidentiality of information at rest, covering the storage half of 03.13.08's transmission-and-storage encryption requirement. | SC-8 protects confidentiality of transmitted information across internal/external networks—the transmission half of 03.13.08.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a2eb0203-b032-472e-b1ce-21d3dd30e36b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-18"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-18.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-18.3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-16"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.967
+            },
+            "coverage": {
+              "target-coverage": 0.917
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-18 establishes configuration/connection requirements and authorizes each wireless access, mirroring 03.01.16.a and 03.01.16.b. | AC-18(01) requires protecting wireless access using authentication and encryption—verbatim the same requirement as 03.01.16.d. | AC-18(03) disables embedded wireless capabilities prior to issuance/deployment, identical to 03.01.16.c.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "ca06a523-56e5-4102-86a6-c1a9b378ff4e",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-18.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-5.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-18(1) mandates authentication of wireless-network users and devices, which is a specific case of the target's device authentication before connection. | IA-4 identifier management explicitly covers device identifiers (MAC, IP, unique tokens) that enable the device identification the target requires. | IA-5(2) PKI/public-key authentication is explicitly cited by the target as a device authentication solution (certificate exchange and revocation checking).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2a0c560e-fa53-496a-9552-e5f023a2aa8c",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-19"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-16"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.325
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-19 governs mobile device connection authorization; mobile devices are a primary vector of wireless access noted in 03.01.16 discussion. | IA-3 uniquely identifies/authenticates devices before connection—supports the wireless authentication requirement in 03.01.16.d.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "aa277e76-ae21-4d78-b514-0f5bae269a7b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-19"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-18"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 0.95
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-19 establishes configuration/connection requirements and authorizes mobile device connections—directly mirrors 03.01.18.a-b almost verbatim.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d2fe6c1d-92f3-4ef8-9951-af3b7de524bd",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-19"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-19 governs mobile-device configuration and connection when outside controlled areas — directly overlaps with the travel-to-high-risk-area scenario.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b81d5f00-868d-440b-bc32-27aaae341b47",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-20"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-20.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ac-20.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-20"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.96
+            },
+            "coverage": {
+              "target-coverage": 0.883
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-20 authorizes or prohibits use of external systems for access/processing of organizational information—directly parallels 03.01.20.a and c. | AC-20(01) requires verification of controls or connection agreements before external system use—verbatim the requirement in 03.01.20.c.1-2. | AC-20(02) restricts organization-controlled portable storage devices on external systems—directly mirrors 03.01.20.d.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "4ae550e0-824a-49b6-849d-d8538718484f",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-20.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-20(2) restricts use of organization-controlled portable storage on external systems, directly overlapping with the target's control over portable/removable media use.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8726f25d-4245-4600-a649-8179e0dfb7f9",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ac-22"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-22"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AC-22 and 03.01.22 both train authorized individuals and review publicly accessible systems to ensure nonpublic information/CUI is not posted and remove it if discovered.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6f47fdaf-1c61-4675-92d7-98c0f40d3e90",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "at-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-02-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AT-2 and 03.02.01 both mandate literacy training for users initially and periodically, updating content after events, using the same awareness techniques.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "89230344-c671-41dc-b0aa-0a4f0aef88d4",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "at-2.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "at-2.3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-02-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AT-2(2) provides insider threat literacy training, which is one specific topic (insider threat indicators) explicitly required by 03.02.01. | AT-2(3) covers social engineering and social mining recognition training, one of the specific topics mandated by 03.02.01.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "9e2751de-004f-46d3-87e2-faddfdd116f6",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "at-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-02-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AT-3 and 03.02.02 both require role-based training before access/duties, periodically thereafter, on system changes, with content updates after events.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2c5d1263-b468-4e98-88b6-83143f848377",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both specify event types selected for logging within the system and require periodic review/update of the selection.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "131b424a-5f86-4a29-8b63-feb33f8e33ea",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.775
+            },
+            "coverage": {
+              "target-coverage": 0.375
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-2 defines the event type selection referenced by 03.03.03.a as the basis for record generation. | AU-3 defines the content that generated audit records must include, directly supporting 03.03.03.a.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3a9b7ab3-76c5-460d-9475-db940d0c4eba",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-3 lists identical required fields: what/when/where/source/outcome/identity of individuals or objects for audit records.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "182c41c3-5223-4d1d-861d-782440bae719",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-12"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-3.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.6
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-12 mandates that generated records include the audit record content defined in AU-3, directly enabling 03.03.02 content. | AU-3(1) covers 03.03.02.b by providing additional audit record information beyond the base content fields.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "1f0ad502-3323-4999-b4e9-eb1331758fce",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-5 requires alerting personnel within a defined time and taking additional actions on audit logging process failures, identical to 03.03.04.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c42bc936-8504-40b6-b554-30b14c10b1bf",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-6"
+              },
+              {
+                "type": "control",
+                "id-ref": "pe-6.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-6 explicitly covers review and analysis of physical access logs and reporting findings, matching the target's log-review requirement. | PE-6(1) specifies intrusion alarms and video surveillance as the mechanism to monitor physical access, directly implementing the target's monitoring requirement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "74b105b3-66cb-44ed-a996-18ef986bdbdc",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-6"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-6.3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.975
+            },
+            "coverage": {
+              "target-coverage": 0.95
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-6 requires review/analysis of audit records for inappropriate activity and reporting findings, matching 03.03.05.a and .b. | AU-6(3) has identical wording to 03.03.05.c: analyze and correlate audit records across repositories for organization-wide situational awareness.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "20b0cf7b-afbc-4790-9051-a042a4f2cadf",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-6"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-6.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-6.3"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-7.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.412
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-6 requires review, analysis, and reporting of audit records — the very activities the target's reduction/report capability is intended to support. | AU-7(1) provides automated processing/sort/search of audit records, directly implementing the reduction and reporting capability the target requires. | Automated integration of audit review/analysis/reporting processes underlies the report generation and after-the-fact investigation workflows the target requires. | Correlating audit records across repositories is a form of audit record reduction/analysis producing organization-wide reports referenced by the target.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "044847e5-c249-44ef-8c49-6708c578afa0",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-6.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Audit record reduction and report generation directly supports the review, analysis, and reporting required by 03.03.05. | Automated integration of audit review, analysis and reporting processes implements the review/report activities required by 03.03.05.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d774a24b-0361-407c-acb8-f32e3f3c23b6",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate an audit record reduction and report generation capability supporting review, analysis, reporting, and after-the-fact incident investigations while preserving original content/time ordering.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "4a38fad2-b359-4692-b53e-11dca77e6209",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require internal system clocks generating time stamps at defined granularity using UTC or a fixed offset — text is nearly identical.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "02f5519f-16c0-45a8-b934-fa3920019e24",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-9"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-9.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-9(4) authorizes access to management of audit logging functionality to only a subset of privileged users — matches target part b verbatim. | Both mandate protecting audit information and audit logging tools from unauthorized access, modification, and deletion using nearly identical wording.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b488f2fb-1a16-47df-8589-a5021660c53d",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-11"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-11 retains audit records to meet regulatory/organizational retention requirements — a specific slice of the target's broader CUI retention mandate.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "cf0a10ff-c2e6-4db9-b05a-aeef44a90c6d",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "au-11"
+              },
+              {
+                "type": "control",
+                "id-ref": "au-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-03-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.96
+            },
+            "coverage": {
+              "target-coverage": 0.9
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "AU-11 requires retention of audit records for a defined period, matching 03.03.03.b retention requirement. | AU-12 mandates generation of audit records for the AU-2 event types with AU-3 content, matching 03.03.03.a directly.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c2006f47-d45b-48e3-8895-6e4473a0a868",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-12-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require assessing controls in the system and its environment to determine whether security requirements are implemented correctly and producing the desired outcome.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "cb448795-771e-4a8d-9e97-81cb756eb5f2",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-3"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-7.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.2
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CA-3 information exchange agreements between systems implement the inter-system CUI transfer agreements called out by 03.01.03 (see 03.12.05 reference). | SC-7(4) managed interfaces and traffic flow policy for external telecommunications directly implement the boundary flow-enforcement mechanisms cited in 03.01.03.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "bd70de47-6211-438a-9895-cfa7e209b07b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-12-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate approving/managing information exchange between systems, documenting interface characteristics and responsibilities in exchange agreements, and reviewing/updating those agreements.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b1e231cf-8f90-40dc-9960-a589155a4d85",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-3"
+              },
+              {
+                "type": "control",
+                "id-ref": "sa-9"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-20"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.775
+            },
+            "coverage": {
+              "target-coverage": 0.375
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CA-3 requires exchange agreements documenting interface characteristics and security requirements between systems—implements the connection/processing agreements in 03.01.20.c.2. | SA-9 requires external service providers to comply with security requirements, matching 03.01.20.b's assignment of security requirements for external systems.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "7039558e-c548-4cf0-88f8-16be2c231a56",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-11-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "POAM captures the risk-response decisions where mitigation cannot be completed immediately, as explicitly noted in the 03.11.04 discussion.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6d07155a-2433-417f-a23b-dd04c6a1b6e0",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-12-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require developing/updating a POAM to document planned remediation of weaknesses from assessments, audits, and continuous monitoring.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "20d575ca-833a-4df7-b5f3-f721c986dc7c",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-12-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Continuous monitoring includes ongoing control assessments per the defined frequency, directly overlapping with the periodic assessment mandate of 03.12.01.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "cc0d2d27-1744-4ad6-a273-86278aeb5fe6",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-12-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require developing and implementing a system-level continuous monitoring strategy that includes ongoing monitoring and security assessments.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "5d39dc09-4e34-44a3-8a94-c10b0c709029",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ca-7.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-12-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.6
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Risk monitoring is defined as an integral part of the continuous monitoring strategy, directly overlapping with the 03.12.03 requirement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "e3ed6fae-0e39-448e-97a7-d32dbeb2d1d7",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require developing/maintaining a current baseline configuration under configuration control and reviewing/updating it periodically and when components are installed or upgraded.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3bef134d-8eda-4460-9ed5-c3f5df612c90",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-9"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.775
+            },
+            "coverage": {
+              "target-coverage": 0.45
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Baseline configuration under configuration control includes the documented configuration settings the target requires to be established. | CM plan governs configuration item identification and management, which encompasses establishing restrictive configuration settings.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "42020de7-2619-46b3-9204-b41d7b086aff",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-2.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-2.3"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-3"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-6"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-8"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-9"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.417
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Automated mechanisms maintaining currency/accuracy of the baseline configuration directly implement the target's requirement to keep the baseline current. | CM-6 states 'established settings become part of the configuration baseline' — configuration settings are integral content of the baseline the target maintains. | Configuration change control governs the review/approval of changes to the baseline configuration the target requires to be maintained under config control. | Retaining previous versions of baseline configurations supports the target's ongoing maintenance and update of the current baseline. | The configuration management plan describes how baselines are updated and configuration items managed — directly supporting the target's baseline maintenance requirement. | The system component inventory documents information about system components that the target's baseline explicitly includes.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "fe8d8616-c4fe-408a-aa54-34f650b0a7e5",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-2.7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-18"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-2(07) configures notebooks/devices for high-risk travel—an implementation of mobile device configuration/usage restrictions per 03.01.18.a.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "e60c5aaf-fd63-4618-af86-abcf05b6dd09",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-2.7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate issuing configured systems to individuals traveling to high-risk areas and applying controls upon their return — near-identical requirements.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "813b5f4e-4eb3-4de0-9de5-cc0bcd4bd2b4",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both define configuration-controlled change types, review/approve with security consideration, implement, and monitor — nearly identical requirements.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "201cc55f-50d4-42f1-a720-4e3db519962d",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-3"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-3.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-4.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.467
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-3 requires approving changes with explicit consideration for security impact analyses, which is impact analysis in change context. | Testing and validating changes before finalization is a mechanism to verify security requirements continue to be met post-change. | Verifying impacted controls after changes directly matches target part (b) — confirming security requirements remain satisfied after implementation.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "7d8cb8cd-0df4-4a2f-9748-953cc0203496",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-3.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-3.4"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-4.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-9"
+              },
+              {
+                "type": "control",
+                "id-ref": "sa-10"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.79
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM plan defines processes for identifying configuration items and managing their configuration — the framework in which change control operates. | Developer CM manages/controls integrity of changes and implements only organization-approved changes — parallels target's approve/implement steps. | Requiring security representatives in the change-control body directly supports the review/approve step for configuration-controlled changes. | Testing/validating/documenting changes before finalizing implementation is a core sub-activity of configuration change control. | Verifying controls after changes supports monitoring/review of activities associated with configuration-controlled changes.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d0a4694b-e33b-4628-b50d-e25448f1072f",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require analyzing system changes to determine security impacts prior to implementation — near-identical requirement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "308d409d-40de-4ea8-97dd-5e641db71ada",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.15
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-5 enforcing logical access restrictions for system changes is a specialized application of the access-enforcement mechanism required by 03.01.02.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "deb9bc2b-556e-4024-b097-d6d7c3910ff0",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require defining, documenting, approving, and enforcing physical and logical access restrictions associated with system changes — identical wording.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "e8be6673-5050-4813-88c0-eef6fd60f557",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate establishing/documenting configuration settings in the most restrictive mode and approving deviations — near-identical wording.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2254e94e-1b62-4789-a26a-eb9799dd7b86",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require configuring the system for only essential capabilities and prohibiting/restricting specified functions, ports, protocols, and services.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d0708c21-1793-4893-99aa-64350b179315",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-7.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sa-4.9"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Periodic review to identify unnecessary/nonsecure functions/ports/protocols/services and disable/remove them directly matches target parts (c) and (d). | Requiring developers to identify functions, ports, protocols, and services intended for use supports deciding which to restrict for least functionality.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8eb7bf2d-2667-4542-8f56-5112d0b1e7dd",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-11"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-7.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.875
+            },
+            "coverage": {
+              "target-coverage": 0.65
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-11 governs user software installation policies and enforcement, overlapping with 03.04.08's deny-all/allow-by-exception authorized software policy. | CM-7(2) prevents program execution per defined policy, directly supporting 03.04.08's deny-all execution enforcement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b1172bda-6a9d-4430-a58a-abf214d6eaea",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-7.5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-7(5) is virtually identical: identify authorized software, employ deny-all/permit-by-exception, and review/update the authorized list.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "72f2c68a-b650-425e-b3e9-2560c22ae3d8",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-8"
+              },
+              {
+                "type": "control",
+                "id-ref": "cm-8.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-10"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.965
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-8 requires developing/documenting and reviewing/updating a system component inventory — the same core requirement as 03.04.10. | CM-8(1) requires updating the component inventory during installations, removals, and system updates — matches 03.04.10(c) verbatim.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "823fedda-3010-4078-b7f2-276592b59e9f",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-12 requires identifying/documenting information location and the system components on which information is processed and stored — matches 03.04.11 directly.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c56167b0-64c2-4fbf-9e1d-dfd604f3bb47",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cm-12.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-04-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.6
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CM-12(1) uses automated tools to identify information location on system components, directly supporting 03.04.11's location identification.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "f96215c0-24a7-47d4-8bf5-0a14ac922c19",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cp-9"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-28.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-09"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.55
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CP-9 requires protecting the confidentiality of backup information, directly satisfying target part (a) though not specifying crypto. | SC-28(1) mandates cryptographic mechanisms to prevent unauthorized disclosure of information at rest, covering CUI in backup storage locations.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "35fdb9af-e47c-434e-92bc-e74ee1884701",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cp-9.8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-09"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CP-9(8) implements cryptographic mechanisms to prevent unauthorized disclosure of backup information — the exact requirement of 03.08.09.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "adb1cf6d-ed6e-4e2f-9427-0e4ab1c6b3d9",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "cp-9.8"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-28.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-8.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.783
+            },
+            "coverage": {
+              "target-coverage": 0.467
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "CP-9.8 implements cryptographic mechanisms to protect backup confidentiality — a specific application of the cryptographic protection required by 03.13.11. | SC-28.1 implements cryptographic mechanisms for information at rest — a direct application of 03.13.11's cryptographic CUI protection. | SC-8.1 implements cryptographic mechanisms during transmission to protect confidentiality, a direct application of 03.13.11's cryptographic CUI protection.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2902a25e-e0bb-4d22-ada2-fcf6dc11ddb5",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-2 uniquely identifies organizational users and associates identification with processes — overlaps with target's identifier assignment to individuals.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8bb75b90-daaf-49b4-bd1e-1a5d64df1737",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 0.9
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-2 mandates uniquely identifying/authenticating organizational users and associating identity with processes acting on their behalf — nearly identical wording.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "bef27b71-bb83-43d5-aae8-4919cdb95d81",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-2.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-2.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-2(1) mandates MFA for privileged accounts — the other half of the target's combined privileged-plus-non-privileged MFA requirement. | IA-2(2) mandates MFA for non-privileged accounts — exactly half of the target's requirement (which also covers privileged accounts).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b0acf9b4-d0bb-48ec-b1cc-ccb38e9e02d0",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-2.8"
+              },
+              {
+                "type": "control",
+                "id-ref": "ma-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "ma-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-07-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.817
+            },
+            "coverage": {
+              "target-coverage": 0.467
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-2(8) implements replay-resistant authentication mechanisms, directly satisfying 03.07.05 part b requirement for replay resistance in nonlocal sessions. | MA-2 approves and monitors maintenance activities whether performed on-site or remotely, directly overlapping 03.07.05 nonlocal maintenance approval. | MA-5 authorizes maintenance personnel including those performing nonlocal maintenance, supporting the approval requirement in 03.07.05 part a.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "17a71492-fd07-43f5-9830-c0dae6ad8243",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-2.8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate replay-resistant authentication mechanisms using nonces or time-synchronous/challenge-response techniques — near-identical language.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "fc629a65-0619-468e-8808-34d277a0b6a9",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require uniquely identifying and authenticating organization-defined devices before establishing a connection — the target's discussion text is drawn directly from IA-3.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6d8b4908-5ff0-4338-82f0-ebcd9cb95786",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 0.9
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require receiving authorization, selecting/assigning individual/group/role/service/device identifiers, and preventing identifier reuse.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "92053210-9460-4d36-960d-15210a35d7d7",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-5"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.533
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-4 identifier management (assigning individual identifiers, usernames) directly supports unique user identification required by the target. | IA-5 manages the authenticators (passwords, biometrics, certificates) that the target uses to authenticate user identities. | IA-8 requires unique identification and authentication of non-organizational users, complementing the target's coverage of 'system users' broadly.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b7c15005-d39f-4dcb-a496-ddc055463ae2",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-4.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-4(4) directly matches target part (d): managing identifiers by uniquely identifying individuals by status (contractors, foreign nationals).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "afc16d6b-d64e-4d42-93e5-0f4ab98d69e9",
+            "relationship": "superset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.6
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-5 authenticator management encompasses password-based authenticators including strength, initial content, and change/refresh — superset of target's password requirements.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6a67c576-c5f6-4620-ac28-9e8bf16c6604",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require verifying recipient identity, establishing initial content, administrative procedures for distribution/loss/revocation, changing defaults, and protecting authenticators.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a64fe697-8713-4808-8ce4-5543a88fd23a",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-5.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 0.95
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IA-5(1) mirrors target verbatim: maintain compromised-password list, verify on create/update, transmit only over crypto channels, store cryptographically protected.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6287f3e7-9d8b-43f0-9738-f5523f6b00e8",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-5.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ia-5.6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.875
+            },
+            "coverage": {
+              "target-coverage": 0.65
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require protecting authenticator content from unauthorized disclosure/modification; IA-5(6) refines the target's item (f). | Password-based authenticator management (composition, transmission, storage protection) is a specific instance of the target's authenticator-management lifecycle.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d6d6271b-69e8-4014-91b0-f37a006b0ec2",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ia-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-05-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate obscuring authentication feedback during the authentication process to prevent unauthorized exploitation (shoulder surfing) — near-identical wording.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c9f98af9-8061-455b-a31e-81c9778c77e6",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate role-based incident response training within a defined period, upon system changes, and on a defined recurring frequency, with content review/update.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b05657e1-e328-4238-8b9f-03bb9e653e45",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate testing effectiveness of the incident response capability using checklists, walk-throughs, tabletop exercises, and simulations.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "04e05415-1e4b-4d2c-a6f1-8b4f93ab835e",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-3.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IR-3(2) requires coordinating incident response testing with related plans, a specific facet of the target's IR testing requirement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6bacd166-6ce1-4418-83bb-a88cb7aede96",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate an incident-handling capability with preparation, detection/analysis, containment, eradication, and recovery consistent with the IR plan.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "5b5ec375-7542-4121-9ad3-975afd7bde3f",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-6.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-7.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Automated reporting of incidents is a mechanism implementing the target's incident-reporting requirements (b) and (c). | Automation for availability of IR information/support directly implements item (d) providing advice and assistance to users. | Incident-handling capability underpins tracking, documenting, reporting and providing assistance for incidents required by the target.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "ea03ed28-3b69-4760-9035-604644c12d2a",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-4.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-5"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.817
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Automated support for the incident-handling process is a mechanism implementing the target's incident-handling capability. | The incident response plan defines the capability structure that the target's incident-handling capability must be consistent with. | Tracking/documenting incidents supports the detection/analysis phase of the target's incident-handling capability.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b97fd06f-ceb1-41d0-8a21-6314ca1de3ba",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-5"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-6"
+              },
+              {
+                "type": "control",
+                "id-ref": "ir-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 0.383
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IR-5 exactly matches item (a): 'track and document incidents' with the same discussion about forensics records and information sources. | IR-6 matches items (b) and (c): reporting suspected incidents to the IR capability within a defined period and reporting incident information to defined authorities. | IR-7 matches item (d): providing an incident response support resource offering advice and assistance to users on handling and reporting incidents.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8b357ba6-be55-4627-88ed-5850f22e6d89",
+            "relationship": "superset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ir-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-06-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "IR-8 covers every target element (roadmap, structure, reportable incidents, information sharing, responsibilities, distribution, updates, protection) plus additional metrics and approval steps.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3930b8d1-79f5-4f3e-be2e-672ebba9b72f",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ma-3"
+              },
+              {
+                "type": "control",
+                "id-ref": "ma-3.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-07-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.96
+            },
+            "coverage": {
+              "target-coverage": 0.925
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MA-3 'Maintenance Tools' matches 03.07.04 part a — approve, control, monitor system maintenance tools plus periodic review. | MA-3(2) 'Inspect Media' checks media containing diagnostic/test programs for malicious code — identical to 03.07.04 part b.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8c5c80a0-156c-46e6-8b9c-0040e84a7d24",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ma-3.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-07-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 0.85
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MA-3(1) inspects maintenance tools for improper/unauthorized modifications, supporting the tool-control mechanism required by 03.07.04.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2a0ff317-7a42-43a4-8efa-000429e3177a",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ma-3.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Checking maintenance media for malicious code before use in the system is a direct instance of malicious code detection at an entry point. | Spam protection at system entry/exit points with configuration-management-aligned updates uses the same mechanism model as malicious code protection for unsolicited/malicious content.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c9f6f2e7-a37f-4f02-b83a-e1e6ec8fcfbb",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ma-3.3"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.775
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MA-3(3) explicitly requires 'Sanitizing or destroying the equipment' to prevent removal of organizational information — same sanitization mechanism as 03.08.03. | SR-12 mandates disposal of components using defined techniques, overlapping with sanitizing CUI-bearing media (scanners, printers, drives) prior to disposal.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "f7fc4439-9751-4564-acab-fef45844c1ec",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ma-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-07-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 0.95
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MA-4 'Nonlocal Maintenance' directly matches 03.07.05: approve/monitor nonlocal maintenance, strong authentication, terminate sessions when complete.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "7fe43f8c-ea75-4be9-9df9-7ad96eca3ec4",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ma-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-07-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 0.98
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MA-5 'Maintenance Personnel' matches 03.07.06 verbatim — authorize personnel, list, verify non-escorted access, designate supervisors.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8e495b3c-56ba-4584-aa89-d2ca5c12bae7",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "mp-5"
+              },
+              {
+                "type": "control",
+                "id-ref": "mp-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.45
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-2 restricts access to system media, providing the access-control component of physical control required in 03.08.01. | MP-5 media transport protects/controls system media outside controlled areas, extending physical control required by 03.08.01. | MP-6 media sanitization prevents disclosure of information from media — directly cited in 03.08.01 discussion as part of secure media handling.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8405d767-12c8-474a-8798-bee77413768a",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-2 'Restrict access to [media] to [authorized personnel]' is the direct source control for 03.08.02's requirement to restrict CUI media access to authorized personnel or roles.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "f92ba119-1dcf-4bc4-9ff4-c49d93132134",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-3 'Mark system media indicating distribution limitations, handling caveats, and applicable security markings' matches 03.08.04 verbatim in intent and content.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "c31b1306-cca9-4d47-9e89-0304497891dd",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 0.98
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-4 'Media Storage' matches 03.08.01 verbatim — physically control and securely store system media.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "44cc15ba-482f-4716-b54f-98469dbb443d",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-4 'physically control and securely store' media directly implements the physical control mechanism target discussion cites for restricting media access.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "1ad66abc-8e86-44cd-bf1d-5659fe3dc5fa",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-5 'Protect and control media during transport outside of controlled areas; maintain accountability; document activities' matches 03.08.05 (a)(b)(c) directly.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "61a6e8e6-ab3f-4813-97ab-da4f55c6b755",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-6 'Sanitize [media] prior to disposal, release out of organizational control, or release for reuse' is virtually identical wording to 03.08.03.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a9abf1e8-c7de-41fa-a30c-ecd92906140f",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "mp-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "MP-7 and 03.08.07 both restrict/prohibit use of specified media types and prohibit portable/removable storage without an identifiable owner.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "d6c8d65b-c07a-4815-8446-d1e99d203ff8",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PE-2 and 03.10.01 use nearly identical wording: maintain access list, issue credentials, review list, remove when access no longer required.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "34f00551-1bbd-4374-8a8d-788664c419c1",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "pe-5"
+              },
+              {
+                "type": "control",
+                "id-ref": "pe-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 0.817
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PE-2 maintains authorized-access lists and credentials that support verifying individual physical access authorizations before granting facility access. | PE-5 controls physical access to output devices (printers, monitors, copiers) to prevent unauthorized individuals from obtaining output, mirroring target part (e). | PE-6 monitors physical access and reviews access logs, directly supporting the target's audit-log and access-monitoring aspects.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "1bf8b605-1a1e-4549-bc82-65eb790a0ab6",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.85
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PE-3 enforces the physical access authorizations from the target's access list by verifying authorizations before granting facility ingress.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a8118d42-cf42-42fd-be63-1f811df293df",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-07"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both enforce physical access authorizations at facility entry/exit, maintain access logs, escort visitors, and secure keys and combinations.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "af91aa41-d05b-464b-9f56-7b69c9ee43fe",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both controls control physical access to system distribution and transmission lines within organizational facilities, using identical examples (locked wiring closets, conduit, sensors).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3829de3e-c287-400f-9a1d-d0a38d60ce1c",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PE-6 and 03.10.02 use nearly identical wording: monitor physical access to detect/respond to incidents, review logs periodically and upon events.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "e182cd66-a53c-41a3-a637-3ba109379a08",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pe-17"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both title-matched controls require determining alternate work sites for employees and employing security controls/requirements at those sites.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2eaf4066-4a65-44c7-bb7c-2f2a2849d4b6",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pl-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-15-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PL-2 develops system security plans covering constituent components, operational context, roles, information types, and safeguards — matches the target's SSP requirement point for point.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "36c6d026-098a-454a-a14b-b306697c1346",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pl-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-15-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PL-4 establishes rules of behavior, receives documented acknowledgment before granting access, and reviews/updates them — mirrors the target's four requirements.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "aff823a3-d4b4-434a-98a8-caa07e9e593b",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pl-4.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-15-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.9
+            },
+            "coverage": {
+              "target-coverage": 0.3
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PL-4(1) adds social-media/external-site restrictions into the rules of behavior — a specific extension of the target's RoB content.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "daccf4e5-6fe4-41f4-b7b9-431d9c18fa12",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pl-4.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-22"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PL-4(1) restricts posting organizational information on public websites, directly supporting the goal of preventing CUI on publicly accessible systems.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "07437728-184e-4345-9a53-4a6620adf3e1",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pl-8"
+              },
+              {
+                "type": "control",
+                "id-ref": "ra-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-15-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.275
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PL-8 documents security architectures describing safeguards and operational context — content that SSPs reference or incorporate. | RA-2 documents the security categorization results in the security plan — a specific input to the SSP the target requires.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "60076969-bf41-43ec-8f56-a41764e4a6f0",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "pl-8"
+              },
+              {
+                "type": "control",
+                "id-ref": "sa-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-16-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.775
+            },
+            "coverage": {
+              "target-coverage": 0.375
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PL-8 develops security architectures as a foundation for system design — the target explicitly cites establishing security architectures as an engineering principle. | SA-3 integrates security considerations across the SDLC — the target explicitly lists incorporating security requirements into the SDLC as an engineering principle.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "039a3e78-3ecf-4979-81fc-e8e7052ff59b",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ps-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-09-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PS-2 establishes screening criteria for positions and risk designations that directly drive the screening/rescreening activities in the target.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "919790e3-8e66-4b63-9b3d-de0db9dfccd4",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ps-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-09-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PS-3 requires screening individuals prior to authorizing system access and rescreening per defined conditions — identical to 03.09.01.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "2873fdea-2367-46b3-b103-1fb3bef60aed",
+            "relationship": "superset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ps-4"
+              },
+              {
+                "type": "control",
+                "id-ref": "ps-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-09-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PS-4 covers disabling access, revoking authenticators, retrieving property upon termination — all elements of target part (a) plus additional exit-interview requirements. | PS-5 requires reviewing/confirming access authorizations and modifying them on personnel transfer — matching target part (b).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "0729449c-65e4-4c21-aa02-eee6deafda0d",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ps-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-15-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "PS-6 access agreements are signed by individuals before access — the discussion explicitly calls RoB a type of access agreement for system users.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3c1ff457-532f-4cfe-ab56-676bf52537ab",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ps-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-16-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.35
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "External personnel security requires providers to comply with organizational policies and monitors compliance, mirroring external-service-provider oversight.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "582c5423-cf5f-4715-9ab9-cdc9da8a7dff",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-11-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both conduct risk assessments identifying threats/vulnerabilities, likelihood/impact of unauthorized disclosure, and require periodic updates.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "860e2d5b-96e3-4f16-a588-abacb7787b6d",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-3.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-11-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.883
+            },
+            "coverage": {
+              "target-coverage": 0.733
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "RA-3(1) assesses supply chain risks and requires updates, directly addressing target's explicit inclusion of supply chain risk in the CUI risk assessment. | SR-2 develops a supply chain risk management plan for systems/components/services, addressing target's supply-chain risk assessment scope. | SR-6 assesses supply-chain risks associated with suppliers/contractors and the system/component/service they provide — the exact scope cited in target references.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "23ae2468-eb1b-4791-aff8-2c73338ccf52",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-3.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-2.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-3"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-17-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.79
+            },
+            "coverage": {
+              "target-coverage": 0.37
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Acquisition strategies/tools are among the SCRM response actions the plan must document across acquisition and delivery. | SCRM policy and procedures establish the governance basis under which the SCRM plan is developed and maintained. | SCRM team is the coordinated cross-organization body that implements and monitors the SCRM plan. | Supply chain controls/processes to address weaknesses are documented and implemented under the SCRM plan. | Supply chain risk assessment identifies and updates risks (counterfeits, malicious code) that the SCRM plan must document and respond to.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "936cd280-ee7a-43cb-a3ed-de8357b2f8c8",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-3.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sa-4"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-11"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-6"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-17-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.762
+            },
+            "coverage": {
+              "target-coverage": 0.338
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Acquisition process embeds security/privacy requirements into contracts — a primary contract-tool mechanism for supply-chain protection. | Anti-counterfeit policy and procedures are tools/techniques within acquisition strategies protecting against counterfeit-component insertion. | Supplier assessments/reviews inform vetting of contractors — an integral part of acquisition strategies. | Supply chain risk assessment results directly inform which acquisition strategies, tools, and methods are most applicable.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "8d3b9d1e-19d2-42e5-8329-ddf6a3005227",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-3.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sr-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-17-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.35
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SCRM plan documents the supply-chain processes and controls that implement the required requirements enforcement. | Supply chain risk assessment identifies weaknesses/deficiencies (counterfeits, malicious code) that the requirements process must address.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "cbf12a91-d5c0-43b6-9e54-dab25bbd9095",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-11-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both monitor and scan systems for vulnerabilities at defined frequencies and when new vulnerabilities emerge, remediate legitimate vulnerabilities, and update scanned vulnerabilities.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "557d64c6-3793-4a04-9789-10bf5c5804d2",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-5"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-2.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.825
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Automated flaw remediation status tracking directly supports the flaw identification and update-installation obligations of the target. | Vulnerability monitoring and scanning identifies the flaws that flaw remediation must correct; target discussion explicitly references CVE/CWE-style vulnerability inputs.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "00e25bbc-8838-44ba-831e-0d25f4a65353",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-5.2"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-2"
+              },
+              {
+                "type": "control",
+                "id-ref": "si-2.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-11-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.867
+            },
+            "coverage": {
+              "target-coverage": 0.717
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "RA-5(2) explicitly updates system vulnerabilities to be scanned at a defined frequency — directly implementing target part (c). | SI-2 identifies, reports, and corrects system flaws and installs security-relevant updates within defined times — directly implements target part (b) remediation. | SI-2(2) uses automated mechanisms to determine whether security-relevant updates are installed on components — supports target's remediation verification.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "36999a31-c88d-42bc-b01f-195a8abcec76",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "ra-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-11-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate responding to findings from security assessments, monitoring, and audits; identical scope with 800-53 adding 'privacy' and 'risk tolerance' qualifiers.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "91d3f993-88f2-4bbc-98d7-eee6924db899",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sa-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-16-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SA-8 applies systems security and privacy engineering principles to specification, design, development, and modification — matches the target verbatim.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "4ca5e273-5bdd-4df8-af41-78fae5acc3d0",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sa-9"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-16-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.97
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require external service providers to comply with security requirements, define roles, and monitor ongoing compliance.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "01d09ff6-2bc4-4a90-bffd-aa554d5995be",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sa-9.2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-16-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.25
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Requires external service providers to identify functions/ports/protocols — a subset of the broader external-services compliance requirement.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "1b444a66-8473-4e2b-ac7b-d41bada5f82b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sa-22"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-16-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate replacing unsupported components and providing alternative sources of continued support; near-identical text.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "051e40c8-fd0c-4ab2-928d-d21671cf3430",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-04"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both control texts are essentially identical—prevent unauthorized/unintended information transfer via shared system resources (object reuse/residual info protection).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "251916a2-4c5a-4e82-a220-2caa18e57c45",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-7"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-7 and 03.13.01 use nearly identical wording: monitor/control communications at external/internal managed interfaces, implement DMZ subnetworks, connect externally only through managed boundary protection devices.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "db3b6334-026c-4588-93e5-203c86c81d6c",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-7"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-7.4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.8
+            },
+            "coverage": {
+              "target-coverage": 0.5
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "External-telecomm managed interfaces establish traffic-flow policy with documented exceptions—operationalizes deny-by-default at the boundary. | SC-7 boundary protection at external/internal managed interfaces provides the enforcement point for the deny-by-default network traffic policy.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "1e4b9641-b536-430b-a785-440383cb88dd",
+            "relationship": "subset-of",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-7.3"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-7.4"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-7.5"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-7.8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.788
+            },
+            "coverage": {
+              "target-coverage": 0.325
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-7(3) limits the number of external network connections, a concrete boundary-protection tactic reducing points that must be monitored per 03.13.01. | SC-7(4) specifies managed interfaces and traffic-flow policy for each external telecommunications service, a concrete subset of 03.13.01's managed-interface requirement. | SC-7(5) implements deny-by-default/allow-by-exception traffic policy at managed interfaces, a core boundary-protection behavior of 03.13.01. | SC-7(8) routes traffic through authenticated proxy servers at managed interfaces, a specific boundary-protection implementation of 03.13.01.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3318bbb0-8979-423c-90a5-d0bf9e417e21",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-7.5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate 'deny network communications traffic by default, allow by exception' at system boundary—wording is essentially identical.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b2200cf1-6171-4054-8af7-ca4e93ba146e",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-8"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-10-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-8 protects transmission confidentiality/integrity and expressly cites protected distribution systems (physical/cabling protection) as one implementation, overlapping target scope.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b4dfde23-c281-4704-a846-cbf89a023a5a",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-28.1"
+              },
+              {
+                "type": "control",
+                "id-ref": "sc-8.1"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.95
+            },
+            "coverage": {
+              "target-coverage": 0.55
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-28(1) requires cryptographic mechanisms to prevent unauthorized disclosure of information at rest—matches the storage-confidentiality portion of 03.13.08. | SC-8(1) mandates cryptographic mechanisms during transmission (TLS/IPsec)—directly matches the transmission-confidentiality portion of 03.13.08.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "f46fb20f-7c62-4d51-b4b2-cf0aae03ea0b",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-10"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-01-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-10 terminates network connections after inactivity; complements logical session termination and target text explicitly contrasts with 03.13.09 (network disconnect).",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "33d358d8-6cf1-4c62-92c2-30161be2cb81",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-10"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-09"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-10 and 03.13.09 both require terminating the network connection at end of session or after a defined inactivity period, with identical de-allocation discussion.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "bda8eb6b-8802-4e62-9004-e867daa6a36e",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-10"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-12 and 03.13.10 both require establishing and managing cryptographic keys per organization-defined key management requirements with identical discussion of manual/automated procedures.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "dd9b7837-2f45-496a-abef-d0d9bd69e791",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-13"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-10"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-13 implements cryptography which depends on the key generation/distribution/storage/destruction managed by 03.13.10.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "3f23de15-6f8f-498c-a99e-9a9047d02905",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-13"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-11"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-13 and 03.13.11 both mandate implementing organization-defined types of cryptography to protect information (CUI), with FIPS-validated cryptography recommended.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "5020a398-527d-48c8-9d99-03890e721325",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-15"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-12"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-15 and 03.13.12 both prohibit remote activation of collaborative computing devices with defined exceptions and require explicit indication of use to physically present users.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "9617b75c-ddd4-4aa7-a9ac-c16471c29233",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-18"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-13"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-18 and 03.13.13 both require defining acceptable mobile code/technologies and authorizing, monitoring, and controlling mobile code use.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "13a95343-95fe-43a3-b276-59c317ca2ffe",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-23"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-13-15"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.99
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate 'Protect the authenticity of communications sessions' with near-identical discussion covering man-in-the-middle and session hijacking protection.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "6798a360-a234-4587-96ce-16ac20321ddb",
+            "relationship": "intersects-with",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sc-28"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-08-05"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.75
+            },
+            "coverage": {
+              "target-coverage": 0.4
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SC-28 protection of information at rest via cryptography implements the cryptographic protection mechanism 03.08.05 cites for media during transport.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "a6a4824c-6bf1-41d3-bf30-94f7ddd484e8",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "si-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require identifying, reporting, and correcting system flaws and installing security-relevant software/firmware updates within a defined time period.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "ca181ccf-6a61-4e1b-a1a1-0aa56cec813a",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "si-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both require implementing malicious code protection at entry/exit points, automatic updates, periodic and real-time scanning, and blocking/quarantining detected malicious code.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "b7bb987f-940f-44c2-925a-af29070d116c",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "si-4"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-06"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SI-4 'System Monitoring' matches 03.14.06 clause-by-clause: detect attacks, unauthorized connections, unauthorized use, inbound/outbound traffic.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "401375bc-fa2e-490e-894a-02fa3f9f4927",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "si-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "SI-5 titled 'Security Alerts, Advisories, and Directives' directly requires receiving external and generating/disseminating internal alerts, mirroring 03.14.03.a-b.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "859e0b0f-a53c-4b69-8601-fed6bec42602",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "si-12"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-14-08"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both mandate managing and retaining information per applicable laws, EOs, directives, regulations, policies, standards, guidelines, and operational requirements — near-identical wording.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "20662e5f-2a61-4c9c-9305-152d29ba7946",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sr-2"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-17-01"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both develop, review/update, and protect a supply-chain risk management plan covering the full system life cycle.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "0ec15cae-4dae-45d9-bf83-cd28b87f281b",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sr-3"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-17-03"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both establish processes to identify/address supply-chain weaknesses and employ controls to protect against supply-chain risks.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          },
+          {
+            "uuid": "663d5439-af2c-4e14-890c-01052179c4e6",
+            "relationship": "equivalent-to",
+            "sources": [
+              {
+                "type": "control",
+                "id-ref": "sr-5"
+              }
+            ],
+            "targets": [
+              {
+                "type": "control",
+                "id-ref": "nist-sp-800-171-r3-03-17-02"
+              }
+            ],
+            "confidence-score": {
+              "percentage": 0.98
+            },
+            "coverage": {
+              "target-coverage": 1.0
+            },
+            "props": [
+              {
+                "name": "mapping-rationale",
+                "value": "Both employ acquisition strategies, contract tools, and procurement methods to identify, protect against, and mitigate supply chain risks.",
+                "ns": "https://example.com/custom/ns/oscal"
+              }
+            ]
+          }
+        ],
+        "target-gap-summary": {
+          "uuid": "07afa025-f62f-4252-b257-249eccf41d94",
+          "unmapped-controls": [
+            {
+              "with-ids": [
+                "nist-sp-800-171-r3-03-01-13",
+                "nist-sp-800-171-r3-03-01-14",
+                "nist-sp-800-171-r3-03-01-15",
+                "nist-sp-800-171-r3-03-01-17",
+                "nist-sp-800-171-r3-03-01-19",
+                "nist-sp-800-171-r3-03-01-21",
+                "nist-sp-800-171-r3-03-02-03",
+                "nist-sp-800-171-r3-03-03-09",
+                "nist-sp-800-171-r3-03-04-07",
+                "nist-sp-800-171-r3-03-04-09",
+                "nist-sp-800-171-r3-03-05-06",
+                "nist-sp-800-171-r3-03-05-08",
+                "nist-sp-800-171-r3-03-05-09",
+                "nist-sp-800-171-r3-03-05-10",
+                "nist-sp-800-171-r3-03-07-01",
+                "nist-sp-800-171-r3-03-07-02",
+                "nist-sp-800-171-r3-03-07-03",
+                "nist-sp-800-171-r3-03-08-06",
+                "nist-sp-800-171-r3-03-08-08",
+                "nist-sp-800-171-r3-03-10-03",
+                "nist-sp-800-171-r3-03-10-04",
+                "nist-sp-800-171-r3-03-10-05",
+                "nist-sp-800-171-r3-03-11-03",
+                "nist-sp-800-171-r3-03-12-04",
+                "nist-sp-800-171-r3-03-13-02",
+                "nist-sp-800-171-r3-03-13-03",
+                "nist-sp-800-171-r3-03-13-05",
+                "nist-sp-800-171-r3-03-13-07",
+                "nist-sp-800-171-r3-03-13-14",
+                "nist-sp-800-171-r3-03-13-16",
+                "nist-sp-800-171-r3-03-14-04",
+                "nist-sp-800-171-r3-03-14-05",
+                "nist-sp-800-171-r3-03-14-07"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

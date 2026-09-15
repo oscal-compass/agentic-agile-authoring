@@ -1,0 +1,142 @@
+source_control_id,target_requirement_id,relationship,requirement_title
+ac-17.1,03.01.12,intersects-with,Remote Access
+ac-17.1,03.14.06,intersects-with,System Monitoring
+ac-18.1,03.05.02,intersects-with,Device Identification and Authentication
+ac-19,03.01.16,intersects-with,Wireless Access
+ac-19,03.04.12,intersects-with,System and Component Configuration for High-Risk Areas
+ac-2.1,03.01.01,intersects-with,Account Management
+ac-2.4,03.01.01,intersects-with,Account Management
+ac-2.4,03.03.01,intersects-with,Event Logging
+ac-20.2,03.08.07,intersects-with,Media Use
+ac-6,03.01.06,superset-of,Least Privilege – Privileged Accounts
+ac-6,03.01.07,superset-of,Least Privilege – Privileged Functions
+ac-6.1,03.04.05,intersects-with,Access Restrictions for Change
+ac-6.10,03.01.05,intersects-with,Least Privilege
+ac-6.10,03.01.06,intersects-with,Least Privilege – Privileged Accounts
+ac-6.2,03.01.05,intersects-with,Least Privilege
+ac-6.5,03.01.01,intersects-with,Account Management
+ac-6.5,03.01.05,intersects-with,Least Privilege
+ac-6.5,03.01.07,intersects-with,Least Privilege – Privileged Functions
+ac-6.9,03.03.01,intersects-with,Event Logging
+au-11,03.14.08,intersects-with,03.14.08: Information Management and Retention
+au-12,03.03.01,intersects-with,Event Logging
+au-12,03.03.02,intersects-with,Audit Record Content
+au-2,03.03.03,intersects-with,Audit Record Generation
+au-3,03.03.03,intersects-with,Audit Record Generation
+au-6,03.03.06,intersects-with,Audit Record Reduction and Report Generation
+au-6,03.10.02,intersects-with,Monitoring Physical Access
+au-6,03.14.06,intersects-with,System Monitoring
+au-6.1,03.03.05,intersects-with,"Audit Record Review, Analysis, and Reporting"
+au-6.1,03.03.06,intersects-with,Audit Record Reduction and Report Generation
+au-6.3,03.03.06,intersects-with,Audit Record Reduction and Report Generation
+au-7,03.03.05,intersects-with,"Audit Record Review, Analysis, and Reporting"
+au-7.1,03.03.06,intersects-with,Audit Record Reduction and Report Generation
+au-9.4,03.01.05,subset-of,Least Privilege
+ca-3,03.01.03,intersects-with,Information Flow Enforcement
+ca-3,03.01.20,intersects-with,Use of External Systems
+ca-5,03.11.04,intersects-with,Risk Response
+ca-7,03.12.01,intersects-with,Control Assessments
+ca-7.4,03.12.03,intersects-with,Continuous Monitoring
+cm-11,03.04.08,intersects-with,Authorized Software – Allow by Exception
+cm-12.1,03.04.11,intersects-with,Information Location
+cm-2,03.04.02,intersects-with,Configuration Settings
+cm-2.2,03.04.01,intersects-with,Baseline Configuration
+cm-2.3,03.04.01,intersects-with,Baseline Configuration
+cm-2.7,03.01.18,intersects-with,Access Control for Mobile Devices
+cm-3,03.04.01,intersects-with,Baseline Configuration
+cm-3,03.04.04,intersects-with,Impact Analyses
+cm-3.2,03.04.03,intersects-with,Configuration Change Control
+cm-3.2,03.04.04,intersects-with,Impact Analyses
+cm-3.4,03.04.03,intersects-with,Configuration Change Control
+cm-4.2,03.04.03,intersects-with,Configuration Change Control
+cm-5,03.01.02,intersects-with,Access Enforcement
+cm-6,03.04.01,intersects-with,Baseline Configuration
+cm-7.2,03.04.08,intersects-with,Authorized Software – Allow by Exception
+cm-8,03.04.01,intersects-with,Baseline Configuration
+cm-9,03.04.01,intersects-with,Baseline Configuration
+cm-9,03.04.02,intersects-with,Configuration Settings
+cm-9,03.04.03,intersects-with,Configuration Change Control
+cp-9.8,03.13.08,intersects-with,Transmission and Storage Confidentiality
+cp-9.8,03.13.11,intersects-with,03.13.11. Cryptographic Protection
+ia-2,03.05.05,intersects-with,Identifier Management
+ia-2.8,03.07.05,intersects-with,Nonlocal Maintenance
+ia-3,03.01.16,intersects-with,Wireless Access
+ia-4,03.05.01,intersects-with,User Identification and Authentication
+ia-4,03.05.02,intersects-with,Device Identification and Authentication
+ia-5,03.05.01,intersects-with,User Identification and Authentication
+ia-5,03.05.07,superset-of,Password Management
+ia-5.1,03.05.12,intersects-with,Authenticator Management
+ia-5.2,03.05.02,intersects-with,Device Identification and Authentication
+ia-5.6,03.05.12,intersects-with,Authenticator Management
+ia-6,03.05.11,equivalent-to,Authentication Feedback
+ia-8,03.05.01,intersects-with,User Identification and Authentication
+ir-3.2,03.06.03,subset-of,Incident Response Testing
+ir-4,03.06.02,intersects-with,"Incident Monitoring, Reporting, and Response Assistance"
+ir-4.1,03.06.01,intersects-with,Incident Handling
+ir-5,03.06.01,intersects-with,Incident Handling
+ir-6.1,03.06.02,intersects-with,"Incident Monitoring, Reporting, and Response Assistance"
+ir-7.1,03.06.02,intersects-with,"Incident Monitoring, Reporting, and Response Assistance"
+ir-8,03.06.01,intersects-with,Incident Handling
+ma-2,03.07.05,intersects-with,Nonlocal Maintenance
+ma-3.2,03.14.02,intersects-with,Malicious Code Protection
+ma-3.3,03.08.03,intersects-with,Media Sanitization
+ma-5,03.07.05,intersects-with,Nonlocal Maintenance
+mp-2,03.08.01,intersects-with,Media Storage
+mp-4,03.08.02,intersects-with,Media Access
+mp-5,03.08.01,intersects-with,Media Storage
+mp-6,03.08.01,intersects-with,Media Storage
+pe-2,03.10.07,intersects-with,Physical Access Control
+pe-3,03.10.01,intersects-with,Physical Access Authorizations
+pe-6,03.10.07,intersects-with,Physical Access Control
+pe-6.1,03.10.02,intersects-with,Monitoring Physical Access
+pl-4.1,03.01.22,intersects-with,Publicly Accessible Content
+pl-4.1,03.15.03,subset-of,Rules of Behavior
+pl-8,03.15.02,intersects-with,System Security Plan
+pl-8,03.16.01,intersects-with,03.16.01: Security Engineering Principles
+ps-2,03.09.01,intersects-with,Personnel Screening
+ps-4,03.01.01,intersects-with,Account Management
+ps-5,03.01.01,intersects-with,Account Management
+ps-6,03.15.03,intersects-with,Rules of Behavior
+ps-7,03.16.03,intersects-with,External System Services
+ra-2,03.15.02,intersects-with,System Security Plan
+ra-3.1,03.17.01,intersects-with,Supply Chain Risk Management Plan
+ra-3.1,03.17.02,intersects-with,"Acquisition Strategies, Tools, and Methods"
+ra-3.1,03.17.03,intersects-with,Supply Chain Requirements and Processes
+ra-5,03.14.01,intersects-with,Flaw Remediation
+sa-10,03.04.03,intersects-with,Configuration Change Control
+sa-3,03.16.01,intersects-with,03.16.01: Security Engineering Principles
+sa-4,03.17.02,intersects-with,"Acquisition Strategies, Tools, and Methods"
+sa-4.9,03.04.06,intersects-with,Least Functionality
+sa-9,03.01.20,intersects-with,Use of External Systems
+sa-9.2,03.16.03,subset-of,External System Services
+sc-10,03.01.11,intersects-with,Session Termination
+sc-13,03.13.10,intersects-with,Cryptographic Key Establishment and Management
+sc-28,03.08.05,intersects-with,Media Transport
+sc-28.1,03.08.09,intersects-with,System Backup – Cryptographic Protection
+sc-28.1,03.13.11,intersects-with,03.13.11. Cryptographic Protection
+sc-7,03.13.06,intersects-with,Network Communications – Deny by Default – Allow by Exception
+sc-7,03.14.06,intersects-with,System Monitoring
+sc-7.3,03.13.01,subset-of,Boundary Protection
+sc-7.4,03.01.03,intersects-with,Information Flow Enforcement
+sc-7.4,03.13.01,subset-of,Boundary Protection
+sc-7.4,03.13.06,intersects-with,Network Communications – Deny by Default – Allow by Exception
+sc-7.5,03.13.01,subset-of,Boundary Protection
+sc-7.8,03.13.01,subset-of,Boundary Protection
+sc-8,03.10.08,intersects-with,Access Control for Transmission and Output Devices
+sc-8.1,03.13.11,intersects-with,03.13.11. Cryptographic Protection
+si-2,03.11.02,intersects-with,Vulnerability Monitoring and Scanning
+si-2.2,03.11.02,intersects-with,Vulnerability Monitoring and Scanning
+si-2.2,03.14.01,intersects-with,Flaw Remediation
+si-4.2,03.14.06,intersects-with,System Monitoring
+si-4.5,03.14.06,intersects-with,System Monitoring
+si-5,03.14.03,equivalent-to,"Security Alerts, Advisories, and Directives"
+si-8,03.14.02,intersects-with,Malicious Code Protection
+sr-1,03.17.01,intersects-with,Supply Chain Risk Management Plan
+sr-11,03.17.02,intersects-with,"Acquisition Strategies, Tools, and Methods"
+sr-12,03.08.03,intersects-with,Media Sanitization
+sr-2,03.11.01,intersects-with,Risk Assessment
+sr-2,03.17.03,intersects-with,Supply Chain Requirements and Processes
+sr-2.1,03.17.01,intersects-with,Supply Chain Risk Management Plan
+sr-3,03.17.01,intersects-with,Supply Chain Risk Management Plan
+sr-5,03.17.01,intersects-with,Supply Chain Risk Management Plan
+sr-6,03.17.02,intersects-with,"Acquisition Strategies, Tools, and Methods"

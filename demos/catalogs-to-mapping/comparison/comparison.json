@@ -1,0 +1,366 @@
+{
+  "reference_pairs": 156,
+  "generated_pairs": 285,
+  "exact_agreement": 144,
+  "reference_only": 12,
+  "generated_only": 141,
+  "relationship_disagreements": 123,
+  "precision": 0.5053,
+  "recall": 0.9231,
+  "f1": 0.6531,
+  "family_stats": {
+    "03.01": {
+      "ref": 31,
+      "hit": 28,
+      "gen": 52,
+      "recall": 0.9032
+    },
+    "03.02": {
+      "ref": 4,
+      "hit": 4,
+      "gen": 4,
+      "recall": 1.0
+    },
+    "03.03": {
+      "ref": 12,
+      "hit": 12,
+      "gen": 24,
+      "recall": 1.0
+    },
+    "03.04": {
+      "ref": 13,
+      "hit": 13,
+      "gen": 34,
+      "recall": 1.0
+    },
+    "03.05": {
+      "ref": 11,
+      "hit": 9,
+      "gen": 20,
+      "recall": 0.8182
+    },
+    "03.06": {
+      "ref": 7,
+      "hit": 7,
+      "gen": 14,
+      "recall": 1.0
+    },
+    "03.07": {
+      "ref": 6,
+      "hit": 5,
+      "gen": 8,
+      "recall": 0.8333
+    },
+    "03.08": {
+      "ref": 8,
+      "hit": 8,
+      "gen": 17,
+      "recall": 1.0
+    },
+    "03.09": {
+      "ref": 3,
+      "hit": 3,
+      "gen": 4,
+      "recall": 1.0
+    },
+    "03.10": {
+      "ref": 6,
+      "hit": 6,
+      "gen": 12,
+      "recall": 1.0
+    },
+    "03.11": {
+      "ref": 6,
+      "hit": 6,
+      "gen": 10,
+      "recall": 1.0
+    },
+    "03.12": {
+      "ref": 4,
+      "hit": 4,
+      "gen": 6,
+      "recall": 1.0
+    },
+    "03.13": {
+      "ref": 14,
+      "hit": 14,
+      "gen": 25,
+      "recall": 1.0
+    },
+    "03.14": {
+      "ref": 6,
+      "hit": 5,
+      "gen": 16,
+      "recall": 0.8333
+    },
+    "03.15": {
+      "ref": 19,
+      "hit": 14,
+      "gen": 18,
+      "recall": 0.7368
+    },
+    "03.16": {
+      "ref": 3,
+      "hit": 3,
+      "gen": 7,
+      "recall": 1.0
+    },
+    "03.17": {
+      "ref": 3,
+      "hit": 3,
+      "gen": 14,
+      "recall": 1.0
+    }
+  },
+  "top_missed_requirements": [
+    {
+      "req": "03.15.01",
+      "title": "Policy and Procedures",
+      "missed_sources": 5
+    },
+    {
+      "req": "03.01.01",
+      "title": "Account Management",
+      "missed_sources": 2
+    },
+    {
+      "req": "03.14.03",
+      "title": "Security Alerts, Advisories, and Directives",
+      "missed_sources": 1
+    },
+    {
+      "req": "03.01.18",
+      "title": "Access Control for Mobile Devices",
+      "missed_sources": 1
+    },
+    {
+      "req": "03.07.04",
+      "title": "Maintenance Tools",
+      "missed_sources": 1
+    },
+    {
+      "req": "03.05.01",
+      "title": "User Identification and Authentication",
+      "missed_sources": 1
+    },
+    {
+      "req": "03.05.11",
+      "title": "Authentication Feedback",
+      "missed_sources": 1
+    }
+  ],
+  "top_extra_requirements": [
+    {
+      "req": "03.04.01",
+      "title": "Baseline Configuration",
+      "extra_sources": 6
+    },
+    {
+      "req": "03.04.03",
+      "title": "Configuration Change Control",
+      "extra_sources": 5
+    },
+    {
+      "req": "03.01.01",
+      "title": "Account Management",
+      "extra_sources": 5
+    },
+    {
+      "req": "03.14.06",
+      "title": "System Monitoring",
+      "extra_sources": 5
+    },
+    {
+      "req": "03.17.01",
+      "title": "Supply Chain Risk Management Plan",
+      "extra_sources": 5
+    },
+    {
+      "req": "03.01.05",
+      "title": "Least Privilege",
+      "extra_sources": 4
+    },
+    {
+      "req": "03.03.06",
+      "title": "Audit Record Reduction and Report Generation",
+      "extra_sources": 4
+    },
+    {
+      "req": "03.17.02",
+      "title": "Acquisition Strategies, Tools, and Methods",
+      "extra_sources": 4
+    },
+    {
+      "req": "03.13.01",
+      "title": "Boundary Protection",
+      "extra_sources": 4
+    },
+    {
+      "req": "03.05.02",
+      "title": "Device Identification and Authentication",
+      "extra_sources": 3
+    }
+  ],
+  "relationship_disagreements_sample": [
+    {
+      "pair": [
+        "mp-4",
+        "03.08.01"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "cm-8",
+        "03.04.10"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ra-5.2",
+        "03.11.02"
+      ],
+      "ref": "subset-of",
+      "gen": "intersects-with"
+    },
+    {
+      "pair": [
+        "cm-2.7",
+        "03.04.12"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ac-18.3",
+        "03.01.16"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ac-20.1",
+        "03.01.20"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "cm-4.2",
+        "03.04.04"
+      ],
+      "ref": "subset-of",
+      "gen": "intersects-with"
+    },
+    {
+      "pair": [
+        "cp-9.8",
+        "03.08.09"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ac-6",
+        "03.01.05"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ac-6.10",
+        "03.01.07"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "si-3",
+        "03.14.02"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "au-3.1",
+        "03.03.02"
+      ],
+      "ref": "subset-of",
+      "gen": "intersects-with"
+    },
+    {
+      "pair": [
+        "sc-23",
+        "03.13.15"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ra-7",
+        "03.11.04"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "au-6",
+        "03.03.05"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ac-11.1",
+        "03.01.10"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "ir-8",
+        "03.06.05"
+      ],
+      "ref": "subset-of",
+      "gen": "superset-of"
+    },
+    {
+      "pair": [
+        "ra-3",
+        "03.11.01"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    },
+    {
+      "pair": [
+        "pe-5",
+        "03.10.07"
+      ],
+      "ref": "subset-of",
+      "gen": "intersects-with"
+    },
+    {
+      "pair": [
+        "sc-12",
+        "03.13.10"
+      ],
+      "ref": "subset-of",
+      "gen": "equivalent-to"
+    }
+  ]
+}

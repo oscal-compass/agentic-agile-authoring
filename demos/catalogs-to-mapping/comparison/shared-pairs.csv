@@ -1,0 +1,145 @@
+source_control_id,target_requirement_id,relationship_ref,relationship_gen,requirement_title
+ac-1,03.15.01,subset-of,subset-of,Policy and Procedures
+ac-11,03.01.10,subset-of,equivalent-to,Device Lock
+ac-11.1,03.01.10,subset-of,equivalent-to,Device Lock
+ac-12,03.01.11,subset-of,equivalent-to,Session Termination
+ac-17,03.01.12,subset-of,equivalent-to,Remote Access
+ac-17.2,03.13.08,subset-of,intersects-with,Transmission and Storage Confidentiality
+ac-17.3,03.01.12,subset-of,equivalent-to,Remote Access
+ac-17.4,03.01.12,subset-of,equivalent-to,Remote Access
+ac-18,03.01.16,subset-of,equivalent-to,Wireless Access
+ac-18.1,03.01.16,subset-of,equivalent-to,Wireless Access
+ac-18.3,03.01.16,subset-of,equivalent-to,Wireless Access
+ac-19,03.01.18,subset-of,equivalent-to,Access Control for Mobile Devices
+ac-2.13,03.01.01,subset-of,subset-of,Account Management
+ac-2.3,03.01.01,subset-of,subset-of,Account Management
+ac-20,03.01.20,subset-of,equivalent-to,Use of External Systems
+ac-20.1,03.01.20,subset-of,equivalent-to,Use of External Systems
+ac-20.2,03.01.20,subset-of,equivalent-to,Use of External Systems
+ac-22,03.01.22,subset-of,equivalent-to,Publicly Accessible Content
+ac-3,03.01.02,subset-of,equivalent-to,Access Enforcement
+ac-4,03.01.03,subset-of,equivalent-to,Information Flow Enforcement
+ac-5,03.01.04,subset-of,equivalent-to,Separation of Duties
+ac-6,03.01.05,subset-of,equivalent-to,Least Privilege
+ac-6.1,03.01.05,subset-of,subset-of,Least Privilege
+ac-6.10,03.01.07,subset-of,equivalent-to,Least Privilege – Privileged Functions
+ac-6.2,03.01.06,subset-of,equivalent-to,Least Privilege – Privileged Accounts
+ac-6.5,03.01.06,subset-of,equivalent-to,Least Privilege – Privileged Accounts
+ac-6.7,03.01.05,subset-of,subset-of,Least Privilege
+ac-6.9,03.01.07,subset-of,equivalent-to,Least Privilege – Privileged Functions
+ac-7,03.01.08,subset-of,equivalent-to,Unsuccessful Logon Attempts
+ac-8,03.01.09,subset-of,superset-of,System Use Notification
+at-2,03.02.01,subset-of,equivalent-to,Literacy Training and Awareness
+at-2.2,03.02.01,subset-of,subset-of,Literacy Training and Awareness
+at-2.3,03.02.01,subset-of,subset-of,Literacy Training and Awareness
+at-3,03.02.02,subset-of,equivalent-to,Role-Based Training
+au-1,03.15.01,subset-of,subset-of,Policy and Procedures
+au-11,03.03.03,subset-of,equivalent-to,Audit Record Generation
+au-12,03.03.03,subset-of,equivalent-to,Audit Record Generation
+au-2,03.03.01,subset-of,equivalent-to,Event Logging
+au-3,03.03.02,subset-of,equivalent-to,Audit Record Content
+au-3.1,03.03.02,subset-of,intersects-with,Audit Record Content
+au-5,03.03.04,subset-of,equivalent-to,Response to Audit Logging Process Failures
+au-6,03.03.05,subset-of,equivalent-to,"Audit Record Review, Analysis, and Reporting"
+au-6.3,03.03.05,subset-of,equivalent-to,"Audit Record Review, Analysis, and Reporting"
+au-7,03.03.06,subset-of,equivalent-to,Audit Record Reduction and Report Generation
+au-8,03.03.07,subset-of,equivalent-to,Time Stamps
+au-9,03.03.08,subset-of,equivalent-to,Protection of Audit Information
+au-9.4,03.03.08,subset-of,equivalent-to,Protection of Audit Information
+ca-1,03.15.01,subset-of,subset-of,Policy and Procedures
+ca-2,03.12.01,subset-of,equivalent-to,Control Assessments
+ca-3,03.12.05,subset-of,equivalent-to,Information Exchange
+ca-5,03.12.02,subset-of,equivalent-to,Plan of Action and Milestones
+ca-7,03.12.03,subset-of,equivalent-to,Continuous Monitoring
+cm-1,03.15.01,subset-of,subset-of,Policy and Procedures
+cm-12,03.04.11,subset-of,equivalent-to,Information Location
+cm-2,03.04.01,subset-of,equivalent-to,Baseline Configuration
+cm-2.7,03.04.12,subset-of,equivalent-to,System and Component Configuration for High-Risk Areas
+cm-3,03.04.03,subset-of,equivalent-to,Configuration Change Control
+cm-4,03.04.04,subset-of,equivalent-to,Impact Analyses
+cm-4.2,03.04.04,subset-of,intersects-with,Impact Analyses
+cm-5,03.04.05,subset-of,equivalent-to,Access Restrictions for Change
+cm-6,03.04.02,subset-of,equivalent-to,Configuration Settings
+cm-7,03.04.06,subset-of,equivalent-to,Least Functionality
+cm-7.1,03.04.06,subset-of,intersects-with,Least Functionality
+cm-7.5,03.04.08,subset-of,equivalent-to,Authorized Software – Allow by Exception
+cm-8,03.04.10,subset-of,equivalent-to,System Component Inventory
+cm-8.1,03.04.10,subset-of,equivalent-to,System Component Inventory
+cp-9,03.08.09,subset-of,intersects-with,System Backup – Cryptographic Protection
+cp-9.8,03.08.09,subset-of,equivalent-to,System Backup – Cryptographic Protection
+ia-1,03.15.01,subset-of,subset-of,Policy and Procedures
+ia-2,03.05.01,subset-of,equivalent-to,User Identification and Authentication
+ia-2.1,03.05.03,subset-of,subset-of,Multi-Factor Authentication
+ia-2.2,03.05.03,subset-of,subset-of,Multi-Factor Authentication
+ia-2.8,03.05.04,subset-of,equivalent-to,Replay-Resistant Authentication
+ia-3,03.05.02,subset-of,equivalent-to,Device Identification and Authentication
+ia-4,03.05.05,subset-of,equivalent-to,Identifier Management
+ia-4.4,03.05.05,subset-of,subset-of,Identifier Management
+ia-5,03.05.12,subset-of,equivalent-to,Authenticator Management
+ia-5.1,03.05.07,subset-of,equivalent-to,Password Management
+ir-1,03.15.01,subset-of,subset-of,Policy and Procedures
+ir-2,03.06.04,subset-of,equivalent-to,Incident Response Training
+ir-3,03.06.03,subset-of,equivalent-to,Incident Response Testing
+ir-4,03.06.01,subset-of,equivalent-to,Incident Handling
+ir-5,03.06.02,subset-of,equivalent-to,"Incident Monitoring, Reporting, and Response Assistance"
+ir-6,03.06.02,subset-of,equivalent-to,"Incident Monitoring, Reporting, and Response Assistance"
+ir-7,03.06.02,subset-of,equivalent-to,"Incident Monitoring, Reporting, and Response Assistance"
+ir-8,03.06.05,subset-of,superset-of,Incident Response Plan
+ma-3,03.07.04,subset-of,equivalent-to,Maintenance Tools
+ma-3.1,03.07.04,subset-of,intersects-with,Maintenance Tools
+ma-3.2,03.07.04,subset-of,equivalent-to,Maintenance Tools
+ma-4,03.07.05,subset-of,equivalent-to,Nonlocal Maintenance
+ma-5,03.07.06,subset-of,equivalent-to,Maintenance Personnel
+mp-2,03.08.02,subset-of,equivalent-to,Media Access
+mp-3,03.08.04,subset-of,equivalent-to,Media Marking
+mp-4,03.08.01,subset-of,equivalent-to,Media Storage
+mp-5,03.08.05,subset-of,equivalent-to,Media Transport
+mp-6,03.08.03,subset-of,equivalent-to,Media Sanitization
+mp-7,03.08.07,subset-of,equivalent-to,Media Use
+pe-17,03.10.06,subset-of,equivalent-to,Alternate Work Site
+pe-2,03.10.01,subset-of,equivalent-to,Physical Access Authorizations
+pe-3,03.10.07,subset-of,equivalent-to,Physical Access Control
+pe-4,03.10.08,subset-of,equivalent-to,Access Control for Transmission and Output Devices
+pe-5,03.10.07,subset-of,intersects-with,Physical Access Control
+pe-6,03.10.02,subset-of,equivalent-to,Monitoring Physical Access
+pl-1,03.15.01,subset-of,subset-of,Policy and Procedures
+pl-2,03.15.02,subset-of,equivalent-to,System Security Plan
+pl-4,03.15.03,subset-of,equivalent-to,Rules of Behavior
+ps-1,03.15.01,subset-of,subset-of,Policy and Procedures
+ps-3,03.09.01,subset-of,equivalent-to,Personnel Screening
+ps-4,03.09.02,subset-of,superset-of,Personnel Termination and Transfer
+ps-5,03.09.02,subset-of,superset-of,Personnel Termination and Transfer
+ra-1,03.15.01,subset-of,subset-of,Policy and Procedures
+ra-3,03.11.01,subset-of,equivalent-to,Risk Assessment
+ra-3.1,03.11.01,subset-of,intersects-with,Risk Assessment
+ra-5,03.11.02,subset-of,equivalent-to,Vulnerability Monitoring and Scanning
+ra-5.2,03.11.02,subset-of,intersects-with,Vulnerability Monitoring and Scanning
+ra-7,03.11.04,subset-of,equivalent-to,Risk Response
+sa-1,03.15.01,subset-of,subset-of,Policy and Procedures
+sa-22,03.16.02,subset-of,equivalent-to,Unsupported System Components
+sa-8,03.16.01,subset-of,equivalent-to,03.16.01: Security Engineering Principles
+sa-9,03.16.03,subset-of,equivalent-to,External System Services
+sc-1,03.15.01,subset-of,subset-of,Policy and Procedures
+sc-10,03.13.09,subset-of,equivalent-to,Network Disconnect
+sc-12,03.13.10,subset-of,equivalent-to,Cryptographic Key Establishment and Management
+sc-13,03.13.11,subset-of,equivalent-to,03.13.11. Cryptographic Protection
+sc-15,03.13.12,subset-of,equivalent-to,Collaborative Computing Devices and Applications
+sc-18,03.13.13,subset-of,equivalent-to,Mobile Code
+sc-23,03.13.15,subset-of,equivalent-to,Session Authenticity
+sc-28,03.13.08,subset-of,intersects-with,Transmission and Storage Confidentiality
+sc-28.1,03.13.08,subset-of,equivalent-to,Transmission and Storage Confidentiality
+sc-4,03.13.04,subset-of,equivalent-to,Information in Shared System Resources
+sc-7,03.13.01,subset-of,equivalent-to,Boundary Protection
+sc-7.5,03.13.06,subset-of,equivalent-to,Network Communications – Deny by Default – Allow by Exception
+sc-8,03.13.08,subset-of,intersects-with,Transmission and Storage Confidentiality
+sc-8.1,03.13.08,subset-of,equivalent-to,Transmission and Storage Confidentiality
+si-1,03.15.01,subset-of,subset-of,Policy and Procedures
+si-12,03.14.08,subset-of,equivalent-to,03.14.08: Information Management and Retention
+si-2,03.14.01,subset-of,equivalent-to,Flaw Remediation
+si-3,03.14.02,subset-of,equivalent-to,Malicious Code Protection
+si-4,03.14.06,subset-of,equivalent-to,System Monitoring
+si-4.4,03.14.06,subset-of,intersects-with,System Monitoring
+sr-2,03.17.01,subset-of,equivalent-to,Supply Chain Risk Management Plan
+sr-3,03.17.03,subset-of,equivalent-to,Supply Chain Requirements and Processes
+sr-5,03.17.02,subset-of,equivalent-to,"Acquisition Strategies, Tools, and Methods"
+sr-6,03.11.01,subset-of,intersects-with,Risk Assessment

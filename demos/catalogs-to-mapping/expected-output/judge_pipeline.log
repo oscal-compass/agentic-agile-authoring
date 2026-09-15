@@ -1,0 +1,18 @@
+=== run_judge_pipeline.sh starting at 2026-09-09T06:47:57Z ===
+OUTPUT_DIR   = /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171
+WORK_DIR     = /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/work
+SOURCE_CAT   = /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/skills/compliance-mapping/examples/NIST_SP-800-53_rev5_MODERATE-baseline-resolved-profile_catalog.json
+TARGET_CAT   = /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-catalog-nist-800-171/catalog.json
+--- Stage 4f: judge_apply ---
+judge_apply: 651 accepted, 0 rejected, 1827 auto-filled no-relationship, 0 cache hits merged -> 651 active relationship links -> /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/work/judgments.json
+--- Stage 5: score_calibrate ---
+score: 651 links scored, 285 pass thresholds (confidence>=0.75, coverage>=0.15) -> /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/work/scored.json
+--- Stage 6: aggregate ---
+aggregate: 287 controls — 192 fully covered, 0 partial, 95 uncovered; 95 flagged low-coverage (<0.5) -> /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/work/aggregated.json
+--- Stage 7: emit_oscal + validate_oscal ---
+emit_oscal: 172 map entries, 33 unmapped target units, title='Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 MODERATE IMPACT BASELINE to Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations' -> /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/mapping_collection.json
+VALID: Model /var/folders/r6/sxn9dh5d64qgw2ky44m0lbvc0000gn/T/trestle_ws_dz_14bct/mapping-collections/candidate/mapping-collection.json passed the Validator to confirm the model passes all registered validation tests.
+validate_oscal: PASSED -> /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/mapping_collection.json
+--- Stage 8: generate report ---
+Wrote report to: /Users/hiro/dev/github.com/oscal-compass/agentic-agile-authoring/output/opencode-mapping-nist-800-53-to-800-171/report.html
+=== DONE at 2026-09-09T06:48:00Z. mapping_collection.json and report.html are ready. ===

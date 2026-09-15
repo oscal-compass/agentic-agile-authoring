@@ -166,6 +166,48 @@ Terminology used below:
 - **Main agent**: you. You orchestrate the phases by running scripts and launching subagents. You do not open template files or `merged.txt` directly.
 - **Subagent**: a fresh agent session spawned via your harness's native subagent tool (`spawn_subagent` on bob v2, `Task` on claude, `task` on opencode). Each subagent receives a self-contained prompt file that includes exactly the context it needs, does one focused edit (write `generate.py` and `validate.py`, or write an edited `generate.py`), and exits.
 
+### Phase 0-pre — Start the live progress view (main agent, deterministic)
+
+**Run this FIRST, before Phase 0.** The `scripts/live_server/` package is a small FastAPI + SPA that observes `$OUT` and shows the operator, in a browser, the same phase-by-phase progress you're about to produce. It exists only for the operator's benefit — no pipeline decision depends on it — so if it fails to start, log the failure and continue.
+
+```bash
+mkdir -p "$OUT"
+# Decide the launcher's lifecycle mode from the harness we're running in.
+# Two shapes matter:
+#   * Interactive TUI (`opencode`, `claude`, `bob` — the operator is
+#     watching a terminal). The launcher should die when this shell dies,
+#     so a Ctrl-C on the TUI cleans up the browser tab's server too.
+#   * `opencode run "…"` and similar one-shot invocations. The caller
+#     exits the instant the pipeline finishes; if the launcher died with
+#     it, the operator's browser would show the results for ~0 seconds.
+#     Keep the launcher alive in persistent mode; a 3-hour loitering
+#     guard inside the launcher makes sure it can't linger forever.
+# The launcher's --die-with-parent walks its own PPID chain to find the
+# harness process to watch, so this shell does NOT need to pass a PID —
+# the harness's `sh -c` wrapper we live under is too short-lived to be
+# useful. All this snippet decides is TUI-vs-one-shot.
+LIFECYCLE_FLAGS=""
+if pgrep -af "opencode.*\brun\b" >/dev/null 2>&1; then
+    :   # `opencode run …` detected → persistent (no --die-with-parent)
+else
+    LIFECYCLE_FLAGS="--die-with-parent"
+fi
+python3 $SKILL_DIR/scripts/live_server/launcher.py \
+    --output-dir "$OUT" $LIFECYCLE_FLAGS \
+    > "$OUT/.live_server.log" 2>&1 &
+echo $! > "$OUT/.live_server.pid"
+disown 2>/dev/null || true
+```
+
+Rules:
+
+- The launcher is **fire-and-forget from your perspective**. Do not `wait` on it; do not check its exit status; do not poll for the URL. The URL is printed to `$OUT/.live_server.log` within ~1 second — the operator will also see their browser open automatically.
+- Do NOT run the launcher without the trailing `&` — it blocks on uvicorn's main loop and would freeze your session. The `& … disown` pattern above is the only supported invocation shape.
+- If `fastapi` / `uvicorn` are not installed, the launcher exits immediately and writes an error to `$OUT/.live_server.log`. That is **not a fatal error** for the pipeline; keep going with Phase 0. Tell the operator (once the pipeline finishes) they can `pip install -r $SKILL_DIR/scripts/requirements.txt` and re-run to get the view next time.
+- Do NOT try to teardown the server yourself when the pipeline finishes. In TUI mode it dies with the shell; in one-shot mode the operator either clicks "Shutdown server" in the browser, calls `kill "$(cat $OUT/.live_server.pid)"`, or waits for the 3-hour loitering guard to fire — never your job as the agent.
+
+The live view is a **skill-owned local viewer**, not a review workflow. There is no assignment, no persistence beyond `$OUT/.reviewed.json`, no GitHub integration. That intentional narrowness is what distinguishes this from Downstream's `compliance-mapping-agents` runtime — mention it to the operator if they ask.
+
 ### Phase 0 — Detect prior artifacts (main agent, deterministic)
 
 Before running any other phase, inspect `$OUT` and decide whether this is a **fresh run** or a **re-run against updated inputs** (SPEC §13). This determines which phases you skip.
