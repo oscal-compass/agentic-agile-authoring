@@ -1,0 +1,1739 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://oscal-compass.github.io/agentic-agile-authoring/design-spec/">
+      
+      
+        <link rel="prev" href="../skills/">
+      
+      
+        <link rel="next" href="../development/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../img/oscal-compass-icon-1200x1200.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Design - Agentic Agile Authoring</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sen:300,300i,400,400i,700,700i%7CAzeret+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Sen";--md-code-font:"Azeret Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-spec-skills-demos-and-installation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Agentic Agile Authoring" class="md-header__button md-logo" aria-label="Agentic Agile Authoring" data-md-component="logo">
+      
+  <img src="../img/oscal-compass-icon-1200x1200.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Agentic Agile Authoring
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/oscal-compass/agentic-agile-authoring" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../skills/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Skills
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../development/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Development
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Agentic Agile Authoring" class="md-nav__button md-logo" aria-label="Agentic Agile Authoring" data-md-component="logo">
+      
+  <img src="../img/oscal-compass-icon-1200x1200.png" alt="logo">
+
+    </a>
+    Agentic Agile Authoring
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/oscal-compass/agentic-agile-authoring" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-skills-and-their-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Skills and their metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Skills and their metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-portable-skillmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Portable SKILL.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-apmyml-package-manifest-hybrid-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 apm.yml package manifest (hybrid layout)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-mcp-dependency-declaration-dependenciesmcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 MCP dependency declaration (dependencies.mcp)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-installation-thin-wrapper-over-openapm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Installation — thin wrapper over OpenAPM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Installation — thin wrapper over OpenAPM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-supported-targets-delegate-to-apm-claude-opencode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Supported targets — delegate to apm (claude, opencode, …)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-selection-default-all-skills-in-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Selection (default: all skills in this repo)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-myharness-reuse-apms-core-own-only-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 MyHarness — reuse APM's core, own only deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-library-vs-cli-boundary-decided" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Library vs CLI boundary (decided)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-prerequisites-deliberately-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Prerequisites (deliberately simple)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Demo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Demo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Verification &amp; Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification &amp; Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-verification-did-we-build-it-right-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Verification — "did we build it right?" (tests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-validation-did-we-build-the-right-thing-acceptance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Validation — "did we build the right thing?" (acceptance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-target-repo-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Target repo layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-requirements-traceability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Requirements traceability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-phasing-open-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Phasing / open items
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-decision-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Decision log
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Decision log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d5-bundle-the-skills-into-the-installer-package-default-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5 — Bundle the skills into the installer package (default source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4-adopt-openapm-apm-cli-as-the-installer-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4 — Adopt OpenAPM (apm-cli) as the installer backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3-self-implement-placement-in-python-superseded-by-d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3 — Self-implement placement in Python (SUPERSEDED by D4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-implement-compliance-authoring-skills-in-python-still-holds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2 — Implement compliance-authoring-skills in Python (still holds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d1-adopt-dont-invent-restored-by-d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1 — Adopt, don't invent (restored by D4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-skills-and-their-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Skills and their metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Skills and their metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-portable-skillmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Portable SKILL.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-apmyml-package-manifest-hybrid-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 apm.yml package manifest (hybrid layout)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-mcp-dependency-declaration-dependenciesmcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 MCP dependency declaration (dependencies.mcp)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-installation-thin-wrapper-over-openapm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Installation — thin wrapper over OpenAPM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Installation — thin wrapper over OpenAPM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-supported-targets-delegate-to-apm-claude-opencode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Supported targets — delegate to apm (claude, opencode, …)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-selection-default-all-skills-in-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Selection (default: all skills in this repo)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-myharness-reuse-apms-core-own-only-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 MyHarness — reuse APM's core, own only deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-library-vs-cli-boundary-decided" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Library vs CLI boundary (decided)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-prerequisites-deliberately-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Prerequisites (deliberately simple)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Demo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Demo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Verification &amp; Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification &amp; Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-verification-did-we-build-it-right-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Verification — "did we build it right?" (tests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-validation-did-we-build-the-right-thing-acceptance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Validation — "did we build the right thing?" (acceptance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-target-repo-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Target repo layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-requirements-traceability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Requirements traceability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-phasing-open-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Phasing / open items
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-decision-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Decision log
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Decision log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d5-bundle-the-skills-into-the-installer-package-default-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5 — Bundle the skills into the installer package (default source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4-adopt-openapm-apm-cli-as-the-installer-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4 — Adopt OpenAPM (apm-cli) as the installer backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3-self-implement-placement-in-python-superseded-by-d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3 — Self-implement placement in Python (SUPERSEDED by D4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-implement-compliance-authoring-skills-in-python-still-holds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2 — Implement compliance-authoring-skills in Python (still holds)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d1-adopt-dont-invent-restored-by-d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1 — Adopt, don't invent (restored by D4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-spec-skills-demos-and-installation">Design Spec — Skills, Demos, and Installation</h1>
+<blockquote>
+<p><strong>Status:</strong> Approved; implementation in progress (rev.4, 2026-08-18). Supersedes the removed
+<code>docs/installer-spec.md</code>. This restructure covers <strong>structure + the first demo
+(<code>catalog-to-assessment</code>) + the <code>compliance-authoring-skills</code> installer</strong>; POA&amp;M authoring is the next task.</p>
+<p><strong>Strategy (decided):</strong> <em>Adopt, don't invent.</em> We are <strong>not</strong> building a package manager or a
+second dependency/ownership system. We stand on <strong>OpenAPM</strong> (<code>apm-cli</code>,
+<a href="https://github.com/microsoft/apm"><code>microsoft/apm</code></a>, MIT) — a real, actively-developed OSS
+Agent Package Manager whose model (<code>apm.yml</code> package + <code>dependencies.mcp</code> + per-harness
+deployment + <code>apm.lock.yaml</code> + non-destructive MCP merge + prune) is exactly our problem. Our
+<code>compliance-authoring-skills</code> CLI is a <strong>thin wrapper</strong> that adds only what APM can't do for us. See
+<code>.insights/installer-node-vs-python.md</code> and the decision log (§9, <strong>D4</strong>).</p>
+<p><strong>Runtime (decided):</strong> Python. Baseline prerequisite is <strong><code>uv</code></strong> (provides <code>uvx</code>, which also
+runs the pinned installer and <code>uvx</code>-based MCP servers like trestle). <strong>No Node/npx.</strong> The
+installer exact-pins <code>apm-cli</code> (verified against <strong>0.28.0</strong>).</p>
+</blockquote>
+<h2 id="1-goal">1. Goal</h2>
+<p>Turn <code>agentic-agile-authoring</code> into an <strong>ecosystem</strong> where many contributors add authoring
+skills, usable across multiple agent harnesses (<strong>Claude Code</strong>, <strong>OpenCode</strong>, a custom/minor
+harness we call <strong>MyHarness</strong>, …). Three first-class objects:</p>
+<ul>
+<li><strong>Skill</strong> — a unit of authoring know-how: <code>SKILL.md</code> + an <code>apm.yml</code> package manifest +
+  optional <code>scripts/</code>/<code>references/</code>/<code>assets/</code>. Single source of truth in <code>skills/</code>, harness-independent.</li>
+<li><strong>Demo</strong> — an end-to-end <strong>walkthrough</strong> exercising <strong>N skills</strong> (§4), captured as a single
+  <code>README.md</code>. Lives in <code>demos/</code>.</li>
+<li><strong>MCP dependency</strong> — a skill declares (in <code>apm.yml</code>) that it needs an MCP server (e.g.
+  <code>trestle</code>); the installer resolves it and wires it into the selected harness's native MCP
+  config (§3).</li>
+</ul>
+<h2 id="2-skills-and-their-metadata">2. Skills and their metadata</h2>
+<h3 id="21-portable-skillmd">2.1 Portable <code>SKILL.md</code></h3>
+<p>Keep <code>SKILL.md</code> portable across harnesses (Anthropic Agent-Skill format). Universally-required
+frontmatter: <code>name</code> (== directory name) and <code>description</code>; optional <code>license</code>/<code>argument-hint</code>
+are read by Claude and ignored elsewhere. The same package deploys to every target — there are
+<strong>no</strong> per-harness skill packages (<code>trestle-skill-claude/…</code> is an anti-pattern).</p>
+<h3 id="22-apmyml-package-manifest-hybrid-layout">2.2 <code>apm.yml</code> package manifest (hybrid layout)</h3>
+<p>Each skill is a <strong>hybrid APM package</strong>: <code>SKILL.md</code> (agent-consumed content) + <code>apm.yml</code>
+(installer-consumed package/dependency metadata) in the same directory. Verified: APM copies the
+<strong>whole</strong> skill folder (<code>SKILL.md</code>, <code>scripts/</code>, <code>references/</code>, <code>assets/</code>, …) on install.</p>
+<div class="highlight"><pre><span></span><code>skills/trestle-skill/
+  SKILL.md
+  apm.yml            # APM package manifest (name, version, dependencies.mcp)
+  scripts/ …         # optional; ride along on install
+</code></pre></div>
+<p>Identity is the directory name; "has it changed?" is answered by APM's <code>apm.lock.yaml</code> (resolved
+SHA + content hash), <strong>not</strong> a bespoke <code>version</code> scheme. We do not invent skill versioning.</p>
+<h3 id="23-mcp-dependency-declaration-dependenciesmcp">2.3 MCP dependency declaration (<code>dependencies.mcp</code>)</h3>
+<p>A skill needing an MCP server declares it in its <code>apm.yml</code> under <code>dependencies.mcp</code>, in APM's
+shape. Self-defined stdio servers (our <code>trestle</code> case) use <code>registry: false</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trestle-skill</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.0.0"</span>
+
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mcp</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trestle</span>
+<span class="w">      </span><span class="nt">registry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1"># self-defined (not resolved from a registry)</span>
+<span class="w">      </span><span class="nt">transport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stdio</span><span class="w">          </span><span class="c1"># stdio | http | sse | streamable-http</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uvx</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--from</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git+https://github.com/oscal-compass/compliance-trestle-mcp.git</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trestle-mcp</span>
+</code></pre></div>
+<p>APM's <code>MCPDependency</code> supports <code>name, transport, command, args, env, url, headers, tools,
+version, registry, package</code> — so both local stdio and remote http servers are expressible.
+Skills with no MCP need simply omit <code>dependencies.mcp</code>.</p>
+<blockquote>
+<p><strong>Do NOT hardcode <code>target:</code>/<code>targets:</code> in a skill's <code>apm.yml</code>.</strong> An unknown target token there
+is the one thing APM rejects at parse time — which would break MyHarness reuse (§3.3). Targets
+are chosen at install time, not baked into the package.</p>
+</blockquote>
+<h2 id="3-installation-thin-wrapper-over-openapm">3. Installation — thin wrapper over OpenAPM</h2>
+<p><code>compliance-authoring-skills</code> is the only bespoke code. It does <strong>not</strong> re-implement package resolution,
+dependency graphs, lockfiles, MCP normalization, or ownership — APM owns all of that. It adds
+three things APM alone doesn't give us:</p>
+<ol>
+<li><strong>Selection</strong> over <em>this repo</em> (<code>--demo</code>, <code>--exclude</code>, all-skills) — APM has no concept of
+   our demos; the wrapper resolves a selection to a set of local skill packages.</li>
+<li><strong>A stable UX</strong> that hides APM's project mechanics (a standalone skill install needs an APM
+   project context; the wrapper synthesizes it) and enforces our prerequisite policy (§3.5).</li>
+<li><strong>MyHarness deployment</strong> — APM's target set is closed (§3.3), so the wrapper deploys to
+   MyHarness itself, <strong>reusing APM's resolver/normalizer</strong> so it's a deployment diff only.</li>
+</ol>
+<div class="highlight"><pre><span></span><code>                    compliance-authoring-skills
+                         │
+                         ▼
+              APM manifest + resolution + MCP normalization   (always via apm-cli, pinned)
+                         │
+             ┌───────────┴───────────┐
+             ▼                       ▼
+     APM-supported target        MyHarness (unknown to APM)
+     (claude, opencode, …)               │
+             │                    our deployer over APM's
+        apm deploys               resolved/normalized objects
+     skill + MCP + lockfile       (skill copy + native MCP merge)
+</code></pre></div>
+<h3 id="31-supported-targets-delegate-to-apm-claude-opencode">3.1 Supported targets — delegate to <code>apm</code> (claude, opencode, …)</h3>
+<p>For any target APM knows, the wrapper shells out to the pinned <code>apm</code> CLI — the canonical,
+maintainer-tested path. <strong>Verified (spikes, §5):</strong></p>
+<ul>
+<li><code>apm install &lt;skill&gt; --target claude</code> (or <code>opencode</code>, …) in a synthesized project <strong>copies the
+  skill into the target's native skill dir AND wires the MCP server into the target's native MCP
+  config in one pass.</strong> Direct-dependency self-defined MCP is auto-trusted (no extra flag).</li>
+<li>Claude → skill in <code>.claude/skills/&lt;name&gt;/</code>, MCP in <code>.mcp.json</code> (<code>mcpServers</code>).</li>
+<li>OpenCode → skill in <code>.agents/skills/&lt;name&gt;/</code>, MCP in <code>opencode.json</code> (<code>mcp.&lt;name&gt; = {type:
+    local, command:[…], enabled}</code>). APM does the per-harness format translation.</li>
+<li><code>apm uninstall &lt;key&gt;</code> + APM's reachability prune removes a skill and drops an MCP server
+  <strong>only when no remaining installed skill still declares it</strong> — user-authored skills and
+  user-defined MCP servers are never touched. (Verified with a diamond dep + a hand-injected user
+  server that survived.)</li>
+</ul>
+<p>The wrapper's job for supported targets is just: resolve the selection → <code>apm install &lt;skill-dirs&gt;
+--target &lt;t&gt;</code> with the <strong><code>--project</code> dir as the APM project</strong> (or <code>-g</code> for user scope) → surface
+results. There is <strong>no</strong> throwaway temp project — that would discard APM's <code>apm.lock.yaml</code>/prune,
+the reason we adopted APM (D4). Ownership/lockfile/prune all live in APM.</p>
+<p>Project tidy (project scope, on by default): APM writes its project bookkeeping into the target
+dir, but the user only wants the deployed products. After a successful install the wrapper drops
+the regenerable <code>apm_modules/</code> cache, reverts APM's <code>.gitignore</code> edit, and consolidates the ledger
+(<code>apm.yml</code> + <code>apm.lock.yaml</code>) into a hidden <code>.compliance-authoring-skills/</code> dir — so the project shows just
+<code>.claude/skills/</code> + <code>.mcp.json</code> + that one hidden dir. <code>uninstall</code> restores the ledger to the
+project root so APM's reachability prune runs, then re-tidies. <code>--keep-apm-files</code> opts out
+(debugging / direct <code>apm</code> interop). Verified: uninstall + prune work with <code>apm_modules/</code> absent and
+the ledger restored to cwd.</p>
+<p>Note (verified @ 0.28.0): the historically-documented <code>auto_create=False</code> skill-skip gotcha does
+<strong>not</strong> bite when <code>--target</code> is passed explicitly (APM creates the target root on the
+<code>auto_create OR explicit</code> path). The wrapper still pre-creates the root as cheap insurance.</p>
+<h3 id="32-selection-default-all-skills-in-this-repo">3.2 Selection (default: all skills in this repo)</h3>
+<table>
+<thead>
+<tr>
+<th>Intent</th>
+<th>Resolves to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>default (no selector)</td>
+<td>all skill packages under <code>skills/</code></td>
+</tr>
+<tr>
+<td><code>--skill a,b</code></td>
+<td>explicit pick</td>
+</tr>
+<tr>
+<td><code>--exclude x,y</code></td>
+<td>(all) − {x,y}</td>
+</tr>
+<tr>
+<td><code>--demo name</code></td>
+<td>the <code>skills:</code> set declared in <code>demos/name/README.md</code></td>
+</tr>
+</tbody>
+</table>
+<p>The resolved set is validated against the source (typos error out), then each skill is handed to
+the appropriate backend (§3.1 for APM targets, §3.3 for MyHarness).</p>
+<p><strong>Source of the skills (decided, D5).</strong> By default the selection is resolved against the skills
+<strong>bundled inside the installed package</strong> (<code>compliance_authoring_skills/_bundled/{skills,demos}</code>, copied from
+this repo's top-level dirs at wheel-build time). So <code>compliance-authoring-skills install …</code> works from <strong>any
+directory</strong> with no local checkout — the tool carries its own skills as package data. The repo's
+top-level <code>skills/</code>/<code>demos/</code> remain the single source of truth (no committed duplicate; an
+editable/dev install falls back to the repo checkout). <code>--source &lt;repo&gt;</code> overrides the default to
+install from an external skills repo (a remote <code>owner/repo</code> shorthand that git-clones first is a
+future add — §8.5). This does <strong>not</strong> revive the retired monolith/publish-wheel of authoring
+logic; the bespoke surface is still just the thin wrapper, now shipping the skills alongside it.</p>
+<h3 id="33-myharness-reuse-apms-core-own-only-deployment">3.3 MyHarness — reuse APM's core, own only deployment</h3>
+<p>APM's deployment targets are a <strong>closed, hardcoded registry</strong> (<code>apm_cli/factory.py:
+_MCP_CLIENT_REGISTRY</code>); unknown target slugs are rejected, and there is <strong>no entry-point/plugin
+mechanism</strong> to register an external target. We do <strong>not</strong> fork APM. Instead — verified by source
+trace — APM's <strong>manifest load → dependency resolution → MCP normalization are fully
+target-agnostic</strong>:</p>
+<ul>
+<li><code>apm_cli.models.apm_package:APMPackage.from_apm_yml(Path)</code> → parsed package</li>
+<li><code>apm_cli.deps.apm_resolver:APMDependencyResolver.resolve_dependencies(project_root)</code> → graph</li>
+<li><code>apm_cli.integration.mcp_config_view:CurrentMcpConfigView.derive(...)</code> (or
+  <code>APMPackage.get_all_mcp_dependencies()</code>) → normalized <code>MCPDependency</code> objects / <code>{name:
+  to_dict()}</code> — <strong>none of these take a target.</strong></li>
+</ul>
+<p>So the MyHarness adapter imports the pinned APM as a <strong>library</strong> to get resolved skills +
+normalized MCP, then does the small deployment diff itself:</p>
+<div class="highlight"><pre><span></span><code>resolved skill package + normalized MCP  (from APM library)
+        │
+        ├── copy skill bundle → ~/.myharness/skills/&lt;name&gt;/
+        └── merge normalized MCP → ~/.myharness/mcp.json   (non-destructive; preserve user entries)
+</code></pre></div>
+<p>MyHarness prune reuses the <strong>same reachability idea</strong> APM uses: recompute the required MCP set
+from the currently-installed skills' manifests and drop only servers no surviving skill needs.
+The only MyHarness-local state is "which entries we wrote" — not a second dependency manager.</p>
+<h3 id="34-library-vs-cli-boundary-decided">3.4 Library vs CLI boundary (decided)</h3>
+<p>Split by need, not dogma (exact-pinned <code>apm-cli</code>, so private APIs are acceptable when we've read
+the pinned source):</p>
+<ul>
+<li><strong>Supported targets → CLI</strong> (<code>apm install/uninstall/prune</code>). We don't need APM's internal
+  objects here; APM owns the whole lifecycle. Least code. (The Click-free entry
+  <code>apm_cli.install.service:InstallService.run(InstallRequest(...))</code> exists if we ever want
+  in-process, but the CLI does the project/lockfile bookkeeping for free.)</li>
+<li><strong>MyHarness → library</strong> (<code>APMPackage.from_apm_yml</code> → <code>APMDependencyResolver</code> →
+  <code>CurrentMcpConfigView.derive</code>), because we need the normalized objects in-process to drive our
+  own deployer.</li>
+</ul>
+<p>Version bumps of <code>apm-cli</code> are gated behind the §5 integration spikes.</p>
+<h3 id="35-prerequisites-deliberately-simple">3.5 Prerequisites (deliberately simple)</h3>
+<ul>
+<li><strong>Guaranteed baseline: <code>uv</code></strong> (→ <code>uvx</code>). <code>uvx</code> runs the pinned <code>compliance-authoring-skills</code>/<code>apm-cli</code> and the
+  <code>uvx</code>-based trestle MCP. This is the only runtime we promise.</li>
+<li><strong>Other MCP-specific prerequisites are the environment's responsibility.</strong> If a skill's MCP
+  needs <code>npx</code> or <code>docker</code>, those must already be installed; the wrapper validates presence and
+  emits a useful error but does <strong>not</strong> auto-install system dependencies.</li>
+</ul>
+<h2 id="4-demo">4. Demo</h2>
+<p>A demo is an <strong>end-to-end walkthrough</strong> exercising N skills, in natural language — the payload
+demo, expressed so anyone can reproduce it.</p>
+<h3 id="41-layout">4.1 Layout</h3>
+<p>A demo is a <strong>single <code>README.md</code></strong> plus any assets it references (e.g. a demo video):</p>
+<div class="highlight"><pre><span></span><code>demos/&lt;demo-name&gt;/
+  README.md       frontmatter (skills:) + demo video + install → prompts (in order) → uninstall
+  …               any referenced assets
+</code></pre></div>
+<ul>
+<li><strong>1 demo : N skills</strong> (not 1:1). The <code>README.md</code> frontmatter declares the skill set (also
+  used by <code>--demo</code> install, §3.2); it self-documents install and uninstall:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">catalog-to-assessment</span>
+<span class="nt">skills</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">catalog-authoring</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">component-definition</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">assessment</span><span class="p p-Indicator">]</span>
+<span class="nn">---</span>
+</code></pre></div>
+<p>The README's prose walks the reader through the prompts to give the agent, in order, and what each
+produces (e.g. an OSCAL <code>catalog.json</code> that <code>trestle validate</code> accepts). There is no separate
+checkpoint file — the walkthrough itself is the spec; a run "passes" when it reproduces the
+described artifacts.</p>
+<h2 id="5-verification-validation">5. Verification &amp; Validation</h2>
+<h3 id="51-verification-did-we-build-it-right-tests">5.1 Verification — "did we build it right?" (tests)</h3>
+<p>The bespoke code is small: the selection wrapper and the MyHarness deployer. Test those directly
+(unit). But the load-bearing behavior lives in APM, so the primary safety net is an
+<strong>integration spike suite</strong> pinned to the <code>apm-cli</code> version — the same checks proven by hand
+during design (see <code>.insights/installer-node-vs-python.md</code>), run in CI and re-run before any
+<code>apm-cli</code> bump:</p>
+<ul>
+<li><strong>standalone install (supported target):</strong> install a local skill <code>--target claude</code> → skill
+  appears in <code>.claude/skills/&lt;name&gt;/</code> <strong>and</strong> its stdio MCP appears in <code>.mcp.json</code>.</li>
+<li><strong>OpenCode:</strong> same, into <code>.agents/skills/</code> + <code>opencode.json</code> (native <code>mcp</code> shape), preserving a
+  pre-existing user <code>provider</code>/<code>model</code> config.</li>
+<li><strong>shared-MCP prune:</strong> two skills declare the same server → uninstall one keeps it, uninstall the
+  last removes it; a hand-planted user MCP server survives throughout.</li>
+<li><strong>selection:</strong> <code>--exclude</code> / <code>--demo</code> resolve to the correct skill set.</li>
+<li><strong>MyHarness:</strong> library reuse yields normalized MCP objects for an unknown target; our deployer
+  writes <code>~/.myharness/skills/</code> + merges <code>~/.myharness/mcp.json</code> non-destructively; prune drops
+  only unreferenced servers.</li>
+</ul>
+<h3 id="52-validation-did-we-build-the-right-thing-acceptance">5.2 Validation — "did we build the right thing?" (acceptance)</h3>
+<p>Two instruments:</p>
+<ol>
+<li><strong>Demo walkthroughs (§4)</strong> validate the <em>authoring capability</em> — a real (harness, model)
+   follows an N-skill demo <code>README.md</code> and reproduces the described artifacts (e.g. produced
+   OSCAL passes <code>trestle validate</code>).</li>
+<li><strong>Installer acceptance</strong> = the §5.1 spikes at requirement level: skills land in each harness's
+   native dir; MCP servers appear in native config; non-destructive uninstall; prune-when-unreferenced.</li>
+</ol>
+<h2 id="6-target-repo-layout">6. Target repo layout</h2>
+<div class="highlight"><pre><span></span><code>skills/&lt;name&gt;/               skill package: SKILL.md + apm.yml [+ scripts/refs/assets]
+demos/&lt;name&gt;/            README.md (frontmatter skills: + walkthrough) [+ assets]
+tools/                       `compliance-authoring-skills` — thin wrapper over apm-cli (Python)
+  pyproject.toml             deps: apm-cli==&lt;pin&gt;, pyyaml
+  compliance_authoring_skills/
+    cli.py                   install / uninstall  --target {claude|opencode|myharness|…}
+    policy.py                selection + apm.yml validation + prereq checks (uv; npx/docker existence)
+    backends/apm_cli.py      subprocess to pinned `apm` for supported targets (canonical path)
+    targets/myharness.py     library reuse (APM resolve/normalize) + our deployer
+  tests/compliance_authoring_skills/        unit + pinned-apm integration spikes (§5.1)
+docs/
+</code></pre></div>
+<p>Notes:
+- Skill <em>placement</em> into a user project is done by APM (supported targets) or the MyHarness
+  deployer — producing <code>.claude/skills/</code>, <code>.agents/skills/</code>, <code>~/.myharness/skills/</code>, and the
+  matching native MCP config, plus APM's <code>apm.lock.yaml</code> for supported targets.
+- The old Python installer (<code>installer/agentic_agile_authoring/cli.py</code>), wheel, Claude plugin, and
+  publish workflow are <strong>retired/removed</strong>.</p>
+<h2 id="7-requirements-traceability">7. Requirements traceability</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Where satisfied</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install per each harness's convention</td>
+<td>§3.1 APM native-dir deploy (claude/opencode verified); §3.3 MyHarness deployer</td>
+</tr>
+<tr>
+<td>Same package to all harnesses (no per-harness pkg)</td>
+<td>§2.1 hybrid <code>SKILL.md</code>+<code>apm.yml</code>, target chosen at install</td>
+</tr>
+<tr>
+<td>Selectable which skills (default all)</td>
+<td>§3.2 (<code>--skill</code>/<code>--exclude</code>/<code>--demo</code>)</td>
+</tr>
+<tr>
+<td>Provided as a CLI (uvx-runnable)</td>
+<td>§3 (<code>compliance-authoring-skills</code>, Python, pins <code>apm-cli</code>)</td>
+</tr>
+<tr>
+<td>Skill declares MCP dep; installer wires it</td>
+<td>§2.3 + §3.1 (<code>apm</code>) / §3.3 (MyHarness)</td>
+</tr>
+<tr>
+<td>MCP merged into native config, non-destructive</td>
+<td>§3.1 verified (Claude <code>.mcp.json</code>, OpenCode <code>opencode.json</code>)</td>
+</tr>
+<tr>
+<td>Uninstall non-destructive + prune unused MCP</td>
+<td>§3.1 APM reachability prune (verified); §3.3 for MyHarness</td>
+</tr>
+<tr>
+<td>One source of truth for lifecycle/ownership</td>
+<td>APM <code>apm.lock.yaml</code> for supported targets; minimal MyHarness-scoped record only</td>
+</tr>
+<tr>
+<td>Demo = walkthrough over N skills</td>
+<td>§4</td>
+</tr>
+<tr>
+<td>Prerequisite policy (uv baseline)</td>
+<td>§3.5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-phasing-open-items">8. Phasing / open items</h2>
+<ol>
+<li><strong>Wrapper build</strong> — <code>compliance-authoring-skills</code> (cli/policy/backends.apm_cli/targets.myharness). <em>In progress.</em></li>
+<li><strong>apm-cli pin</strong> — exact-pin the verified version (0.28.0) in <code>pyproject.toml</code>; CI gate on §5.1.</li>
+<li><strong>Standalone-install shaping</strong> — finalize synthetic-project vs <code>-g</code> user-scope vs <code>--root</code> for
+   supported targets (spikes used a temp project with a local-path dep; both work).</li>
+<li><strong>MyHarness spec</strong> — pin <code>~/.myharness/{skills/,mcp.json}</code> paths + the minimal ownership record.</li>
+<li><strong>Remote source shorthand</strong> — <code>--source oscal-compass/agentic-agile-authoring</code> would <code>git clone</code>
+   first (git then an optional prereq); deferred.</li>
+<li><strong>trestle MCP runtime bug (external)</strong> — <code>compliance-trestle-mcp</code> currently crashes on import
+   (<code>No module named 'mcp.server.fastmcp'</code>, stale FastMCP pin). Wiring is correct in every harness,
+   but the server yields no tools until that repo's dependency is fixed. Tracked separately.</li>
+<li><strong>OpenAPM tracking</strong> — APM/OpenAPM is pre-1.0 and fast-moving; the <code>dependencies.mcp</code> shape and
+   library entry points may shift. Mitigated by the version pin + §5.1 gate.</li>
+</ol>
+<h2 id="9-decision-log">9. Decision log</h2>
+<p>Short ADR-style records of load-bearing choices. Most recent first.</p>
+<h3 id="d5-bundle-the-skills-into-the-installer-package-default-source">D5 — Bundle the skills into the installer package (default source)</h3>
+<ul>
+<li><strong>Status:</strong> Accepted (2026-08-18). Refines D4; does <strong>not</strong> reverse it.</li>
+<li><strong>Context:</strong> With <code>--source</code> defaulting to the current directory, <code>compliance-authoring-skills</code> only worked from
+  a checkout of this repo — the user expected a tool they could run from <strong>any</strong> directory and have
+  it place "its" skills. Options: (a) require running from the repo root; (b) a remote <code>owner/repo</code>
+  shorthand that git-clones first (§8.5, deferred — adds a git prereq + clone lifecycle); (c) bundle
+  the skills into the package as data.</li>
+<li><strong>Decision:</strong> Ship the repo's <code>skills/</code> + <code>demos/</code> inside the wheel at build time
+  (<code>compliance_authoring_skills/_bundled/</code>, via hatchling <code>force-include</code>), and make <code>--source</code> <strong>optional</strong>,
+  defaulting to that bundle. <code>--source &lt;repo&gt;</code> still installs from an external skills repo. Runtime
+  resolution: bundled dir if present, else the repo checkout the package lives in (editable/dev).</li>
+<li><strong>Consequences:</strong> (+) works from any cwd, no checkout, matches user expectation; single source of
+  truth stays the repo's top-level dirs (build copies them — no committed duplicate); the wrapper
+  stays skill-set-agnostic (external <code>--source</code> still honored). (−) skills now ride in the wheel, so
+  a skill change means a rebuild to refresh the bundle (dev/editable installs read the live repo, so
+  this only bites published artifacts); bundle can drift from an old installed wheel (acceptable —
+  same as any packaged data). This is <strong>not</strong> the retired monolith/plugin: authoring logic isn't
+  re-coupled; the tool merely carries skills as data.</li>
+<li><strong>Not chosen:</strong> repo-root-only (too restrictive); remote shorthand as the <em>only</em> path (heavier;
+  still planned as an addition, §8.5).</li>
+</ul>
+<h3 id="d4-adopt-openapm-apm-cli-as-the-installer-backend">D4 — Adopt OpenAPM (<code>apm-cli</code>) as the installer backend</h3>
+<ul>
+<li><strong>Status:</strong> Accepted (2026-08-18). <strong>Supersedes D3</strong> (and restores D1's "adopt, don't invent").</li>
+<li><strong>Context:</strong> After D3 chose to self-implement placement + a bespoke MCP bridge/lockfile, research
+  surfaced <strong>OpenAPM</strong> (<code>microsoft/apm</code>, <code>apm-cli</code>) — a real, maintained OSS package manager
+  that already models exactly our problem: <code>apm.yml</code> packages, <code>dependencies.mcp</code> (incl. self-defined
+  stdio <code>command</code>/<code>args</code>), per-harness deployment (Claude, OpenCode, +9), <code>apm.lock.yaml</code>,
+  non-destructive native-MCP merge, and reachability-based prune. Re-implementing that ourselves
+  would be a second dependency/ownership system — the thing we explicitly want to avoid.</li>
+<li><strong>Evidence (source trace + spikes against <code>apm-cli==0.28.0</code>):</strong></li>
+<li><code>apm install &lt;local-skill&gt; --target claude</code> → skill in <code>.claude/skills/</code> + trestle stdio in
+    <code>.mcp.json</code>, one pass, direct-dep MCP auto-trusted.</li>
+<li><code>--target opencode</code> → skill in <code>.agents/skills/</code> + <code>opencode.json</code> <code>mcp</code> (native shape),
+    <strong>user <code>litellm</code> provider config preserved</strong>; a real OpenCode agent (litellm haiku) then loaded
+    and listed the installed skill.</li>
+<li>shared-MCP: two skills → uninstall one keeps trestle, uninstall the last prunes it; a
+    hand-injected user MCP server survived throughout.</li>
+<li>target-agnostic library layer (<code>APMPackage.from_apm_yml</code> → <code>APMDependencyResolver</code> →
+    <code>CurrentMcpConfigView.derive</code>) yields normalized MCP for an <strong>unknown</strong> target — enabling
+    MyHarness without forking APM.</li>
+<li><strong>Decision:</strong> <code>compliance-authoring-skills</code> becomes a <strong>thin wrapper</strong>: delegate supported targets to the pinned
+  <code>apm</code> CLI; add only selection (our demos), UX, prereq policy, and a <strong>MyHarness deployer</strong> that
+  reuses APM's target-agnostic resolve/normalize (library) and writes MyHarness's own skill dir +
+  MCP config. Exact-pin <code>apm-cli</code>; gate bumps on the §5.1 spikes.</li>
+<li><strong>Consequences:</strong> (+) drastically less bespoke code; APM owns resolution/lockfile/ownership/prune;
+  correct per-harness MCP translation for free; broad target coverage. (−) a real dependency on a
+  pre-1.0, fast-moving project (mitigated by pin + spikes); baseline prereq is now <strong><code>uv</code></strong> (not
+  zero); MyHarness is the one place we still write a deployer + a small ownership record.</li>
+<li><strong>Not chosen:</strong> forking APM to add MyHarness to <code>_MCP_CLIENT_REGISTRY</code> (maintenance burden;
+  library reuse of the target-agnostic layers avoids it). Full write-up:
+  <code>.insights/installer-node-vs-python.md</code>.</li>
+</ul>
+<h3 id="d3-self-implement-placement-in-python-superseded-by-d4">D3 — Self-implement placement in Python (SUPERSEDED by D4)</h3>
+<ul>
+<li><strong>Status:</strong> Superseded by D4. Was: reverse D1 and self-implement placement + MCP bridge in Python
+  (no Node) because Vercel <code>skills</code> has no library API and forces Node on users.</li>
+<li><strong>Why superseded:</strong> the anti-Node reasoning still holds (we do not use Vercel <code>skills</code>), but MS
+  APM provides the placement/ownership/prune we were about to hand-write — in Python, reusable as a
+  library — so hand-writing it is no longer justified. The Vercel <code>skills</code> findings (no library API;
+  closed harness set) remain recorded in <code>.insights/prior-art-skill-dependency-managers.md</code>.</li>
+</ul>
+<h3 id="d2-implement-compliance-authoring-skills-in-python-still-holds">D2 — Implement <code>compliance-authoring-skills</code> in Python (still holds)</h3>
+<ul>
+<li><strong>Status:</strong> Accepted. Reinforced by D4: APM itself is Python, so library reuse of its
+  resolve/normalize layer for MyHarness is natural. Tested with <code>pytest</code>.</li>
+</ul>
+<h3 id="d1-adopt-dont-invent-restored-by-d4">D1 — Adopt, don't invent (restored by D4)</h3>
+<ul>
+<li><strong>Status:</strong> Accepted; the "reuse existing tooling for placement/MCP" intent is fulfilled by D4
+  (adopt MS APM). Declaring MCP deps in <code>apm.yml</code> (§2.3) is APM's own shape.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../skills/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Skills">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Skills
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../development/" class="md-footer__link md-footer__link--next" aria-label="Next: Development">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Development
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/oscal-compass/agentic-agile-authoring" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<p style="font-size:18px;text-align:center">We are a Cloud Native Computing Foundation sandbox project.</p>
+<p style="text-align:center">
+  <img src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-white-logo.svg" width=300 class="cncf-logo-dark" />
+  <img src="https://www.cncf.io/wp-content/uploads/2022/07/cncf-color-bg.svg" width=300 class="cncf-logo-light" />
+</p>
+<p style="font-size:12px;text-align:center">The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href="https://www.linuxfoundation.org/legal/trademark-usage">Trademark Usage</a>.</p>
+<p style="font-size:12px;text-align:left">OSCAL Compass was originally contributed by IBM.</p>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer", "navigation.tabs"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
