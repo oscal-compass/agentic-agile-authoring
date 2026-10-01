@@ -4,3 +4,6 @@ pillow>=10.0
 pytesseract>=0.3
 pdf2image>=1.16
 compliance-trestle>=3.0
+# live_server (skill-owned browser view; see scripts/live_server/)
+fastapi>=0.110
+uvicorn>=0.27

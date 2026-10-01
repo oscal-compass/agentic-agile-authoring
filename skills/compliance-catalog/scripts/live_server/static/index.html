@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OSCAL Compass — catalog run</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">OSCAL Compass · <span class="brand-sub">catalog</span></div>
+    <div id="session-badge" class="session-badge">single-session · closes when you Ctrl-C</div>
+  </header>
+
+  <div class="layout">
+    <main>
+      <section id="overview" class="card">
+        <div class="overview-row">
+          <div class="stat-tile" id="stat-controls"><div class="stat-num">—</div><div class="stat-label">Controls</div></div>
+          <div class="stat-tile" id="stat-groups"><div class="stat-num">—</div><div class="stat-label">Groups</div></div>
+          <div class="stat-tile" id="stat-errors"><div class="stat-num">—</div><div class="stat-label">Validate errors</div></div>
+          <div class="stat-tile" id="stat-iteration"><div class="stat-num">—</div><div class="stat-label">Fix iteration</div></div>
+        </div>
+        <div class="output-dir mono" id="output-dir">—</div>
+      </section>
+
+      <section class="card">
+        <h2>Pipeline</h2>
+        <ol id="phase-list" class="phase-list"></ol>
+      </section>
+
+      <section class="card">
+        <h2>Validate errors over time</h2>
+        <div id="err-chart" class="err-chart"></div>
+        <p class="text-dim" id="err-empty">No iterations yet.</p>
+      </section>
+
+      <section id="done-panel" class="card hidden">
+        <h2>Run complete</h2>
+        <p id="done-summary" class="text-dim"></p>
+        <div class="verdict-row">
+          <button id="approve-btn" class="btn approve">✓ Approve this catalog</button>
+          <button id="reject-btn"  class="btn reject">✗ Reject and re-run</button>
+          <button id="shutdown-btn" class="btn shutdown" title="Stop the live server. Any browser tab still open here will just show a connection error afterwards.">⏻ Shutdown server</button>
+        </div>
+        <p id="verdict-status" class="text-dim"></p>
+        <details class="report-details">
+          <summary>Show report.md</summary>
+          <pre id="report-md" class="report-md"></pre>
+        </details>
+      </section>
+    </main>
+
+    <aside id="agent-panel" class="agent-panel">
+      <div class="agent-panel-header">
+        <h2>Agent activity</h2>
+        <label class="agent-panel-follow">
+          <input type="checkbox" id="follow-toggle" checked />
+          <span>Follow tail</span>
+        </label>
+      </div>
+      <div id="agent-log" class="agent-log"></div>
+    </aside>
+  </div>
+
+  <footer>
+    <span id="last-updated" class="text-dim">Waiting for first update…</span>
+  </footer>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

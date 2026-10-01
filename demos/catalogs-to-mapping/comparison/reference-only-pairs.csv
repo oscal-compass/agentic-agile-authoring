@@ -1,0 +1,13 @@
+source_control_id,target_requirement_id,relationship,requirement_title
+ac-19.5,03.01.18,subset-of,Access Control for Mobile Devices
+ac-2,03.01.01,subset-of,Account Management
+ac-2.5,03.01.01,subset-of,Account Management
+at-1,03.15.01,subset-of,Policy and Procedures
+ia-11,03.05.01,subset-of,User Identification and Authentication
+ia-6.6,03.05.11,subset-of,Authentication Feedback
+ma-1,03.15.01,subset-of,Policy and Procedures
+ma-3.3,03.07.04,subset-of,Maintenance Tools
+mp-1,03.15.01,subset-of,Policy and Procedures
+pe-1,03.15.01,subset-of,Policy and Procedures
+si-5.5,03.14.03,subset-of,"Security Alerts, Advisories, and Directives"
+sr-1,03.15.01,subset-of,Policy and Procedures

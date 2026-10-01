@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OSCAL Compass — mapping run</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">OSCAL Compass · <span class="brand-sub">mapping</span></div>
+    <div id="session-badge" class="session-badge">single-session · closes when you Ctrl-C</div>
+  </header>
+
+  <div class="layout">
+    <main>
+      <section id="overview" class="card">
+        <div class="overview-row">
+          <div class="stat-tile" id="stat-source"><div class="stat-num">—</div><div class="stat-label">Source controls</div></div>
+          <div class="stat-tile" id="stat-target"><div class="stat-num">—</div><div class="stat-label">Target controls</div></div>
+          <div class="stat-tile" id="stat-links"><div class="stat-num">—</div><div class="stat-label">Mapping links</div></div>
+          <div class="stat-tile" id="stat-chunks"><div class="stat-num">—</div><div class="stat-label">Judge chunks</div></div>
+        </div>
+        <div class="output-dir mono" id="output-dir">—</div>
+      </section>
+
+      <section class="card">
+        <h2>Pipeline</h2>
+        <ol id="phase-list" class="phase-list"></ol>
+      </section>
+
+      <section id="relationships-card" class="card hidden">
+        <h2>Relationship mix</h2>
+        <div id="rel-bars" class="rel-bars"></div>
+      </section>
+
+      <section id="done-panel" class="card hidden">
+        <h2>Run complete</h2>
+        <p id="done-summary" class="text-dim"></p>
+        <div class="verdict-row">
+          <button id="approve-btn" class="btn approve">✓ Approve this mapping</button>
+          <button id="reject-btn"  class="btn reject">✗ Reject and re-run</button>
+          <button id="shutdown-btn" class="btn shutdown" title="Stop the live server. The browser tab keeps the current view but stops updating.">⏻ Shutdown server</button>
+        </div>
+        <p id="verdict-status" class="text-dim"></p>
+        <div id="report-link-wrap" class="report-link-wrap">
+          <a id="report-link" class="report-link" href="#" target="_blank" rel="noopener noreferrer">Open report.html →</a>
+        </div>
+      </section>
+    </main>
+
+    <aside id="agent-panel" class="agent-panel">
+      <div class="agent-panel-header">
+        <h2>Agent activity</h2>
+        <label class="agent-panel-follow">
+          <input type="checkbox" id="follow-toggle" checked />
+          <span>Follow tail</span>
+        </label>
+      </div>
+      <div id="agent-log" class="agent-log"></div>
+    </aside>
+  </div>
+
+  <footer>
+    <span id="last-updated" class="text-dim">Waiting for first update…</span>
+  </footer>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

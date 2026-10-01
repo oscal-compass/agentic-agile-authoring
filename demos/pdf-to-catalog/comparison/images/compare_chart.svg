@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="2499" font-family="monospace" font-size="13">
+<rect x="503" y="9" width="21" height="18" fill="#16a34a" rx="1"/>
+<text x="533" y="26" fill="#6b7280" font-size="16">>=75%</text>
+<rect x="668" y="9" width="21" height="18" fill="#ca8a04" rx="1"/>
+<text x="698" y="26" fill="#6b7280" font-size="16">50-74%</text>
+<rect x="833" y="9" width="21" height="18" fill="#dc2626" rx="1"/>
+<text x="863" y="26" fill="#6b7280" font-size="16">&lt;50%</text>
+<text x="750" y="78" text-anchor="middle" font-weight="bold" font-size="22" fill="#1f2328">SP-800-171-REV3 (97)</text>
+<line x1="135" y1="129" x2="135" y2="2457" stroke="#ccc" stroke-width="1"/>
+<line x1="457" y1="129" x2="457" y2="2457" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="457" y="108" text-anchor="middle" fill="#9ca3af" font-size="16">25%</text>
+<text x="457" y="2481" text-anchor="middle" fill="#9ca3af" font-size="16">25%</text>
+<line x1="780" y1="129" x2="780" y2="2457" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="780" y="108" text-anchor="middle" fill="#9ca3af" font-size="16">50%</text>
+<text x="780" y="2481" text-anchor="middle" fill="#9ca3af" font-size="16">50%</text>
+<line x1="1102" y1="129" x2="1102" y2="2457" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="1102" y="108" text-anchor="middle" fill="#9ca3af" font-size="16">75%</text>
+<text x="1102" y="2481" text-anchor="middle" fill="#9ca3af" font-size="16">75%</text>
+<line x1="1425" y1="129" x2="1425" y2="2457" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="1425" y="108" text-anchor="middle" fill="#9ca3af" font-size="16">100%</text>
+<text x="1425" y="2481" text-anchor="middle" fill="#9ca3af" font-size="16">100%</text>
+<text x="131" y="146" text-anchor="end" fill="#374151" font-size="15">03.04.05</text>
+<rect x="135" y="129" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="170" text-anchor="end" fill="#374151" font-size="15">03.05.11</text>
+<rect x="135" y="153" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="194" text-anchor="end" fill="#374151" font-size="15">03.06.01</text>
+<rect x="135" y="177" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="218" text-anchor="end" fill="#374151" font-size="15">03.06.03</text>
+<rect x="135" y="201" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="242" text-anchor="end" fill="#374151" font-size="15">03.08.01</text>
+<rect x="135" y="225" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="266" text-anchor="end" fill="#374151" font-size="15">03.08.03</text>
+<rect x="135" y="249" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="290" text-anchor="end" fill="#374151" font-size="15">03.08.04</text>
+<rect x="135" y="273" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="314" text-anchor="end" fill="#374151" font-size="15">03.10.08</text>
+<rect x="135" y="297" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="338" text-anchor="end" fill="#374151" font-size="15">03.11.04</text>
+<rect x="135" y="321" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="362" text-anchor="end" fill="#374151" font-size="15">03.12.01</text>
+<rect x="135" y="345" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="386" text-anchor="end" fill="#374151" font-size="15">03.12.03</text>
+<rect x="135" y="369" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="410" text-anchor="end" fill="#374151" font-size="15">03.13.04</text>
+<rect x="135" y="393" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="434" text-anchor="end" fill="#374151" font-size="15">03.13.09</text>
+<rect x="135" y="417" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="458" text-anchor="end" fill="#374151" font-size="15">03.13.11</text>
+<rect x="135" y="441" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="482" text-anchor="end" fill="#374151" font-size="15">03.13.15</text>
+<rect x="135" y="465" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="506" text-anchor="end" fill="#374151" font-size="15">03.14.08</text>
+<rect x="135" y="489" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="530" text-anchor="end" fill="#374151" font-size="15">03.16.01</text>
+<rect x="135" y="513" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="554" text-anchor="end" fill="#374151" font-size="15">03.17.02</text>
+<rect x="135" y="537" width="1290" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="578" text-anchor="end" fill="#374151" font-size="15">03.04.02</text>
+<rect x="135" y="561" width="1280" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="602" text-anchor="end" fill="#374151" font-size="15">03.14.01</text>
+<rect x="135" y="585" width="1276" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="626" text-anchor="end" fill="#374151" font-size="15">03.04.12</text>
+<rect x="135" y="609" width="1276" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="650" text-anchor="end" fill="#374151" font-size="15">03.17.03</text>
+<rect x="135" y="633" width="1276" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="674" text-anchor="end" fill="#374151" font-size="15">03.13.13</text>
+<rect x="135" y="657" width="1275" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="698" text-anchor="end" fill="#374151" font-size="15">03.14.03</text>
+<rect x="135" y="681" width="1275" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="722" text-anchor="end" fill="#374151" font-size="15">03.13.12</text>
+<rect x="135" y="705" width="1275" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="746" text-anchor="end" fill="#374151" font-size="15">03.03.04</text>
+<rect x="135" y="729" width="1274" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="770" text-anchor="end" fill="#374151" font-size="15">03.03.07</text>
+<rect x="135" y="753" width="1274" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="794" text-anchor="end" fill="#374151" font-size="15">03.03.03</text>
+<rect x="135" y="777" width="1274" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="818" text-anchor="end" fill="#374151" font-size="15">03.11.01</text>
+<rect x="135" y="801" width="1274" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="842" text-anchor="end" fill="#374151" font-size="15">03.03.08</text>
+<rect x="135" y="825" width="1273" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="866" text-anchor="end" fill="#374151" font-size="15">03.05.03</text>
+<rect x="135" y="849" width="1273" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="890" text-anchor="end" fill="#374151" font-size="15">03.01.06</text>
+<rect x="135" y="873" width="1272" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="914" text-anchor="end" fill="#374151" font-size="15">03.17.01</text>
+<rect x="135" y="897" width="1271" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="938" text-anchor="end" fill="#374151" font-size="15">03.04.01</text>
+<rect x="135" y="921" width="1269" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="962" text-anchor="end" fill="#374151" font-size="15">03.03.05</text>
+<rect x="135" y="945" width="1269" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="986" text-anchor="end" fill="#374151" font-size="15">03.16.02</text>
+<rect x="135" y="969" width="1268" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1010" text-anchor="end" fill="#374151" font-size="15">03.04.08</text>
+<rect x="135" y="993" width="1267" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1034" text-anchor="end" fill="#374151" font-size="15">03.02.01</text>
+<rect x="135" y="1017" width="1266" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1058" text-anchor="end" fill="#374151" font-size="15">03.10.06</text>
+<rect x="135" y="1041" width="1266" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1082" text-anchor="end" fill="#374151" font-size="15">03.14.02</text>
+<rect x="135" y="1065" width="1262" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1106" text-anchor="end" fill="#374151" font-size="15">03.03.01</text>
+<rect x="135" y="1089" width="1260" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1130" text-anchor="end" fill="#374151" font-size="15">03.05.04</text>
+<rect x="135" y="1113" width="1260" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1154" text-anchor="end" fill="#374151" font-size="15">03.04.10</text>
+<rect x="135" y="1137" width="1257" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1178" text-anchor="end" fill="#374151" font-size="15">03.01.12</text>
+<rect x="135" y="1161" width="1257" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1202" text-anchor="end" fill="#374151" font-size="15">03.13.01</text>
+<rect x="135" y="1185" width="1256" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1226" text-anchor="end" fill="#374151" font-size="15">03.05.01</text>
+<rect x="135" y="1209" width="1256" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1250" text-anchor="end" fill="#374151" font-size="15">03.04.06</text>
+<rect x="135" y="1233" width="1256" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1274" text-anchor="end" fill="#374151" font-size="15">03.01.18</text>
+<rect x="135" y="1257" width="1254" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1298" text-anchor="end" fill="#374151" font-size="15">03.11.02</text>
+<rect x="135" y="1281" width="1253" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1322" text-anchor="end" fill="#374151" font-size="15">03.13.06</text>
+<rect x="135" y="1305" width="1252" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1346" text-anchor="end" fill="#374151" font-size="15">03.01.16</text>
+<rect x="135" y="1329" width="1251" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1370" text-anchor="end" fill="#374151" font-size="15">03.14.06</text>
+<rect x="135" y="1353" width="1251" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1394" text-anchor="end" fill="#374151" font-size="15">03.10.02</text>
+<rect x="135" y="1377" width="1250" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1418" text-anchor="end" fill="#374151" font-size="15">03.12.05</text>
+<rect x="135" y="1401" width="1250" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1442" text-anchor="end" fill="#374151" font-size="15">03.09.02</text>
+<rect x="135" y="1425" width="1248" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1466" text-anchor="end" fill="#374151" font-size="15">03.15.01</text>
+<rect x="135" y="1449" width="1247" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1490" text-anchor="end" fill="#374151" font-size="15">03.10.01</text>
+<rect x="135" y="1473" width="1243" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1514" text-anchor="end" fill="#374151" font-size="15">03.09.01</text>
+<rect x="135" y="1497" width="1242" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1538" text-anchor="end" fill="#374151" font-size="15">03.05.05</text>
+<rect x="135" y="1521" width="1241" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1562" text-anchor="end" fill="#374151" font-size="15">03.07.04</text>
+<rect x="135" y="1545" width="1234" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1586" text-anchor="end" fill="#374151" font-size="15">03.01.05</text>
+<rect x="135" y="1569" width="1232" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1610" text-anchor="end" fill="#374151" font-size="15">03.01.22</text>
+<rect x="135" y="1593" width="1231" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1634" text-anchor="end" fill="#374151" font-size="15">03.04.11</text>
+<rect x="135" y="1617" width="1230" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1658" text-anchor="end" fill="#374151" font-size="15">03.12.02</text>
+<rect x="135" y="1641" width="1227" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1682" text-anchor="end" fill="#374151" font-size="15">03.02.02</text>
+<rect x="135" y="1665" width="1225" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1706" text-anchor="end" fill="#374151" font-size="15">03.10.07</text>
+<rect x="135" y="1689" width="1225" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1730" text-anchor="end" fill="#374151" font-size="15">03.15.03</text>
+<rect x="135" y="1713" width="1223" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1754" text-anchor="end" fill="#374151" font-size="15">03.01.03</text>
+<rect x="135" y="1737" width="1217" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1778" text-anchor="end" fill="#374151" font-size="15">03.05.02</text>
+<rect x="135" y="1761" width="1215" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1802" text-anchor="end" fill="#374151" font-size="15">03.01.10</text>
+<rect x="135" y="1785" width="1209" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1826" text-anchor="end" fill="#374151" font-size="15">03.05.07</text>
+<rect x="135" y="1809" width="1207" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1850" text-anchor="end" fill="#374151" font-size="15">03.03.02</text>
+<rect x="135" y="1833" width="1190" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1874" text-anchor="end" fill="#374151" font-size="15">03.15.02</text>
+<rect x="135" y="1857" width="1190" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1898" text-anchor="end" fill="#374151" font-size="15">03.05.12</text>
+<rect x="135" y="1881" width="1185" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1922" text-anchor="end" fill="#374151" font-size="15">03.01.01</text>
+<rect x="135" y="1905" width="1179" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1946" text-anchor="end" fill="#374151" font-size="15">03.06.05</text>
+<rect x="135" y="1929" width="1169" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1970" text-anchor="end" fill="#374151" font-size="15">03.16.03</text>
+<rect x="135" y="1953" width="1166" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="1994" text-anchor="end" fill="#374151" font-size="15">03.13.08</text>
+<rect x="135" y="1977" width="1158" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2018" text-anchor="end" fill="#374151" font-size="15">03.06.02</text>
+<rect x="135" y="2001" width="1152" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2042" text-anchor="end" fill="#374151" font-size="15">03.08.07</text>
+<rect x="135" y="2025" width="1151" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2066" text-anchor="end" fill="#374151" font-size="15">03.06.04</text>
+<rect x="135" y="2049" width="1147" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2090" text-anchor="end" fill="#374151" font-size="15">03.01.07</text>
+<rect x="135" y="2073" width="1146" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2114" text-anchor="end" fill="#374151" font-size="15">03.01.20</text>
+<rect x="135" y="2097" width="1143" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2138" text-anchor="end" fill="#374151" font-size="15">03.01.02</text>
+<rect x="135" y="2121" width="1143" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2162" text-anchor="end" fill="#374151" font-size="15">03.01.08</text>
+<rect x="135" y="2145" width="1143" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2186" text-anchor="end" fill="#374151" font-size="15">03.01.11</text>
+<rect x="135" y="2169" width="1141" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2210" text-anchor="end" fill="#374151" font-size="15">03.07.06</text>
+<rect x="135" y="2193" width="1138" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2234" text-anchor="end" fill="#374151" font-size="15">03.01.09</text>
+<rect x="135" y="2217" width="1138" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2258" text-anchor="end" fill="#374151" font-size="15">03.08.05</text>
+<rect x="135" y="2241" width="1133" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2282" text-anchor="end" fill="#374151" font-size="15">03.04.04</text>
+<rect x="135" y="2265" width="1132" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2306" text-anchor="end" fill="#374151" font-size="15">03.01.04</text>
+<rect x="135" y="2289" width="1123" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2330" text-anchor="end" fill="#374151" font-size="15">03.03.06</text>
+<rect x="135" y="2313" width="1120" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2354" text-anchor="end" fill="#374151" font-size="15">03.08.02</text>
+<rect x="135" y="2337" width="1094" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2378" text-anchor="end" fill="#374151" font-size="15">03.04.03</text>
+<rect x="135" y="2361" width="1087" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2402" text-anchor="end" fill="#374151" font-size="15">03.13.10</text>
+<rect x="135" y="2385" width="1085" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2426" text-anchor="end" fill="#374151" font-size="15">03.07.05</text>
+<rect x="135" y="2409" width="1068" height="18" fill="#16a34a" rx="1"/>
+<text x="131" y="2450" text-anchor="end" fill="#374151" font-size="15">03.08.09</text>
+<rect x="135" y="2433" width="1058" height="18" fill="#16a34a" rx="1"/>
+</svg>

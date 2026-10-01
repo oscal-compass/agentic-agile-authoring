@@ -21,6 +21,12 @@ The OSCAL Compass project is hosted by the [Cloud Native Computing Foundation (C
   harness's native MCP config, with a lockfile and non-destructive uninstall/prune. See
   [tools/README.md](tools/README.md) and [docs/design-spec.md](docs/design-spec.md).
 
+A short walkthrough on YouTube — *OSCAL Compass (CNCF Project) Advances Compliance-as-Code with Agentic Authoring*:
+
+[![OSCAL Compass (CNCF Project) Advances Compliance-as-Code with Agentic Authoring](https://img.youtube.com/vi/9jawO1whtdk/maxresdefault.jpg)](https://youtu.be/9jawO1whtdk)
+
+▶ [Watch on YouTube](https://youtu.be/9jawO1whtdk)
+
 ## Skills
 
 Seven portable skills. The **authoring lifecycle** composes left-to-right
@@ -133,6 +139,10 @@ uvx \
 Each demo is a runnable walkthrough — install steps, the prompts to give the agent in order,
 uninstall, and a demo video:
 
+- **[`demos/pdf-to-catalog/`](demos/pdf-to-catalog/README.md)** — convert a compliance PDF
+  into a validated OSCAL Catalog (`compliance-catalog`).
+- **[`demos/catalogs-to-mapping/`](demos/catalogs-to-mapping/README.md)** — map controls
+  between two OSCAL Catalogs (`compliance-mapping`).
 - **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)** — the full authoring
   lifecycle end-to-end: tailor a NIST SP 800-53 catalog, map its controls to a Kubernetes
   component, and generate an assessment result (`catalog-authoring → component-definition →
