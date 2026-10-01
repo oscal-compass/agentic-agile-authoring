@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "compliance-authoring-skills"
-version = "1.0.0"
+version = "1.1.0"
 description = "thin wrapper over OpenAPM: install portable skills into agent harnesses + wire their MCP deps"
 readme = "README.md"
 requires-python = ">=3.10"
