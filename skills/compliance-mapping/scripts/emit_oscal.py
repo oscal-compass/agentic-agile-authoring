@@ -115,7 +115,7 @@ def derive_mapping_description(source_oscal_path, target_oscal_path):
     return "Compliance mapping"
 
 
-def build_resource(oscal_path, href):
+def build_resource(oscal_path, href, ns):
     return {
         "type": "catalog",
         "href": href,
@@ -123,7 +123,7 @@ def build_resource(oscal_path, href):
             {
                 "name": "catalog_uuid",
                 "value": get_catalog_uuid(oscal_path),
-                "ns": "https://example.com/custom/ns/oscal",
+                "ns": ns,
             }
         ],
     }
@@ -162,6 +162,11 @@ def main():
     parser.add_argument("--target-href", required=True)
     parser.add_argument("--target-working", required=True, help="Target working catalog (for target-gap-summary)")
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--ns",
+        default="https://example.com/custom/ns/oscal",
+        help="OSCAL extension namespace URI used in props (default: https://example.com/custom/ns/oscal).",
+    )
     parser.add_argument(
         "--title",
         default=None,
@@ -213,7 +218,7 @@ def main():
                     {
                         "name": "mapping-rationale",
                         "value": rationale_text,
-                        "ns": "https://example.com/custom/ns/oscal",
+                        "ns": args.ns,
                     }
                 ],
             }
@@ -221,8 +226,8 @@ def main():
 
     mapping_entry = {
         "uuid": str(uuid.uuid4()),
-        "source-resource": build_resource(args.source_original, args.source_href),
-        "target-resource": build_resource(args.target_original, args.target_href),
+        "source-resource": build_resource(args.source_original, args.source_href, args.ns),
+        "target-resource": build_resource(args.target_original, args.target_href, args.ns),
         "maps": maps,
     }
 

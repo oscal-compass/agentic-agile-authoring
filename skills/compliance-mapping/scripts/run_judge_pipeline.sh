@@ -38,6 +38,7 @@ SOURCE_CATALOG=""
 SOURCE_HREF=""
 TARGET_CATALOG=""
 TARGET_HREF=""
+OSCAL_NS="https://example.com/custom/ns/oscal"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -47,13 +48,14 @@ while [ $# -gt 0 ]; do
     --source-href) SOURCE_HREF="$2"; shift 2 ;;
     --target-catalog) TARGET_CATALOG="$2"; shift 2 ;;
     --target-href) TARGET_HREF="$2"; shift 2 ;;
+    --ns) OSCAL_NS="$2"; shift 2 ;;
     *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
 done
 
 if [ -z "$OUTPUT_DIR" ] || [ -z "$SOURCE_CATALOG" ] || [ -z "$SOURCE_HREF" ] \
     || [ -z "$TARGET_CATALOG" ] || [ -z "$TARGET_HREF" ]; then
-  echo "usage: run_judge_pipeline.sh --output-dir DIR --source-catalog PATH --source-href HREF --target-catalog PATH --target-href HREF [--work-dir DIR]" >&2
+  echo "usage: run_judge_pipeline.sh --output-dir DIR --source-catalog PATH --source-href HREF --target-catalog PATH --target-href HREF [--work-dir DIR] [--ns URI]" >&2
   exit 2
 fi
 
@@ -133,7 +135,8 @@ python3 "$SCRIPT_DIR/emit_oscal.py" "$WORK_DIR/aggregated.json" \
     --source-original "$SOURCE_CATALOG" --source-href "$SOURCE_HREF" \
     --target-original "$TARGET_CATALOG" --target-href "$TARGET_HREF" \
     --target-working "$WORK_DIR/target_wc_gen0.json" \
-    --output "$OUTPUT_DIR/mapping_collection.json"
+    --output "$OUTPUT_DIR/mapping_collection.json" \
+    --ns "$OSCAL_NS"
 
 python3 "$SCRIPT_DIR/validate_oscal.py" --mapping "$OUTPUT_DIR/mapping_collection.json"
 
