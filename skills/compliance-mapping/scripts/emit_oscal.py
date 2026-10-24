@@ -38,6 +38,7 @@ import json
 import sys
 import uuid
 from collections import defaultdict
+from importlib.metadata import PackageNotFoundError, version
 
 from internal_model import control_units, load_working_catalog
 
@@ -217,7 +218,7 @@ def main():
                 "props": [
                     {
                         "name": "mapping-rationale",
-                        "value": rationale_text,
+                        "value": rationale_text.strip(),
                         "ns": args.ns,
                     }
                 ],
@@ -238,6 +239,15 @@ def main():
             "unmapped-controls": [{"with-ids": unmapped_ids}],
         }
 
+    # compliance-trestle < 5.0.0 expects "mappings" to be a list; >= 5.0.0 expects a single object.
+    try:
+        trestle_ver = version("compliance-trestle")
+        legacy_trestle = int(trestle_ver.split(".")[0]) < 5
+    except (PackageNotFoundError, ValueError):
+        legacy_trestle = False
+
+    mappings_value = [mapping_entry] if legacy_trestle else mapping_entry
+
     mapping_collection = {
         "mapping-collection": {
             "uuid": str(uuid.uuid4()),
@@ -253,7 +263,7 @@ def main():
                 "status": "complete",
                 "mapping-description": description,
             },
-            "mappings": [mapping_entry],
+            "mappings": mappings_value,
         }
     }
 

@@ -18,4 +18,4 @@
 # delegated to native subagent tools of the host harness), so it omits `dependencies.mcp`.
 # Do NOT add a `target:` field — APM rejects unknown target tokens at parse time.
 name: compliance-mapping
-version: "1.0.0"
+version: "1.0.1"
