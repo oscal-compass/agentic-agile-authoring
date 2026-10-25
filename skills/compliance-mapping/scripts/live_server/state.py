@@ -266,7 +266,11 @@ def _mapping_summary(d: Path) -> dict:
             data = json.load(open(mapping_json, encoding="utf-8"))
             mc = data.get("mapping-collection") or {}
             all_maps: list[dict] = []
-            for m in mc.get("mappings") or []:
+            mappings = mc.get("mappings") or []
+            # list for compliance-trestle < 5.0.0, single object for >= 5.0.0
+            if isinstance(mappings, dict):
+                mappings = [mappings]
+            for m in mappings:
                 all_maps.extend(m.get("maps") or [])
             links = len(all_maps)
             for m in all_maps:
