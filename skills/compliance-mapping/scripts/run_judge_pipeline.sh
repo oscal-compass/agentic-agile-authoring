@@ -28,7 +28,9 @@
 # under it. Exit 0 on success, non-zero on failure — the caller reads the
 # exit code directly, no completion-marker file needed.
 # ============================================================================
-set -uo pipefail
+# -e: abort on the first failing stage so later stages never run against
+# missing inputs and the script cannot report success after a failure.
+set -euo pipefail
 
 # ---- args ------------------------------------------------------------------
 
@@ -99,7 +101,29 @@ if ! ls "$WORK_DIR"/agent_verdicts_*.jsonl >/dev/null 2>&1; then
 fi
 
 # ---- Stage 4e: concatenate per-chunk verdicts ------------------------------
-cat "$WORK_DIR"/agent_verdicts_*.jsonl > "$WORK_DIR/agent_verdicts.jsonl" 2>/dev/null || true
+# Every chunk must have a verdicts file. judge_apply.py auto-fills any pair
+# without a verdict as no-relationship (and caches it), so a missing chunk
+# would silently turn into "no mapping" instead of failing.
+MISSING_CHUNKS=""
+for chunk in "$WORK_DIR"/judge_chunk_[0-9]*.json; do
+  n="${chunk##*/judge_chunk_}"; n="${n%.json}"
+  [ -f "$WORK_DIR/agent_verdicts_${n}.jsonl" ] || MISSING_CHUNKS="$MISSING_CHUNKS $n"
+done
+if [ -n "$MISSING_CHUNKS" ]; then
+  echo "FATAL: no agent_verdicts_<N>.jsonl for chunk(s):$MISSING_CHUNKS — re-run Stage 4d for them" >&2
+  exit 4
+fi
+
+# Subagents often omit the trailing newline. A plain `cat` would then glue the
+# last record of one file to the first record of the next, producing invalid
+# JSONL ("Extra data"). Emit a newline after any file that lacks one.
+: > "$WORK_DIR/agent_verdicts.jsonl"
+for f in "$WORK_DIR"/agent_verdicts_[0-9]*.jsonl; do
+  cat "$f" >> "$WORK_DIR/agent_verdicts.jsonl"
+  if [ -s "$f" ] && [ -n "$(tail -c1 "$f")" ]; then
+    echo >> "$WORK_DIR/agent_verdicts.jsonl"
+  fi
+done
 
 # Refuse to proceed if we have zero verdicts — that means every sub-agent
 # dropped an empty file and the downstream stages would just produce an

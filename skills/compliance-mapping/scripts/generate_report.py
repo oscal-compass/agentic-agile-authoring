@@ -61,9 +61,16 @@ def _find_latest_working_catalog(work_dir: Path, side: str) -> Path | None:
     return candidates[-1] if candidates else None
 
 
+def _mappings_list(mc: dict) -> list[dict]:
+    """`mappings` is a list for compliance-trestle < 5.0.0 and a single
+    object for >= 5.0.0 (see emit_oscal.py); accept both."""
+    mappings = mc.get("mappings") or []
+    return [mappings] if isinstance(mappings, dict) else mappings
+
+
 def _extract_target_gaps(mapping: dict) -> list[str]:
     ids: list[str] = []
-    for m in mapping.get("mapping-collection", {}).get("mappings", []):
+    for m in _mappings_list(mapping.get("mapping-collection", {})):
         gap = m.get("target-gap-summary", {})
         for entry in gap.get("unmapped-controls", []):
             ids.extend(entry.get("with-ids", []))
@@ -118,7 +125,7 @@ def _fingerprint(mapping: dict) -> str:
     bleed across unrelated reports opened on the same machine."""
     mc = mapping.get("mapping-collection", {})
     mc_uuid = mc.get("uuid", "")
-    map_count = sum(len(m.get("maps", [])) for m in mc.get("mappings", []))
+    map_count = sum(len(m.get("maps", [])) for m in _mappings_list(mc))
     h = hashlib.sha256(f"{mc_uuid}:{map_count}".encode("utf-8")).hexdigest()[:16]
     return h
 

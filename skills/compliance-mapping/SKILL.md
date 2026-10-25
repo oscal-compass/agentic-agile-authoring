@@ -211,6 +211,7 @@ Exit code 0 means the pipeline succeeded; any other value means a stage failed. 
 
 - `2` — missing prerequisites (`work/` gone, or no `agent_verdicts_*.jsonl`)
 - `3` — every subagent's verdicts file was empty. Inspect `work/agent_verdicts_<N>.jsonl` sizes to find which subagents produced nothing and re-spawn them.
+- `4` — one or more `judge_chunk_<N>.json` has no `agent_verdicts_<N>.jsonl` (the missing chunk numbers are printed). Re-run Stage 4d for those chunks, then re-run the script.
 - other non-zero — a downstream stage (`judge_apply` / `score_calibrate` / `aggregate` / `emit_oscal` / `validate_oscal` / `generate_report`) errored. Read the log.
 
 **Restart semantics.** The whole pipeline is idempotent. Rerunning after a partial failure only re-executes stages whose outputs are missing. Chunks whose `agent_verdicts_<N>.jsonl` already exists and is non-empty are skipped during Stage 4d's re-fan-out; downstream stages simply overwrite `judgments.json` / `scored.json` / etc. from the concatenated verdicts. The correct action after a failure is almost always "run Stage 4d for the missing chunks, then run `run_judge_pipeline.sh` again."
