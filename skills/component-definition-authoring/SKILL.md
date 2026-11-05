@@ -1,11 +1,11 @@
 ---
-name: component-definition
+name: component-definition-authoring
 description: Translate high-level abstract controls defined in an OSCAL catalog/profile into concrete, component-specific control implementations. Use when user wants to define how a specific component (service, tool, middleware) satisfies controls, author component definitions, or generate OSCAL component-definition.json from CSV.
 argument-hint: Optional component name or type (e.g., "firewall", "scanner")
 license: Complete terms in LICENSE.txt
 ---
 
-# Component Definition
+# Component Definition Authoring
 
 ## Purpose
 

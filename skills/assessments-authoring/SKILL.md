@@ -1,11 +1,11 @@
 ---
-name: assessment
+name: assessments-authoring
 description: Generate OSCAL assessment results by mapping component-definition rules to validation checks and evaluating control compliance. Use when user wants to assess whether controls are satisfied based on component implementations and validation checks, or generate assessment tables with compliance status.
 argument-hint: Optional component name or assessment scope (e.g., "firewall", "kubernetes-cluster")
 license: Complete terms in LICENSE.txt
 ---
 
-# Assessment
+# Assessments Authoring
 
 ## Purpose
 

@@ -41,15 +41,15 @@ def test_normalized_mcp_via_apm_library(source_repo):
 
 
 def test_normalized_mcp_empty_for_no_mcp_skill(source_repo):
-    assert myharness.normalized_mcp(source_repo / "skills" / "assessment") == {}
+    assert myharness.normalized_mcp(source_repo / "skills" / "assessments-authoring") == {}
 
 
 def test_install_deploys_skills_and_wires_mcp(source_repo, tmp_path):
     root = tmp_path / "mh"
     res = myharness.install(
-        _skill_dirs(source_repo, "catalog-authoring", "assessment"), root=root
+        _skill_dirs(source_repo, "catalog-authoring", "assessments-authoring"), root=root
     )
-    assert set(res.skills_deployed) == {"catalog-authoring", "assessment"}
+    assert set(res.skills_deployed) == {"catalog-authoring", "assessments-authoring"}
     assert res.mcp_added == ["trestle"]
     assert (root / "skills" / "catalog-authoring" / "SKILL.md").is_file()
     config = json.loads((root / "mcp.json").read_text())
@@ -74,7 +74,7 @@ def test_install_preserves_user_mcp_server(source_repo, tmp_path):
 def test_shared_mcp_prune_keeps_then_removes(source_repo, tmp_path):
     root = tmp_path / "mh"
     myharness.install(
-        _skill_dirs(source_repo, "catalog-authoring", "component-definition"), root=root
+        _skill_dirs(source_repo, "catalog-authoring", "component-definition-authoring"), root=root
     )
     # remove one consumer → trestle stays (the other still needs it).
     res1 = myharness.uninstall(["catalog-authoring"], root=root)
@@ -82,7 +82,7 @@ def test_shared_mcp_prune_keeps_then_removes(source_repo, tmp_path):
     assert res1.mcp_pruned == []
     assert "trestle" in json.loads((root / "mcp.json").read_text())["mcpServers"]
     # remove the last consumer → trestle pruned.
-    res2 = myharness.uninstall(["component-definition"], root=root)
+    res2 = myharness.uninstall(["component-definition-authoring"], root=root)
     assert res2.mcp_pruned == ["trestle"]
     assert json.loads((root / "mcp.json").read_text())["mcpServers"] == {}
 

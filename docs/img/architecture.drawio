@@ -34,10 +34,10 @@
                 <mxCell id="s_catalog" value="catalog-authoring" style="rounded=1;fillColor=#1a4a25;strokeColor=#6abf69;fontSize=15;fontColor=#ffffff;" parent="skills" vertex="1">
                     <mxGeometry x="10" y="36" width="138" height="44" as="geometry"/>
                 </mxCell>
-                <mxCell id="s_comp" value="component-definition" style="rounded=1;fillColor=#1a4a25;strokeColor=#6abf69;fontSize=15;fontColor=#ffffff;" parent="skills" vertex="1">
+                <mxCell id="s_comp" value="component-definition-authoring" style="rounded=1;fillColor=#1a4a25;strokeColor=#6abf69;fontSize=15;fontColor=#ffffff;" parent="skills" vertex="1">
                     <mxGeometry x="158" y="36" width="160" height="44" as="geometry"/>
                 </mxCell>
-                <mxCell id="s_assess" value="assessment" style="rounded=1;fillColor=#1a4a25;strokeColor=#6abf69;fontSize=15;fontColor=#ffffff;" parent="skills" vertex="1">
+                <mxCell id="s_assess" value="assessments-authoring" style="rounded=1;fillColor=#1a4a25;strokeColor=#6abf69;fontSize=15;fontColor=#ffffff;" parent="skills" vertex="1">
                     <mxGeometry x="328" y="36" width="130" height="44" as="geometry"/>
                 </mxCell>
                 <mxCell id="s_git" value="git-workflow" style="rounded=1;fillColor=#2a2000;strokeColor=#f0c000;strokeWidth=1.2;fontSize=15;dashed=1;fontColor=#f0c000;" parent="skills" vertex="1">

@@ -21,8 +21,8 @@ uses to store and manage OSCAL artifacts.
 **Request flow:**
 
 1. The user asks the coding agent to perform a compliance authoring task in natural language.
-2. The harness activates the appropriate skill (`catalog-authoring`, `component-definition`,
-   `assessment`, or `git-workflow`) directly from its description.
+2. The harness activates the appropriate skill (`catalog-authoring`, `component-definition-authoring`,
+   `assessments-authoring`, or `git-workflow`) directly from its description.
 3. The skill guides the agent through the task — editing files, assisting with content, and
    calling Trestle MCP tools as needed.
 4. When a Trestle MCP tool is called, the server translates it into a `compliance-trestle` CLI
@@ -70,8 +70,8 @@ All are invoked independently; a demo carries any ordering.
 | Skill | Input | Output | MCP dep |
 |-------|-------|--------|---------|
 | `catalog-authoring` | NIST OSCAL catalog / profile URL | `catalog.json`, editable Markdown | `trestle` |
-| `component-definition` | Catalog or profile + component description | `component-definition.json` | `trestle` |
-| `assessment` | Component definition + scan results | Compliance assessment table (Markdown / OSCAL) | — |
+| `component-definition-authoring` | Catalog or profile + component description | `component-definition.json` | `trestle` |
+| `assessments-authoring` | Component definition + scan results | Compliance assessment table (Markdown / OSCAL) | — |
 | `poam-authoring` | Assessment result (failed findings) or FedRAMP `.xlsx` | `plan-of-action-and-milestones.json` | — |
 | `compliance-catalog` | Compliance-document PDF (law / regulation / standard) | Validated `catalog.json` (+ excluded-units record) | — |
 | `compliance-mapping` | Two OSCAL Catalogs (source, target) | `mapping-collection.json` + HTML report | — |
@@ -103,7 +103,7 @@ invocation is never used from within a skill.
 | `trestle_author_profile_generate` | catalog-authoring | Generate editable Markdown from a profile |
 | `trestle_author_profile_resolve` | catalog-authoring | Resolve a profile into a catalog with substituted parameters |
 | `trestle_author_profile_assemble` | catalog-authoring | Assemble edited Markdown back into a Profile JSON |
-| `trestle_task_csv_to_oscal_cd` | component-definition | Convert a CSV of control implementations into a Component Definition JSON |
+| `trestle_task_csv_to_oscal_cd` | component-definition-authoring | Convert a CSV of control implementations into a Component Definition JSON |
 
 These tool→skill rows are the reference behind the `dependencies.mcp: [trestle]` declarations in
-the `catalog-authoring` and `component-definition` sidecars.
+the `catalog-authoring` and `component-definition-authoring` sidecars.

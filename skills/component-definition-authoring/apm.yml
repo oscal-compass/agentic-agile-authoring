@@ -17,7 +17,7 @@
 # declares the MCP servers this skill needs (this skill calls trestle_task_csv_to_oscal_cd); the
 # trestle def mirrors the repo-root .mcp.json (the canonical def). Do NOT add a `target:` field —
 # APM rejects unknown target tokens at parse time.
-name: component-definition
+name: component-definition-authoring
 version: "1.0.0"
 
 dependencies:

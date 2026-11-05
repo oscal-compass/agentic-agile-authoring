@@ -18,7 +18,7 @@ from compliance_authoring_skills.selection import (
     unknown_names,
 )
 
-ALL = ["assessment", "catalog-authoring", "component-definition", "git-workflow"]
+ALL = ["assessments-authoring", "catalog-authoring", "component-definition-authoring", "git-workflow"]
 
 
 def test_default_selection_is_all():
@@ -26,27 +26,27 @@ def test_default_selection_is_all():
 
 
 def test_exclude_subtracts_from_all():
-    assert resolve_skill_list(ALL, exclude=["git-workflow", "assessment"]) == [
+    assert resolve_skill_list(ALL, exclude=["git-workflow", "assessments-authoring"]) == [
         "catalog-authoring",
-        "component-definition",
+        "component-definition-authoring",
     ]
 
 
 def test_demo_resolves_to_its_skill_set():
-    demo = ["catalog-authoring", "component-definition", "assessment"]
+    demo = ["catalog-authoring", "component-definition-authoring", "assessments-authoring"]
     assert resolve_skill_list(ALL, demo=demo) == demo
 
 
 def test_demo_with_exclude():
-    demo = ["catalog-authoring", "component-definition", "assessment"]
-    assert resolve_skill_list(ALL, demo=demo, exclude=["assessment"]) == [
+    demo = ["catalog-authoring", "component-definition-authoring", "assessments-authoring"]
+    assert resolve_skill_list(ALL, demo=demo, exclude=["assessments-authoring"]) == [
         "catalog-authoring",
-        "component-definition",
+        "component-definition-authoring",
     ]
 
 
 def test_picks_win_over_demo_and_all():
-    assert resolve_skill_list(ALL, picks=["catalog-authoring"], demo=["assessment"]) == [
+    assert resolve_skill_list(ALL, picks=["catalog-authoring"], demo=["assessments-authoring"]) == [
         "catalog-authoring"
     ]
 
@@ -57,7 +57,7 @@ def test_selection_dedups_and_preserves_order():
 
 def test_unknown_names_flags_typos():
     assert unknown_names(ALL, exclude=["git-worklow"]) == ["git-worklow"]
-    assert unknown_names(ALL, picks=["assessment"]) == []
+    assert unknown_names(ALL, picks=["assessments-authoring"]) == []
 
 
 def test_unknown_names_skipped_when_source_unenumerable():
@@ -65,8 +65,8 @@ def test_unknown_names_skipped_when_source_unenumerable():
 
 
 def test_parse_frontmatter_reads_skills_list():
-    md = "---\nname: catalog-to-assessment\nskills:\n  - catalog-authoring\n  - assessment\n---\n\n# Steps\n"
-    assert parse_frontmatter(md)["skills"] == ["catalog-authoring", "assessment"]
+    md = "---\nname: catalog-to-assessment\nskills:\n  - catalog-authoring\n  - assessments-authoring\n---\n\n# Steps\n"
+    assert parse_frontmatter(md)["skills"] == ["catalog-authoring", "assessments-authoring"]
 
 
 def test_parse_frontmatter_empty_without_frontmatter():

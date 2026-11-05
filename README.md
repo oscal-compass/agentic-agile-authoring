@@ -30,7 +30,7 @@ A short walkthrough on YouTube — *OSCAL Compass (CNCF Project) Advances Compli
 ## Skills
 
 Seven portable skills. The **authoring lifecycle** composes left-to-right
-(`catalog-authoring → component-definition → assessment → poam-authoring`); the
+(`catalog-authoring → component-definition-authoring → assessments-authoring → poam-authoring`); the
 **framework-onboarding** skills sit upstream, turning source documents into the OSCAL Catalogs the
 lifecycle consumes. Each is invoked directly by the harness — there is no orchestrator persona; a
 demo carries any ordering.
@@ -40,8 +40,8 @@ demo carries any ordering.
 | Skill | Description | MCP dep |
 |-------|-------------|---------|
 | `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
-| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
-| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
+| `component-definition-authoring` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
+| `assessments-authoring` | Evaluate control compliance from component definitions and validation scan results | — |
 | `poam-authoring` | Author an OSCAL POA&M — reactively from an assessment's failed findings, from a FedRAMP xlsx, pre-defined from a `component-definition` then linked to an assessment, or from a scan tool's remediation export (reference-driven, mapped onto pass-through `risk.remediations[]`); generates `risks[]`, defaults to a standalone file (workspace optional) | — |
 
 ### Framework onboarding
@@ -97,7 +97,7 @@ uvx \
 ```
 
 Each install copies the selected skills into the harness's native skill dir and wires the
-`trestle` MCP server — declared by `catalog-authoring` / `component-definition` — into the
+`trestle` MCP server — declared by `catalog-authoring` / `component-definition-authoring` — into the
 harness's native MCP config (`.mcp.json` for Claude, `opencode.json` for OpenCode, `<project>/.bob/mcp.json` for Bob). User-authored
 skills and user-defined MCP servers are never touched.
 
@@ -107,10 +107,10 @@ skill needs it:
 ```bash
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
-  compliance-authoring-skills uninstall --skill assessment --target claude
+  compliance-authoring-skills uninstall --skill assessments-authoring --target claude
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
-  compliance-authoring-skills uninstall --skill assessment --target bob
+  compliance-authoring-skills uninstall --skill assessments-authoring --target bob
 ```
 
 ### Pinning a version
@@ -145,7 +145,7 @@ uninstall, and a demo video:
   between two OSCAL Catalogs (`compliance-mapping`).
 - **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)** — the full authoring
   lifecycle end-to-end: tailor a NIST SP 800-53 catalog, map its controls to a Kubernetes
-  component, and generate an assessment result (`catalog-authoring → component-definition →
+  component, and generate an assessment result (`catalog-authoring → component-definition-authoring →
   assessment`).
 - **[`demos/poam-authoring/`](demos/poam-authoring/README.md)** — author a valid OSCAL Plan of
   Action and Milestones, in three scenarios: `01-component-definition` (pre-define from a

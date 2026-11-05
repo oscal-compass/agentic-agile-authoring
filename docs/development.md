@@ -92,7 +92,7 @@ What the wrapper owns (everything else is APM's — resolution, deployment, lock
 ```bash
 compliance-authoring-skills install --demo catalog-to-assessment --target claude
 compliance-authoring-skills install --exclude git-workflow --target opencode
-compliance-authoring-skills uninstall --skill assessment --target claude
+compliance-authoring-skills uninstall --skill assessments-authoring --target claude
 ```
 
 Testing strategy: the bespoke surface (selection/policy, MyHarness deployer) is unit-tested; the

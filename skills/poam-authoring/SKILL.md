@@ -28,7 +28,7 @@ Draft the first half, then ask the user for the second half. Do not invent remed
 
 ## Inputs (four paths)
 
-- **A) Assessment result → POA&M (default).** An `assessment` skill markdown table, or an OSCAL
+- **A) Assessment result → POA&M (default).** An `assessments-authoring` skill markdown table, or an OSCAL
   `assessment-results.json`. Only its **failed / non-compliant findings** become POA&M items. If no
   assessment result is available, take a list of weaknesses directly from the user.
 - **B) FedRAMP POA&M `.xlsx` → POA&M.** The user already has a FedRAMP-format POA&M spreadsheet

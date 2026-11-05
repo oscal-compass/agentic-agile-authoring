@@ -1,6 +1,6 @@
 ---
 name: catalog-to-assessment
-skills: [catalog-authoring, component-definition, assessment]
+skills: [catalog-authoring, component-definition-authoring, assessments-authoring]
 ---
 
 # Demo: catalog → component → assessment
@@ -33,7 +33,7 @@ uvx \
   compliance-authoring-skills install --demo catalog-to-assessment --target bob
 ```
 
-This copies `catalog-authoring`, `component-definition`, and `assessment` into the harness's
+This copies `catalog-authoring`, `component-definition-authoring`, and `assessments-authoring` into the harness's
 native skill dir and wires the `trestle` MCP server (declared by the first two) into the harness's
 native MCP config (`.mcp.json` for Claude, `opencode.json` for OpenCode, `<project>/.bob/mcp.json` for Bob).
 Open the target project in the harness so it picks up the skills + `trestle`.
@@ -64,14 +64,14 @@ and asks whether you want to customize the wording. (`catalog-authoring`)
 
 The agent produces a human-readable implementation guide (Markdown + CSV) per control, then the
 OSCAL `component-definition.json` (valid OSCAL), referencing the catalog from Step 2.
-(`component-definition`)
+(`component-definition-authoring`)
 
 ### Step 4 — Generate assessment results
 
 > Using the component definition, create the assessment results.
 
 Provide your security tool's scan output and the agent generates an assessment posture; with no
-scan output it generates a mock posture and says so. (`assessment`)
+scan output it generates a mock posture and says so. (`assessments-authoring`)
 
 ## Uninstall
 
@@ -82,15 +82,15 @@ user-authored skills and user-defined MCP servers are never touched.
 # remove one skill (Claude):
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
-  compliance-authoring-skills uninstall --skill assessment --target claude
+  compliance-authoring-skills uninstall --skill assessments-authoring --target claude
 
 # remove the whole demo set (Claude):
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
-  compliance-authoring-skills uninstall --skill catalog-authoring,component-definition,assessment --target claude
+  compliance-authoring-skills uninstall --skill catalog-authoring,component-definition-authoring,assessments-authoring --target claude
 
 # …or from Bob:
 uvx \
   --from "git+https://github.com/oscal-compass/agentic-agile-authoring.git@main#subdirectory=tools" \
-  compliance-authoring-skills uninstall --skill catalog-authoring,component-definition,assessment --target bob
+  compliance-authoring-skills uninstall --skill catalog-authoring,component-definition-authoring,assessments-authoring --target bob
 ```

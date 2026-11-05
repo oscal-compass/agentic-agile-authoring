@@ -5,14 +5,14 @@
 | Skill | Description | MCP dep |
 |-------|-------------|---------|
 | `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs | `trestle` |
-| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
-| `assessment` | Evaluate control compliance from component definitions and validation scan results | — |
+| `component-definition-authoring` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` | `trestle` |
+| `assessments-authoring` | Evaluate control compliance from component definitions and validation scan results | — |
 | `poam-authoring` | Author an OSCAL POA&M from an assessment's failed findings — remediation plan, milestones, POC, due date | — |
 | `compliance-catalog` | Convert a compliance-document PDF (law, regulation, standard) into a validated OSCAL Catalog | — |
 | `compliance-mapping` | Map controls between two OSCAL Catalogs into an OSCAL Mapping Collection + browsable HTML report | — |
 | `git-workflow` | Two-branch Git strategy for change tracking and PR review of compliance documents (opt-in) | — |
 
-The lifecycle skills compose `catalog-authoring → component-definition → assessment →
+The lifecycle skills compose `catalog-authoring → component-definition-authoring → assessments-authoring →
 poam-authoring`; `compliance-catalog` and `compliance-mapping` are framework-onboarding skills
 (PDF → catalog, and catalog ↔ catalog) that produce the OSCAL Catalogs the lifecycle consumes.
 
@@ -26,7 +26,7 @@ server declares it there under `dependencies.mcp`. On install, the installer (Op
 the `compliance-authoring-skills` wrapper) wires the declared server into the target harness's native MCP config,
 and on uninstall prunes it only when no remaining installed skill needs it — see
 [Architecture](architecture.md#installation--mcp-wiring). Only `catalog-authoring` and
-`component-definition` declare `dependencies.mcp` (`trestle`); the rest declare none.
+`component-definition-authoring` declare `dependencies.mcp` (`trestle`); the rest declare none.
 `compliance-catalog` and `compliance-mapping` still use `trestle`, but as a local CLI/library for
 validation — not the MCP server — so they wire no MCP dependency on install.
 
@@ -140,7 +140,7 @@ Draft the first half, then ask the user for the second half. Never invent remedi
 
 ### Inputs (two paths)
 
-- **A) Assessment result → POA&M (default).** An `assessment` skill markdown table or an OSCAL
+- **A) Assessment result → POA&M (default).** An `assessments-authoring` skill markdown table or an OSCAL
   `assessment-results.json`. Only its **failed / non-compliant findings** become POA&M items. With
   no assessment result, take a list of weaknesses directly from the user.
 - **B) FedRAMP POA&M `.xlsx` → POA&M.** Convert an existing FedRAMP-format spreadsheet with the

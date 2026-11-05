@@ -38,7 +38,7 @@ def test_install_without_source_uses_default(monkeypatch, _ok_prereqs, source_re
     assert rc == 0
     out = capsys.readouterr().out
     # the bundled/default selection (all skills in source_repo) was resolved.
-    assert "catalog-authoring" in out and "assessment" in out
+    assert "catalog-authoring" in out and "assessments-authoring" in out
 
 
 def test_install_explicit_source_overrides_default(monkeypatch, _ok_prereqs, source_repo, tmp_path):
@@ -48,7 +48,7 @@ def test_install_explicit_source_overrides_default(monkeypatch, _ok_prereqs, sou
     )
     rc = cli.main(
         [
-            "install", "--source", str(source_repo), "--skill", "assessment",
+            "install", "--source", str(source_repo), "--skill", "assessments-authoring",
             "--target", "myharness", "--myharness-root", str(tmp_path / "mh"), "--dry-run",
         ]
     )
@@ -120,7 +120,7 @@ def test_shaping_flags_warn_for_apm_target(monkeypatch, _ok_prereqs, source_repo
         lambda *a, **k: type("R", (), {"stdout": "ok\n"})(),
     )
     rc = cli.main(
-        ["install", "--skill", "assessment", "--target", "claude", "--mcp-drop", "transport"]
+        ["install", "--skill", "assessments-authoring", "--target", "claude", "--mcp-drop", "transport"]
     )
     assert rc == 0
     assert "have no effect for target 'claude'" in capsys.readouterr().err

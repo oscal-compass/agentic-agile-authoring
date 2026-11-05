@@ -52,9 +52,9 @@ target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decis
 
 - **`skills/<name>/`** — hybrid skill packages: `SKILL.md` (frontmatter: `name` = dir name,
   `description`, optional `license`/`argument-hint`) + `apm.yml` + supporting files. Four skills:
-  `catalog-authoring`, `component-definition`, `assessment`, `git-workflow`.
+  `catalog-authoring`, `component-definition-authoring`, `assessments-authoring`, `git-workflow`.
 - **`skills/<name>/apm.yml`** — the APM package manifest (`name`, `version`, and `dependencies.mcp`
-  where the skill needs an MCP server — `catalog-authoring`/`component-definition` declare
+  where the skill needs an MCP server — `catalog-authoring`/`component-definition-authoring` declare
   `trestle`). Do NOT add a `target:` field (APM rejects unknown target tokens at parse time).
 - **`demos/<name>/`** — a single `README.md` (frontmatter `skills:` + the walkthrough:
   prompts, install/uninstall, demo video) plus any referenced assets. A demo is an end-to-end

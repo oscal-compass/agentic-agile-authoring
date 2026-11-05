@@ -67,7 +67,7 @@ def test_opencode_native_merge_preserves_user_config(source_repo, tmp_path):
 def test_shared_mcp_prune_via_apm(source_repo, tmp_path):
     project = tmp_path / "proj"
     apm_cli.install(
-        _dirs(source_repo, "catalog-authoring", "component-definition"),
+        _dirs(source_repo, "catalog-authoring", "component-definition-authoring"),
         target="claude",
         project=project,
     )
@@ -78,7 +78,7 @@ def test_shared_mcp_prune_via_apm(source_repo, tmp_path):
     assert "trestle" in json.loads((project / ".mcp.json").read_text())["mcpServers"]
 
     # uninstall the last consumer → trestle pruned.
-    apm_cli.uninstall(["component-definition"], target="claude", project=project)
+    apm_cli.uninstall(["component-definition-authoring"], target="claude", project=project)
     remaining = json.loads((project / ".mcp.json").read_text()).get("mcpServers", {})
     assert "trestle" not in remaining
 
@@ -100,14 +100,14 @@ def test_project_scope_tidy_leaves_only_products_and_stash(source_repo, tmp_path
 def test_tidy_stash_restores_for_uninstall_prune(source_repo, tmp_path):
     project = tmp_path / "proj"
     apm_cli.install(
-        _dirs(source_repo, "catalog-authoring", "component-definition"),
+        _dirs(source_repo, "catalog-authoring", "component-definition-authoring"),
         target="claude",
         project=project,
     )
     # uninstall must transparently restore the stash, prune correctly, and re-tidy.
     apm_cli.uninstall(["catalog-authoring"], target="claude", project=project)
     assert "trestle" in json.loads((project / ".mcp.json").read_text())["mcpServers"]
-    apm_cli.uninstall(["component-definition"], target="claude", project=project)
+    apm_cli.uninstall(["component-definition-authoring"], target="claude", project=project)
     assert "trestle" not in json.loads((project / ".mcp.json").read_text()).get("mcpServers", {})
     # still tidy after uninstalls.
     assert not (project / "apm_modules").exists()
@@ -140,7 +140,7 @@ def test_deployed_skill_has_no_pycache(source_repo, tmp_path):
 
 def test_install_dry_run_builds_argv_without_running(source_repo, tmp_path):
     argv = apm_cli.install(
-        _dirs(source_repo, "assessment"), target="claude", project=tmp_path / "p", dry_run=True
+        _dirs(source_repo, "assessments-authoring"), target="claude", project=tmp_path / "p", dry_run=True
     )
     assert argv[1] == "install" and "--target" in argv and "claude" in argv
     assert not (tmp_path / "p").exists()

@@ -47,8 +47,8 @@ def _write_skill(
 def source_repo(tmp_path: Path) -> Path:
     """A synthetic skills-source repo mirroring the real one's shape.
 
-    * ``catalog-authoring`` + ``component-definition`` share a ``trestle`` stdio MCP,
-    * ``assessment`` has no MCP,
+    * ``catalog-authoring`` + ``component-definition-authoring`` share a ``trestle`` stdio MCP,
+    * ``assessments-authoring`` has no MCP,
     * plus a ``catalog-to-assessment`` demo declaring the three.
     """
     root = tmp_path / "repo"
@@ -59,8 +59,8 @@ def source_repo(tmp_path: Path) -> Path:
         "args": ["--from", "git+https://example.invalid/trestle.git", "trestle-mcp"],
     }
     _write_skill(skills, "catalog-authoring", mcp=trestle)
-    _write_skill(skills, "component-definition", mcp=trestle)
-    _write_skill(skills, "assessment")
+    _write_skill(skills, "component-definition-authoring", mcp=trestle)
+    _write_skill(skills, "assessments-authoring")
 
     demo = root / "demos" / "catalog-to-assessment"
     demo.mkdir(parents=True)
@@ -69,7 +69,7 @@ def source_repo(tmp_path: Path) -> Path:
             """\
             ---
             name: catalog-to-assessment
-            skills: [catalog-authoring, component-definition, assessment]
+            skills: [catalog-authoring, component-definition-authoring, assessments-authoring]
             ---
 
             # Demo
