@@ -103,6 +103,27 @@ $$Component_Title,$$Component_Description,$$Component_Type,$$Rule_Id,$$Rule_Desc
 MyScanner,Compliance scanner,validation,rule-001,,,,,https://myorg.example.com,check-001,Verify rule-001 is active,MyApp
 ```
 
+## Parameters a rule needs
+
+A rule that a policy template is generated from usually needs values — a signer identity, an
+approved registry, a label key. Carry them in the optional parameter columns rather than burying
+them in the rule description:
+
+```
+$Parameter_Id   $Parameter_Description   $Parameter_Value_Default   $Parameter_Value_Alternatives
+```
+
+- One set of four columns carries one parameter. For a second, third, … parameter on the same
+  rule, repeat the four names with a **common suffix per set**: `$Parameter_Id_2`,
+  `$Parameter_Description_2`, `$Parameter_Value_Default_2`, `$Parameter_Value_Alternatives_2`.
+  trestle finds them by prefix, so the suffix only has to be consistent within its own set.
+- `$Parameter_Value_Default` is the value that becomes the rule's set-parameter;
+  `$Parameter_Value_Alternatives` is a comma-separated list of other allowed values.
+- Parameter columns are **ignored on validation rows** — a parameter belongs to the service rule,
+  not to the check that verifies it.
+- A row with an empty `$Parameter_Id` carries no parameter and the other three are not read, so a
+  rule that needs no parameter costs nothing.
+
 ## Invoking the MCP tool
 
 ```python
@@ -117,6 +138,13 @@ trestle_task_csv_to_oscal_cd(
 ```
 
 The tool generates the required INI config internally — do not ask the user for a config file path.
+
+Pass `csv_file` and `output_dir` as absolute paths. `trestle_root` is forwarded to
+`trestle --trestle-root`, but it does **not** relocate `$$Profile_Source` resolution: the task
+sets its own workspace to `os.getcwd()` (`trestle/tasks/base_task.py`, `_configure_csv_common`),
+so a workspace-relative `$$Profile_Source` resolves against the directory the MCP server was
+started in. Start the server in the trestle workspace root — which is also why
+`catalog-authoring` tells you to omit `trestle_root` altogether.
 
 ### `validate_controls` — pass `"on"`, do not take the default
 
@@ -161,6 +189,33 @@ and the author has decided to accept that; never `"off"`.
 8. **URL validation**: `$$Namespace` contains valid URLs with scheme (e.g., `https://kubernetes.io`)
 9. **`validate_controls="on"` is passed** — the default is `off`, which accepts a control that is
    in no baseline and produces a silently wrong mapping
+
+## Two failures that do not look like failures
+
+### A service row with no control is dropped silently
+
+`_CsvMgr._is_no_control()` skips any non-validation row whose `$$Control_Id_List` is empty, and
+it does so in the row generator — before the required-column check that would otherwise reject
+it. There is no error and no warning: the rule is simply absent from `component-definition.json`
+and the conversion reports success. If a rule you authored is missing from the output, look at
+that column first. (On a validation row the same emptiness is legitimate and the row is kept.)
+
+### The tool reports failure in its return value, not as an exception
+
+`trestle_task_csv_to_oscal_cd` always returns a string. Success starts with `✅`, failure with
+`❌ Failed to convert CSV to OSCAL component definition` followed by trestle's stderr. It does
+not raise, so an agent that does not read the return value will report success on a conversion
+that wrote nothing — the one failure mode that matters most in an unattended run. Read it back,
+and expect:
+
+- `Unresolved controls: [...]` — `validate_controls="on"` rejected those control ids. Fix the row
+  or widen the profile; do not turn validation off.
+- `Missing columns: [...]` — a required header name is absent or misspelled.
+- `row "N" missing value for "X"` — a required cell is empty on that row.
+- `row "N" contains duplicate Rule_Id "..."` — two rows share component title, component type,
+  rule id, check id and target component.
+- `Command timed out after 60 seconds` — the MCP wrapper caps the trestle subprocess at 60 s.
+  That is a timeout, not a CSV defect; re-run it rather than editing a CSV that is correct.
 
 ## Common Issues and Fixes
 

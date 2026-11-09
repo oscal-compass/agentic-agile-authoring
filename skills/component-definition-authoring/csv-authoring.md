@@ -61,7 +61,7 @@ Service components **implement** controls (firewall, OS, middleware, Kubernetes 
 | `$$Component_Title` | YES | Component name (e.g., "Kubernetes Platform") |
 | `$$Component_Description` | YES | What the component does |
 | `$$Component_Type` | YES | Literal string: `service` |
-| `$$Control_Id_List` | YES | Control ID (e.g., `AC-2`, `AC-3`) |
+| `$$Control_Id_List` | YES | Space-separated control IDs (e.g., `cm-2 si-7`). **If this is empty the whole row is skipped without an error** |
 | `$$Rule_Id` | YES | Unique rule identifier (e.g., `K8S-AC-2.1`) |
 | `$$Rule_Description` | YES | How this rule implements the control |
 | `$$Profile_Source` | YES | A profile reference trestle can resolve: `profiles/<name>/profile.json` or an `https://` URL of a profile. Not a control family, not a free-text label |
@@ -392,5 +392,10 @@ If csv-to-oscal conversion fails:
            if not row[col[name]]:
                print(f"Row {i+1}: Missing required column {name}")
    ```
+
+5. **Check that no service row lost its control list.** An empty `$$Control_Id_List` on a service
+   row makes trestle skip the row with no error at all, so the rule goes missing from the output
+   while the conversion still reports success. Count the rules in
+   `component-definition.json` against the rows you wrote.
 
 If all checks pass but conversion still fails, the issue is likely in the trestle tool itself, not the CSV.
