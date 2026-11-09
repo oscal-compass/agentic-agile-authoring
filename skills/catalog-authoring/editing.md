@@ -24,14 +24,39 @@ Confirm target control(s) for editing with user. Present with brief descriptions
 
 ## Step 4: Parameter Reflection
 
-- Update md files (maintain escape characters like `\[`)
-- Replace with minimal phrases to create natural sentences
+Set values in the **`x-trestle-set-params` header** of each control markdown file. That header is
+the only thing `trestle_author_profile_assemble` reads values from (`set_parameters: true` →
+`ControlReader`, key `x-trestle-set-params`), and trestle's own generated comment in the header
+says it: *only the `profile-values` and `display-name` properties are editable*.
 
-**Example**:
+```yaml
+x-trestle-set-params:
+  ac-01_odp.03:
+    profile-values:
+      - organizational
+    profile-param-value-origin: SYSTEM.md — single-tenant service, one owning team
 ```
-Original: "Develop an {{ insert: param, ac-01_odp.03 }} access control policy."
-Appropriate: ac-01_odp.03 = "organizational" → "organizational access control policy"
-Inappropriate: ac-01_odp.03 = "access control policy" → Redundant and unnatural
+
+Leave the `{{ insert: param, ... }}` moustache in the prose exactly as generated. Rewriting the
+prose does not create a set-parameter: the assembled profile takes nothing from the statement
+text, so an edit there is lost and the parameter stays unset while the markdown looks finished.
+Maintain escape characters like `\[` while editing.
+
+Two cases worth getting right:
+
+- **A parameter deliberately left unset.** Give it a `profile-param-value-origin` saying why and
+  no `profile-values`. The decision is then recorded in the artefact instead of looking like an
+  oversight, and `profile-resolve`'s `value_not_assigned_prefix` (Step 5) marks it in the prose.
+- **An aggregating parameter** — one whose header shows an `aggregates` property. Its value comes
+  from the parameters it aggregates, and trestle states `profile-values` is not applicable to it.
+  Do not set one.
+
+Choose values as minimal phrases that read naturally in the control sentence:
+
+```
+Prose:         "Develop an {{ insert: param, ac-01_odp.03 }} access control policy."
+Appropriate:   ac-01_odp.03 = "organizational" → "organizational access control policy"
+Inappropriate: ac-01_odp.03 = "access control policy" → redundant and unnatural
 ```
 
 ## Step 5: Profile/Catalog Regeneration
