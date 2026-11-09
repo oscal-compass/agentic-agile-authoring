@@ -53,7 +53,7 @@ Support custom catalog operations using NIST OSCAL catalogs and profiles, from p
 - Always use trestle MCP tools, never CLI commands
 - Never use `trestle_root` parameter — omit it from all MCP tool calls
 - Use profile-based control selection — edit profile's `include-controls` to specify desired controls
-- Confirm CSV content with user before parameter reflection
+- Confirm CSV content with user before parameter reflection — when a human is in the loop
 - After markdown conversion, never read `catalog.json` directly
 
 ---
@@ -74,7 +74,8 @@ Given a component (a concrete system element such as a service, OS, or audit too
 3. For each component, enumerate rules and map them to control IDs
 4. **Author CSV using Python `csv.writer()`**
 5. **Generate markdown preview** for user review
-6. Confirm CSV content with the user before generating
+6. Confirm CSV content with the user before generating — when a human is in the loop; unattended,
+   the preview is written as the record and the conversion follows in the same pass
 7. Invoke `trestle_task_csv_to_oscal_cd` to produce `component-definition.json`
 
 ### Key Learnings

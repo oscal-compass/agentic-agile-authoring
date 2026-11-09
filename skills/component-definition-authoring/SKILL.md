@@ -36,15 +36,35 @@ A component definition captures rules per component, maps them to catalog contro
 ## Workflow
 
 1. Confirm the trestle workspace and target profile/catalog with the user
-2. Identify components and their types (ask user for validation component if not specified)
+2. Identify components and their types (ask the user for the validation component if it is not
+   specified and someone is there to answer)
 3. For each component, enumerate the rules and map them to control IDs
 4. **Author CSV using Python csv.writer()** (see [csv-authoring.md](csv-authoring.md) for detailed guidance)
    - Use Python lists, not manual string concatenation
    - Verify column counts and namespace URLs programmatically
    - Never use `write_to_file` for CSV construction
 5. **Generate markdown preview** using `csv_to_markdown.py` to show component vs control vs rule/check mappings
-6. Confirm CSV content with the user before generating
+6. Confirm CSV content with the user before generating — when a human is in the loop; otherwise
+   see [Running with no human in the loop](#running-with-no-human-in-the-loop)
 7. Invoke `trestle_task_csv_to_oscal_cd` to produce `component-definition.json`
+
+## Running with no human in the loop
+
+The confirmation steps above assume someone is watching. Settle that question once, at the
+start: the run is unattended when the request already fixes the decisions it would otherwise
+ask about (the prompt, or an instructions file in the workspace that it points at, pins them),
+when it is a recorded or batch run, or when the user has said to go ahead without asking.
+
+When the run is unattended:
+
+- **Do not stop at the approval gate.** Still generate the markdown preview — it is the record of
+  what was converted — then run the conversion in the same pass.
+- **Let the conversion be the review.** `validate_controls="on"` and the required-column checks
+  reject exactly the rows a reviewer would have caught. Fix the row it names and run it again.
+- **Where a question would have supplied a missing fact**, take it from the pinned instructions,
+  and name the choice you made in your summary. Do not invent one silently.
+- **Never ask a question that cannot be answered.** With no human present a question does not
+  slow the run down, it ends it.
 
 ## Key Learnings
 
@@ -94,13 +114,17 @@ This helps users review the mapping before OSCAL generation.
 Generate markdown preview **before** attempting csv-to-oscal conversion. This allows:
 - User to review control-to-rule mappings
 - Early detection of mapping errors
-- Approval before OSCAL generation
+- Approval before OSCAL generation, where there is someone to give it
 - Reduced wasted conversion attempts on invalid CSV
 
-Order: CSV authoring → Markdown preview → User approval → OSCAL conversion
+Order: CSV authoring → Markdown preview → user approval, when a human is in the loop → OSCAL
+conversion. Unattended, the preview is still written and the conversion follows in the same
+pass.
 
 ### Validation Component Integration
 
-Always ask user which validation tool/component they use (e.g., Kyverno, Falco, OPA).
+Ask the user which validation tool/component they use (e.g., Kyverno, Falco, OPA). With no human
+in the loop, take the engines from the pinned instructions — they are part of the decomposition,
+not a detail to invent.
 Include validation component in the same CSV alongside service component.
 Validation component checks should reference the service component rules they verify.

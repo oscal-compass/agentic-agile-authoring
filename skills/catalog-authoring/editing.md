@@ -4,7 +4,9 @@ Execute from parameter editing to profile/catalog deployment using trestle MCP.
 
 ## Step 1: Control Selection
 
-Confirm target control(s) for editing with user. Present with brief descriptions.
+Confirm target control(s) for editing with the user, presented with brief descriptions. When no
+human is in the loop, take the selection from the profile's `include-controls` — it is already
+the authoritative list — and do not ask.
 
 ## Step 2: CSV Template Generation
 
@@ -18,9 +20,12 @@ Confirm target control(s) for editing with user. Present with brief descriptions
 
 ## Step 3: CSV Completion & Confirmation
 
-- When agent completes: **Must display content to user → confirm (ask_followup_question) → proceed to next step only after OK**
+- When the agent completes: **display the content to the user → ask for confirmation using
+  whatever ask/confirm affordance the harness provides → proceed only after OK**
 - Prohibited: Automatic reflection/commit
 - Allowed: Reflection/commit after confirmation
+- **With no human in the loop**, leave the CSV in the workspace as the record and proceed. See
+  SKILL.md, *Running with no human in the loop*.
 
 ## Step 4: Parameter Reflection
 

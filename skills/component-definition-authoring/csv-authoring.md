@@ -349,8 +349,10 @@ print(f"✓ All rows have {len(rows[0])} columns")
 3. **Write CSV using `csv.writer()`** (never manual text)
 4. **Verify column counts and URLs** programmatically
 5. **Generate markdown preview** to show mappings to user
-6. **User approves** markdown content
-7. **Invoke trestle csv-to-oscal-cd** (conversion should succeed if CSV is correct)
+6. **User approves** markdown content — skip this when no human is in the loop (see SKILL.md,
+   *Running with no human in the loop*); the preview is still written as the record
+7. **Invoke trestle csv-to-oscal-cd** (conversion should succeed if CSV is correct) and read the
+   returned string back: failure is reported in it, not raised
 
 ## Troubleshooting
 

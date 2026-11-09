@@ -27,7 +27,8 @@ Support custom catalog operations using NIST OSCAL catalogs and profiles, from p
 - **Do NOT use `trestle_root` parameter** - omit it from all MCP calls
 - **Use profile-based control selection** - edit profile's `include-controls` to specify desired controls, not custom markdown files
 - Output in English (other languages allowed when specified by user)
-- When completing CSV, always confirm with user before proceeding to next step
+- When completing CSV, confirm with the user before proceeding to the next step — when a human is
+  in the loop; otherwise see [Running with no human in the loop](#running-with-no-human-in-the-loop)
 - Git operations are NOT performed by default → Only use git-workflow skill when user explicitly requests it
 
 ## Default Workflow
@@ -50,6 +51,24 @@ See [editing.md](editing.md) for detailed instructions.
 - Complete both profile and catalog regeneration steps
 - Reference actual files only, no assumptions
 - After md conversion, never read catalog.json directly
+
+## Running with no human in the loop
+
+The confirmation steps above assume someone is watching. Settle that question once, at the
+start: the run is unattended when the request already fixes the decisions it would otherwise
+ask about (the prompt, or an instructions file in the workspace that it points at, pins them),
+when it is a recorded or batch run, or when the user has said to go ahead without asking.
+
+When the run is unattended:
+
+- **Do not stop at the approval gate.** Still generate the markdown preview — it is the record of
+  what was converted — then run the conversion in the same pass.
+- **Let the conversion be the review.** `validate_controls="on"` and the required-column checks
+  reject exactly the rows a reviewer would have caught. Fix the row it names and run it again.
+- **Where a question would have supplied a missing fact**, take it from the pinned instructions,
+  and name the choice you made in your summary. Do not invent one silently.
+- **Never ask a question that cannot be answered.** With no human present a question does not
+  slow the run down, it ends it.
 
 ## Related Skills
 
