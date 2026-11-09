@@ -88,11 +88,38 @@ trestle_task_csv_to_oscal_cd(
     version="<version>",
     csv_file="<absolute path to CSV>",
     output_dir="<absolute path to output dir>",
-    trestle_root="<absolute path to trestle workspace>"
+    trestle_root="<absolute path to trestle workspace>",
+    validate_controls="on",
 )
 ```
 
 The tool generates the required INI config internally — do not ask the user for a config file path.
+
+### `validate_controls` — pass `"on"`, do not take the default
+
+The tool's default is `"off"`. Leave it there and every `$$Control_Id_List` entry is accepted
+without being checked against the resolved profile, so a control that is **in no baseline at
+all** produces a component definition that looks correct and asserts coverage the framework
+never selected. The failure is silent at authoring time and expensive later: the mapping is
+wrong, not malformed, so no schema validation downstream will find it.
+
+Controls that look like obvious choices and are selected by none of the NIST SP 800-53 rev 5
+LOW, MODERATE or HIGH baselines include `cm-14` Signed Components, `cm-2.1`, `sr-4` Provenance
+and `sr-11.3`. With `validate_controls="on"` the conversion fails on the row that cites one,
+which is the only automatic check that catches it.
+
+Use `"warn"` only when the profile is deliberately narrower than the controls being documented
+and the author has decided to accept that; never `"off"`.
+
+### Other optional parameters
+
+| Parameter | Default | Use |
+|---|---|---|
+| `validate_controls` | `"off"` | **Always pass `"on"`** — see above |
+| `component_definition` | none | Path to an existing component-definition to update rather than create |
+| `output_overwrite` | `True` | Replace existing output |
+| `class_column_mappings` | none | Map a column to a CSS class, e.g. `{"Rule_Id": "scc_class"}` |
+| `verbose` | `False` | Verbose output when a conversion fails and the error is not obvious |
 
 ## Checklist before invoking
 
@@ -106,6 +133,8 @@ The tool generates the required INI config internally — do not ask the user fo
    - `$$Profile_Source` and `$$Profile_Description` must be present (can be empty)
    - `$Target_Component` must be present for all rows
 8. **URL validation**: `$$Namespace` contains valid URLs with scheme (e.g., `https://kubernetes.io`)
+9. **`validate_controls="on"` is passed** — the default is `off`, which accepts a control that is
+   in no baseline and produces a silently wrong mapping
 
 ## Common Issues and Fixes
 
