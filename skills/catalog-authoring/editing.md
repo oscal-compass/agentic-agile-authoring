@@ -38,10 +38,13 @@ Inappropriate: ac-01_odp.03 = "access control policy" → Redundant and unnatura
 
 ### Profile Regeneration (Required)
 - MCP tool: `trestle_author_profile_assemble`
-- name: `myprofile`
-- markdown: `md_profile`
-- output: `myprofile`
-- set-parameters: true
+- markdown_dir: `md_profile`
+- output_profile: `myprofile`
+- set_parameters: true
+
+The two required parameters are `markdown_dir` and `output_profile`. There is also a `name`
+parameter, but it is optional and it is not the output. `set_parameters: true` is what reads the
+`x-trestle-set-params` header back out of the markdown into the profile.
 
 ### Catalog Regeneration (Required - must execute both commands)
 
@@ -49,8 +52,19 @@ Inappropriate: ac-01_odp.03 = "access control policy" → Redundant and unnatura
 - MCP tool: `trestle_author_profile_resolve`
 - name: `myprofile`
 - output: `catalog_resolved`
-- set-parameters: true
-- bracket-format: `"."`
+- show_values: true
+- bracket_format: `"[.]"`
+- value_not_assigned_prefix: `"ORGANISATION TO DEFINE —"`
+
+`profile-resolve` has no `set_parameters` parameter — `show_values: true` is what substitutes
+values into the prose. In `bracket_format` the dot stands for the value, so `"."` on its own
+renders the value with nothing around it; `"[.]"` is what makes a filled parameter visible, and
+more than one dot is an error. `value_not_assigned_prefix` requires `show_values` and marks every
+ODP still unset, printing its label rather than a blank.
+
+Do not combine `show_values` with `show_labels` or `label_prefix`: trestle rejects it with
+`Use of show-values is not compatible with show-labels or label-prefix`.
+
 
 **Command 2: Generate Markdown**
 - MCP tool: `trestle_author_catalog_generate`

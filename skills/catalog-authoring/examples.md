@@ -41,8 +41,9 @@ output: md_profile
 MCP tool: trestle_author_profile_resolve
 name: nist_low
 output: catalog_resolved
-set-parameters: true
-bracket-format: "."
+show_values: true
+bracket_format: "[.]"
+value_not_assigned_prefix: "ORGANISATION TO DEFINE —"
 
 MCP tool: trestle_author_catalog_generate
 name: catalog_resolved
@@ -78,15 +79,16 @@ Updated: "Review and update the access control policy annually."
 ### Step 4: Regenerate Profile and Catalog
 ```
 MCP tool: trestle_author_profile_assemble
-markdown: md_profile
-output: nist_low
-set-parameters: true
+markdown_dir: md_profile
+output_profile: nist_low
+set_parameters: true
 
 MCP tool: trestle_author_profile_resolve
 name: nist_low
 output: catalog_resolved
-set-parameters: true
-bracket-format: "."
+show_values: true
+bracket_format: "[.]"
+value_not_assigned_prefix: "ORGANISATION TO DEFINE —"
 
 MCP tool: trestle_author_catalog_generate
 name: catalog_resolved
