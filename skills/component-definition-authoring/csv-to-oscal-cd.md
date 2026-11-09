@@ -125,7 +125,10 @@ and the author has decided to accept that; never `"off"`.
 
 1. Trestle workspace is initialized (`trestle_init` or pre-existing)
 2. CSV exists at the specified path
-3. Output directory exists (trestle will error if it does not)
+3. Output directory path is chosen — **do not create it**. trestle creates it: `_execute()` in
+   `trestle/tasks/csv_to_oscal_cd.py` calls `opth.mkdir(exist_ok=True, parents=True)` on the
+   unconditional main path before writing (checked against trestle 5.2.0). A `mkdir` step added
+   "to be safe" buys nothing and costs a tool-approval prompt that stalls an unattended run
 4. All required columns are present in the CSV header row
 5. For validation type: `$Check_Id` and `$Check_Description` columns are present
 6. **Data row validation**: All data rows have same column count as header
