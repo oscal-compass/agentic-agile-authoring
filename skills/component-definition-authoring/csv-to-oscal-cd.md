@@ -11,9 +11,16 @@ Refer to `docs/command-specs/task/csv-to-oscal-cd.md` for the full spec. Key poi
 - `$`  = optional column
 - `#`  = comment column (ignored)
 
-## Column Ordering
+## Columns
 
-The correct column order for CSV files is critical for proper OSCAL generation. Use this exact sequence:
+trestle matches columns **by name, not by position**: `_CsvMgr.get_col_index()` searches the
+header row for the name, after stripping leading `$` and title-casing each word. Any order
+works, and the order below is only a readable convention — the demo's own CSV interleaves the
+parameter columns and converts cleanly.
+
+What does matter: every required name is present (a missing one fails with
+`Missing columns: [...]`), the names are spelled the way trestle spells them, and every row has
+the same number of fields as the header.
 
 **Service Component Columns (Row 1):**
 ```
@@ -34,7 +41,9 @@ $$Component_Title	$$Component_Description	$$Component_Type	$$Control_Id_List	$$R
 - All rows (header, description, data) must have the same number of columns
 - For service-only rows: leave `$Check_Id` and `$Check_Description` empty
 - For validation-only rows: leave `$$Control_Id_List`, `$$Rule_Description`, `$$Profile_Source`, `$$Profile_Description` empty
-- Column order must match exactly — do not rearrange columns
+- Column *names* must match; their order is free, and their case is normalised before matching
+- A column name starting with `#` is dropped. Any other unrecognised column is **not** dropped —
+  it becomes an extra property on the rule set, named after the column
 
 **Component types and their column requirements:**
 
@@ -45,7 +54,7 @@ $$Component_Title	$$Component_Description	$$Component_Type	$$Control_Id_List	$$R
 | `$$Component_Type` | `service` | `validation` |
 | `$$Rule_Id` | required | required |
 | `$$Rule_Description` | required | ignored |
-| `$$Profile_Source` | required | ignored |
+| `$$Profile_Source` | required — see below | ignored |
 | `$$Profile_Description` | required | ignored |
 | `$$Control_Id_List` | required | ignored |
 | `$$Namespace` | required | required |
@@ -54,6 +63,20 @@ $$Component_Title	$$Component_Description	$$Component_Type	$$Control_Id_List	$$R
 | `$Target_Component` | optional | recommended (prevents Rule_Id collisions) |
 
 For validation type, leave `$$Rule_Description`, `$$Profile_Source`, `$$Profile_Description`, `$$Control_Id_List` empty — they are silently ignored.
+
+### `$$Profile_Source` is a profile reference, not a label
+
+It is not the control family and not a free-text source name. trestle hands every distinct
+`$$Profile_Source` value to `ProfileResolver.get_resolved_profile_catalog()`, and the value lands
+unchanged as the `source` of the generated `control-implementation`. Use the workspace-relative
+path of the profile the controls were selected in — `profiles/<name>/profile.json` — or an
+`https://` URL of a profile.
+
+With `validate_controls="on"` (below) this is load-bearing: the control list is checked against
+the catalog resolved from that profile, so a value that does not resolve fails the conversion
+instead of validating anything. `$$Profile_Description` is free text describing that profile; it
+becomes the `control-implementation` description, and two rows with the same source but different
+descriptions produce two separate control implementations.
 
 ## When to write a service CSV vs a validation CSV
 
@@ -69,7 +92,7 @@ Both types can coexist in one CSV and will be merged into a single `component-de
 ```
 $$Component_Title,$$Component_Description,$$Component_Type,$$Rule_Id,$$Rule_Description,$$Profile_Source,$$Profile_Description,$$Control_Id_List,$$Namespace
 <descriptions row>
-MyApp,My application,service,rule-001,Rule description,https://example.com/catalog.json,NIST SP 800-53 Rev 5,ac-3,https://myorg.example.com
+MyApp,My application,service,rule-001,Rule description,profiles/myprofile/profile.json,NIST SP 800-53 Rev 5 selection for MyApp,ac-3,https://myorg.example.com
 ```
 
 ### Validation
