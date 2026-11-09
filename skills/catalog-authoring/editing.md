@@ -95,7 +95,6 @@ ODP still unset, printing its label rather than a blank.
 Do not combine `show_values` with `show_labels` or `label_prefix`: trestle rejects it with
 `Use of show-values is not compatible with show-labels or label-prefix`.
 
-
 **Command 2: Generate Markdown**
 - MCP tool: `trestle_author_catalog_generate`
 - name: `catalog_resolved`
