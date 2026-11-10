@@ -45,7 +45,8 @@ See [editing.md](editing.md) for detailed instructions.
 - Always use trestle MCP tools, never CLI commands
 - **Never use `trestle_root` parameter** - omit it from all MCP tool calls
 - **Use profile-based control selection** - edit profile's `include-controls` to specify desired controls instead of creating custom markdown files
-- Confirm CSV content with user before parameter reflection
+- Confirm CSV content with user before parameter reflection — when a human is in the loop
+  (see [Running with no human in the loop](#running-with-no-human-in-the-loop))
 - Maintain escape characters in markdown files
 - Use minimal, natural phrases for parameter values
 - Complete both profile and catalog regeneration steps
@@ -63,8 +64,11 @@ When the run is unattended:
 
 - **Do not stop at the approval gate.** Still generate the markdown preview — it is the record of
   what was converted — then run the conversion in the same pass.
-- **Let the conversion be the review.** `validate_controls="on"` and the required-column checks
-  reject exactly the rows a reviewer would have caught. Fix the row it names and run it again.
+- **Let the assembly be the review.** `trestle_author_profile_assemble` with
+  `set_parameters: true` takes values only from each control's `x-trestle-set-params` header, and
+  `profile-resolve`'s `value_not_assigned_prefix` marks every parameter still unset in the
+  resolved catalog. Read that output: a value you meant to set and left in the prose appears
+  there as unset.
 - **Where a question would have supplied a missing fact**, take it from the pinned instructions,
   and name the choice you made in your summary. Do not invent one silently.
 - **Never ask a question that cannot be answered.** With no human present a question does not
