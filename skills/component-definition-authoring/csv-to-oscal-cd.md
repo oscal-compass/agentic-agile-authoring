@@ -197,8 +197,11 @@ and the author has decided to accept that; never `"off"`.
 5. For validation type: `$Check_Id` and `$Check_Description` columns are present
 6. **Data row validation**: All data rows have same column count as header
 7. **Column completeness**: Validation component rows include all required columns (even if empty)
-   - `$$Profile_Source` and `$$Profile_Description` must be present (can be empty)
-   - `$Target_Component` must be present for all rows
+   - `$$Profile_Source` and `$$Profile_Description` must be present (can be empty) — they are on
+     the header-checked list, so an absent column fails even where the value is ignored
+   - `$Target_Component` is optional. A CSV without the column at all converts (verified against
+     trestle 5.2.0; the `poam-authoring` demo's CSV does not carry it). Add it when two rows would
+     otherwise share a rule key — see `csv-authoring.md`
 8. **URL validation**: `$$Namespace` contains valid URLs with scheme (e.g., `https://kubernetes.io`)
 9. **`validate_controls="on"` is passed** — the default is `off`, which accepts a control that is
    in no baseline and produces a silently wrong mapping
@@ -269,9 +272,18 @@ with open('file.csv', 'r') as f:
 # Valid: 'https://kubernetes.io', 'https://kyverno.io'
 ```
 
-### Missing Optional Columns
-**Error:** Column index out of range during property creation
+### A missing optional column is not an error
 
-**Cause:** Optional columns like `$Target_Component` are missing from some rows.
+An optional column that is absent from the header does **not** raise. `get_row_value()` returns
+its default (`''`) when `get_col_index()` answers `-1`, so a CSV with no `$Target_Component`
+column converts cleanly — verified against trestle 5.2.0, and the `poam-authoring` demo ships
+such a CSV.
 
-**Fix:** Ensure all optional columns are present in header and all data rows have values (can be empty string).
+The two things that *are* errors look similar enough to be worth separating:
+
+- a data row **shorter than the header** — that is the `IndexError` above, and it is real;
+- a **misspelled** `$Check_Id` / `$Check_Description` — the column counts as absent, so the value
+  reads as empty and a validation row fails with `row "N" missing value for "Check_Id"`.
+
+So do not add empty optional columns "to be safe". Add a column when you have something to put in
+it.
