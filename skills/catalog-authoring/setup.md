@@ -8,8 +8,9 @@ trestle commands resolve a relative path against the working directory of the se
 the MCP client — not this skill — decides what that is. Two ways to make it the workspace:
 
 - **Pass `trestle_root` as an absolute path.** On compliance-trestle-mcp 1.0.0+ the wrapper runs
-  the command inside it, so a workspace-relative path resolves. Relative values are wrong here:
-  the command runs *in* the directory, so `./workspace` becomes `./workspace/workspace`.
+  the command inside it, so a workspace-relative path resolves. Give it an absolute path because a
+  relative one is made absolute against the *server's* directory — which the client chose and you
+  do not know — so `./workspace` names somewhere unpredictable.
 - **Omit it when the server is already running in the workspace.** The steps below are written
   that way, which is why they pass bare names like `mycatalog`.
 

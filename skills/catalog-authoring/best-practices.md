@@ -20,8 +20,9 @@ starting the server in the workspace and omitting it was the only thing that wor
 
 `run_trestle_command` now makes the `--trestle-root` value absolute and runs the subprocess
 **inside** that directory (`absolute_trestle_root` and `_working_directory` in
-`trestle_mcp/libs/trestle.py`, new in 1.0.0). The repo-root `.mcp.json` installs from the upstream
-default branch, which is 1.0.0, so this is the behaviour you get. So:
+`trestle_mcp/libs/trestle.py`, new in 1.0.0). The repo-root `.mcp.json` and this skill's `apm.yml`
+both floor the dependency at `compliance-trestle-mcp>=1.0.0`, so this is the behaviour an install
+gets. So:
 
 - **Pass `trestle_root` — as an absolute path — when you cannot be sure the server is running in
   the workspace.** It is what makes a workspace-relative path argument mean what you meant, and
@@ -35,7 +36,7 @@ Not every call was affected, which is why the old rule looked right in some plac
 an argument that is a model **name** is resolved by trestle against the root, so it never depended
 on the working directory. Measured against trestle 5.2.0 — run from outside the workspace with the
 flag alone, `author profile-generate --name miniprof --output md_prof` still writes into the
-workspace, while `split -f catalogs/minicat/catalog.json --trestle-root <ws>` fails with
+workspace, while `split -f catalogs/minicat/catalog.json -e catalog.groups --trestle-root <ws>` fails with
 `File <cwd>/catalogs/minicat/catalog.json does not exist`.
 
 ## Profile-Based Control Selection
@@ -160,8 +161,13 @@ x-trestle-set-params:
 MCP tool: trestle_import
 file: https://...
 output: mycatalog
-trestle_root: ./workspace  # ❌ the command runs *in* this directory, so ./workspace/workspace
+trestle_root: ./workspace  # ❌ relative to the server's directory, which you do not know
 ```
+
+A relative value is not doubled — `absolute_trestle_root` calls `os.path.abspath()` before the
+path is used as the working directory, which is exactly what stops `ws/ws`. The problem is what it
+is absolute *against*: the server process's directory, chosen by the client. So `./workspace`
+names a place you cannot predict, and usually one that is not a workspace at all.
 
 ### ✅ Correct Approach
 ```
