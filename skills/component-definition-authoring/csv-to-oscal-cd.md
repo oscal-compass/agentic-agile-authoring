@@ -1,8 +1,9 @@
 Use the `trestle_task_csv_to_oscal_cd` MCP tool to convert a CSV file into an OSCAL component definition.
 
-Key points are summarized below. For the full spec, see `docs/command-specs/task/csv-to-oscal-cd.md`
-in the compliance-trestle repository; the installed task also describes itself, column names and
-notes included, via `trestle task csv-to-oscal-cd --info`.
+Key points are summarized below. For the full spec, see
+`docs/tutorials/Transformers_and_Tasks/csv_to_oscal_cd.md` in the compliance-trestle repository;
+the installed task also describes itself, column names and notes included, via
+`trestle task csv-to-oscal-cd --info`, which has the advantage of matching the version you have.
 
 ## CSV authoring rules
 
