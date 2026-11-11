@@ -154,6 +154,10 @@ makes the `--trestle-root` value absolute and runs the subprocess *inside* that 
 `trestle_root` and `profiles/<name>/profile.json` resolves against wherever the client started the
 server, which is the project root far more often than it is the workspace.
 
+This is about `trestle_task_csv_to_oscal_cd`. `catalog-authoring` tells you to omit `trestle_root`
+from its own MCP calls; that rule governs its flow, and nothing here changes it — when you are
+running this task, pass the root.
+
 A `trestle_root` that does not exist fails loudly rather than quietly. The wrapper declines to use
 a missing directory as the working directory, but `--trestle-root` still goes to trestle, which
 rejects it before the task starts: `Given directory /x/ws is not in a valid trestle root
