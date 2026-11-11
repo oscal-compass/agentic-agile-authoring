@@ -141,12 +141,22 @@ trestle_task_csv_to_oscal_cd(
 
 The tool generates the required INI config internally — do not ask the user for a config file path.
 
-Pass `csv_file` and `output_dir` as absolute paths. `trestle_root` is forwarded to
-`trestle --trestle-root`, but it does **not** relocate `$$Profile_Source` resolution: the task
-sets its own workspace to `os.getcwd()` (`trestle/tasks/base_task.py`, `_configure_csv_common`),
-so a workspace-relative `$$Profile_Source` resolves against the directory the MCP server was
-started in. Start the server in the trestle workspace root — which is also why
-`catalog-authoring` tells you to omit `trestle_root` altogether.
+Pass `csv_file` and `output_dir` as absolute paths. **Pass `trestle_root` as well whenever a
+`$$Profile_Source` is workspace-relative** — it is what decides the directory that value resolves
+against.
+
+trestle itself is not what makes that work. The task sets its own workspace to `os.getcwd()`
+(`trestle/tasks/base_task.py`, `_configure_csv_common`, checked against trestle 5.2.0) and never
+consults `--trestle-root` when resolving a profile. The MCP wrapper is what makes it work: it
+makes the `--trestle-root` value absolute and runs the subprocess *inside* that directory
+(`_working_directory` in `trestle_mcp/libs/trestle.py`), so `os.getcwd()` is the workspace. Omit
+`trestle_root` and `profiles/<name>/profile.json` resolves against wherever the client started the
+server, which is the project root far more often than it is the workspace.
+
+One thing to know about that mechanism: the wrapper uses the path only if the directory exists. A
+root with a typo in it is skipped without a word, and resolution falls back to the server's start
+directory. So when a `$$Profile_Source` that is certainly present cannot be found, check the root
+you passed before you start editing the CSV.
 
 ### `validate_controls` — pass `"on"`, do not take the default
 
