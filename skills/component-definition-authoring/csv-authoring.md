@@ -87,7 +87,13 @@ Validation components **verify** that service rules are enforced (scanner, audit
 | `$$Namespace` | YES | Valid URL with scheme (e.g., `https://kyverno.io`) |
 | `$Check_Id` | YES | Unique check ID (e.g., `KYVERNO-AC-2.1`) |
 | `$Check_Description` | YES | What this check validates |
-| `$Target_Component` | NO | Leave **empty string** `""` (or service component name) |
+| `$Target_Component` | NO, but fill it | The service component this check verifies (e.g., `MyApp`) |
+
+`$Target_Component` is optional to trestle but worth filling in. For a validation row the rule key
+is `(component title, type, rule id, check id, target component)`, so leaving it empty drops one
+discriminator: two checks that agree on the first four collide and the run fails with
+`row "N" contains duplicate Rule_Id "..."`. It is also what links the check back to the component
+it verifies, so an empty value loses that link in the assembled component definition.
 
 ## Python CSV Construction Template
 
