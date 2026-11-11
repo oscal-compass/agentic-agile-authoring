@@ -240,7 +240,7 @@ demos/<demo-name>/
 ```yaml
 ---
 name: catalog-to-assessment
-skills: [catalog-authoring, component-definition-authoring, assessment]
+skills: [catalog-authoring, component-definition-authoring, assessments-authoring]
 ---
 ```
 
