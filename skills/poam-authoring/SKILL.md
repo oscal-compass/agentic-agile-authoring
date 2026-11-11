@@ -37,7 +37,7 @@ Draft the first half, then ask the user for the second half. Do not invent remed
   [xlsx-to-oscal-poam.md](xlsx-to-oscal-poam.md). This path is control-centric (Controls required by
   the FedRAMP template) and less common; most users take path A.
 - **C) Component-definition → pre-defined POA&M (+ optional assessment linking).** A
-  `component-definition.json` (from the `component-definition` skill) declares, per component, the
+  `component-definition.json` (from the `component-definition-authoring` skill) declares, per component, the
   **rules/checks** mapped to controls. Because each check is a testable assertion, the full weakness
   catalog is known *before* assessment: **pre-define** one poam-item per rule/check with remediation
   authored up front, filling `local-definitions` from the component-definition
