@@ -77,8 +77,9 @@ when it is a recorded or batch run, or when the user has said to go ahead withou
 
 When the run is unattended:
 
-- **Do not stop at the approval gate.** Still generate the markdown preview — it is the record of
-  what was converted — then run the conversion in the same pass.
+- **Do not stop at the approval gate.** This skill's gate is the parameter CSV that `editing.md`
+  Step 3 asks you to confirm. Leave the CSV in the workspace — it is the record of what was asked
+  and what was filled in — and carry on into the reflection in the same pass.
 - **Let the assembly be the review.** `trestle_author_profile_assemble` with
   `set_parameters: true` takes values only from each control's `x-trestle-set-params` header, and
   `profile-resolve`'s `value_not_assigned_prefix` marks every parameter still unset in the
