@@ -216,8 +216,11 @@ and expect:
 - `row "N" missing value for "X"` — a required cell is empty on that row.
 - `row "N" contains duplicate Rule_Id "..."` — two rows share component title, component type,
   rule id, check id and target component.
-- `Command timed out after 60 seconds` — the MCP wrapper caps the trestle subprocess at 60 s.
-  That is a timeout, not a CSV defect; re-run it rather than editing a CSV that is correct.
+- `Command timed out after 600 seconds` — the MCP wrapper caps the trestle subprocess, and this
+  task gets the long limit (600 s). That is a timeout, not a CSV defect, so do not start editing a
+  CSV that is correct. Ten minutes almost always means a remote `$$Profile_Source` is being fetched
+  and resolved, so check that reference before re-running. The number is the wrapper's, not
+  trestle's, and it may differ in your deployment.
 
 ## Common Issues and Fixes
 
