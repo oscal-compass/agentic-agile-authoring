@@ -51,8 +51,9 @@ target-agnostic resolve/normalize as a library. See `docs/design-spec.md` (decis
 ### Key directories
 
 - **`skills/<name>/`** — hybrid skill packages: `SKILL.md` (frontmatter: `name` = dir name,
-  `description`, optional `license`/`argument-hint`) + `apm.yml` + supporting files. Four skills:
-  `catalog-authoring`, `component-definition-authoring`, `assessments-authoring`, `git-workflow`.
+  `description`, optional `license`/`argument-hint`) + `apm.yml` + supporting files. Seven skills:
+  `catalog-authoring`, `component-definition-authoring`, `assessments-authoring`, `poam-authoring`,
+  `compliance-catalog`, `compliance-mapping`, `git-workflow`.
 - **`skills/<name>/apm.yml`** — the APM package manifest (`name`, `version`, and `dependencies.mcp`
   where the skill needs an MCP server — `catalog-authoring`/`component-definition-authoring` declare
   `trestle`). Do NOT add a `target:` field (APM rejects unknown target tokens at parse time).

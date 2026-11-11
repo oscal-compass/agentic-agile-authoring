@@ -93,7 +93,7 @@ def test_validate_manifest_missing_apm_yml(source_repo):
 
 def test_validate_manifest_missing_version(source_repo):
     d = source_repo / "skills" / "assessments-authoring"
-    (d / "apm.yml").write_text("name: assessment\n", encoding="utf-8")
+    (d / "apm.yml").write_text("name: assessments-authoring\n", encoding="utf-8")
     with pytest.raises(policy.PolicyError, match="required field 'version'"):
         policy.validate_skill_manifest(d)
 
@@ -101,7 +101,7 @@ def test_validate_manifest_missing_version(source_repo):
 def test_validate_manifest_rejects_target_field(source_repo):
     d = source_repo / "skills" / "assessments-authoring"
     (d / "apm.yml").write_text(
-        'name: assessment\nversion: "1.0.0"\ntarget: claude\n', encoding="utf-8"
+        'name: assessments-authoring\nversion: "1.0.0"\ntarget: claude\n', encoding="utf-8"
     )
     with pytest.raises(policy.PolicyError, match="must not declare 'target"):
         policy.validate_skill_manifest(d)
