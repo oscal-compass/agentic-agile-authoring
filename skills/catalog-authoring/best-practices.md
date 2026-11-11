@@ -1,41 +1,42 @@
 # Best Practices & Lessons Learned
 
-## trestle_root Parameter Bug
+## `trestle_root` and the server's working directory
 
-### Problem
-The `trestle_root` parameter in trestle MCP tools has path resolution bugs that cause failures:
+### What this file used to say, and why it said it
+
+`trestle_root` was documented here as unusable, on the strength of this failure:
 
 ```
 Error: Cache get failure for catalogs/...: [Errno 2] No such file or directory
 ```
 
-This occurs because trestle resolves relative paths from the workspace root, not from the specified `trestle_root` directory.
+The cause was in the **MCP wrapper**, not in trestle. The wrapper handed `--trestle-root` to
+trestle as a flag and nothing more, so every argument that is a *filesystem path* was still
+resolved by the OS against the server process's working directory — wherever the client launched
+it, which is almost never the workspace. Passing `trestle_root` therefore changed nothing, and
+starting the server in the workspace and omitting it was the only thing that worked.
 
-### Solution
-**Do NOT use the `trestle_root` parameter.** Instead:
+### Fixed in compliance-trestle-mcp 1.0.0
 
-1. Initialize trestle workspace in current directory:
-   ```
-   MCP tool: trestle_init
-   mode: local
-   (omit trestle_root parameter)
-   ```
+`run_trestle_command` now makes the `--trestle-root` value absolute and runs the subprocess
+**inside** that directory (`absolute_trestle_root` and `_working_directory` in
+`trestle_mcp/libs/trestle.py`, new in 1.0.0). The repo-root `.mcp.json` installs from the upstream
+default branch, which is 1.0.0, so this is the behaviour you get. So:
 
-2. Run all trestle MCP commands without `trestle_root`:
-   ```
-   MCP tool: trestle_import
-   file: https://...
-   output: mycatalog
-   (omit trestle_root parameter)
-   ```
+- **Pass `trestle_root` — as an absolute path — when you cannot be sure the server is running in
+  the workspace.** It is what makes a workspace-relative path argument mean what you meant, and
+  the client decides the working directory, not you.
+- **Omitting it is still correct when the server was started in the workspace**, which is what the
+  examples below assume.
+- A `trestle_root` that does not exist is rejected with `Given directory ... is not in a valid
+  trestle root directory`, naming the path. It does not fall back silently.
 
-3. trestle will automatically use the workspace in current directory
-
-### Why This Works
-- trestle searches for `.trestle/` directory in current working directory
-- All relative paths are resolved from the workspace root
-- No ambiguity in path resolution
-- More robust and predictable behavior
+Not every call was affected, which is why the old rule looked right in some places and not others:
+an argument that is a model **name** is resolved by trestle against the root, so it never depended
+on the working directory. Measured against trestle 5.2.0 — run from outside the workspace with the
+flag alone, `author profile-generate --name miniprof --output md_prof` still writes into the
+workspace, while `split -f catalogs/minicat/catalog.json --trestle-root <ws>` fails with
+`File <cwd>/catalogs/minicat/catalog.json does not exist`.
 
 ## Profile-Based Control Selection
 
@@ -80,7 +81,6 @@ Modify `profiles/<profile_name>/profile.json` to specify only desired controls:
 MCP tool: trestle_author_profile_generate
 name: myprofile
 output: md_profile
-(omit trestle_root parameter)
 ```
 
 **Result**: Generates markdown only for controls specified in `include-controls`
@@ -117,16 +117,16 @@ x-trestle-set-params:
    └─ trestle init --local
 
 2. Import catalog
-   └─ trestle_import (no trestle_root)
+   └─ trestle_import
 
 3. Import profile
-   └─ trestle_import (no trestle_root)
+   └─ trestle_import
 
 4. Edit profile's include-controls
    └─ Specify desired control IDs only
 
 5. Generate markdown from profile
-   └─ trestle_author_profile_generate (no trestle_root)
+   └─ trestle_author_profile_generate
    └─ Result: Only selected controls in markdown
 ```
 
@@ -137,17 +137,17 @@ x-trestle-set-params:
    └─ Add implementation guidance
 
 2. Assemble profile back to JSON
-   └─ trestle_author_profile_assemble (no trestle_root)
+   └─ trestle_author_profile_assemble
    └─ Use --set-parameters flag
 ```
 
 ### Phase 3: Deployment
 ```
 1. Resolve profile to catalog
-   └─ trestle_author_profile_resolve (no trestle_root)
+   └─ trestle_author_profile_resolve
 
 2. Generate resolved catalog markdown
-   └─ trestle_author_catalog_generate (no trestle_root)
+   └─ trestle_author_catalog_generate
 
 3. Deploy to organization
    └─ Use markdown or JSON as needed
@@ -155,12 +155,12 @@ x-trestle-set-params:
 
 ## Common Mistakes to Avoid
 
-### ❌ Mistake 1: Using trestle_root Parameter
+### ❌ Mistake 1: Passing a relative `trestle_root`
 ```
 MCP tool: trestle_import
 file: https://...
 output: mycatalog
-trestle_root: /path/to/workspace  # ❌ Don't do this
+trestle_root: ./workspace  # ❌ the command runs *in* this directory, so ./workspace/workspace
 ```
 
 ### ✅ Correct Approach
@@ -168,8 +168,11 @@ trestle_root: /path/to/workspace  # ❌ Don't do this
 MCP tool: trestle_import
 file: https://...
 output: mycatalog
-(omit trestle_root parameter)  # ✅ Do NOT specify trestle_root
+trestle_root: /abs/path/to/workspace  # ✅ absolute, or omit it when the server runs in the workspace
 ```
+
+This file used to say never to pass `trestle_root` at all. That was a workaround for a wrapper bug
+fixed in compliance-trestle-mcp 1.0.0 — see the first section.
 
 ### ❌ Mistake 2: Creating Custom Control Files
 ```
@@ -209,11 +212,13 @@ with open("md_catalog/cm/cm-2.md") as f:
 ### Issue: Path Resolution Errors
 **Symptom**: `Cache get failure for catalogs/...: [Errno 2] No such file or directory`
 
+A relative path was resolved against a working directory that is not the workspace.
+
 **Solution**:
-1. Do NOT use `trestle_root` parameter in any MCP calls
-2. Ensure `.trestle/` directory exists in current directory
-3. Initialize trestle with: `trestle_init` mode `local` (no trestle_root)
-4. All MCP operations work from workspace context automatically
+1. Pass `trestle_root` as an **absolute** path. On compliance-trestle-mcp 1.0.0+ the command then
+   runs in that directory, which is what makes the relative path resolve
+2. Ensure `.trestle/` exists there — `trestle_init` mode `local` creates it
+3. On a pre-1.0.0 server the parameter cannot help: start the server in the workspace instead
 
 ### Issue: Profile Generation Fails
 **Symptom**: `Error generating the profile markdown failed`
@@ -222,7 +227,8 @@ with open("md_catalog/cm/cm-2.md") as f:
 1. Verify profile's `imports[].href` points to correct catalog path
 2. Ensure catalog is in correct location relative to profile
 3. Check that `include-controls` specifies valid control IDs
-4. Do NOT use `trestle_root` parameter
+4. Check the workspace the command actually ran in — `trestle_root` if you passed one, the
+   server's working directory if you did not
 
 ### Issue: Missing Controls in Generated Markdown
 **Symptom**: Only some controls appear in `md_profile/`
@@ -240,6 +246,6 @@ with open("md_catalog/cm/cm-2.md") as f:
 
 ---
 
-**Last Updated**: 2026-03-17  
-**Version**: 1.0  
+**Last Updated**: 2026-11-11  
+**Version**: 1.1  
 **Status**: Active Best Practices

@@ -2,18 +2,27 @@
 
 Asset acquisition and structure organization using trestle MCP.
 
-## ⚠️ CRITICAL: Do NOT Use trestle_root Parameter
+## The workspace every call runs in
 
-**All trestle MCP operations in this phase MUST omit the `trestle_root` parameter.**
+trestle commands resolve a relative path against the working directory of the server process, and
+the MCP client — not this skill — decides what that is. Two ways to make it the workspace:
 
-trestle automatically detects and uses the workspace in the current directory. Do not pass `trestle_root` parameter to any MCP tool call.
+- **Pass `trestle_root` as an absolute path.** On compliance-trestle-mcp 1.0.0+ the wrapper runs
+  the command inside it, so a workspace-relative path resolves. Relative values are wrong here:
+  the command runs *in* the directory, so `./workspace` becomes `./workspace/workspace`.
+- **Omit it when the server is already running in the workspace.** The steps below are written
+  that way, which is why they pass bare names like `mycatalog`.
+
+Before 1.0.0, `trestle_root` was a flag and nothing more — it did not move the working directory,
+so omitting it was the only thing that worked. `best-practices.md` has the history and the
+measurements; if you are on an older server, keep omitting it.
 
 ## Step 1: Initialize Workspace
 
 Initialize trestle in current directory:
 - MCP tool: `trestle_init`
 - mode: `local`
-- trestle_root: (omit this parameter)
+- trestle_root: omit it when the server runs in the workspace, otherwise its absolute path
 
 ## Step 2: Asset Identification
 
@@ -123,22 +132,23 @@ Then:
 
 **Important**: After converting to md, do not read catalog.json directly. Use only the md directory.
 
-## Troubleshooting: trestle_root Parameter Issues
+## Troubleshooting: a relative path that does not resolve
 
-**Problem**: Path resolution errors when using `trestle_root` parameter
+**Problem**
 ```
 Error: Cache get failure for catalogs/...: [Errno 2] No such file or directory
 ```
 
-**Solution**: Do NOT use `trestle_root` parameter. Instead:
-1. Initialize trestle workspace in `./workspace/` directory
-2. Run trestle MCP commands without `trestle_root` parameter
-3. trestle will automatically use the workspace in current directory
+The path was resolved against a working directory that is not the workspace.
 
-**Robust Approach**:
-- Initialize trestle workspace: `trestle_init` with mode `local` (no trestle_root)
-- Run all trestle MCP operations without `trestle_root` parameter
-- trestle automatically detects and uses the workspace structure
+**Solution**
+1. Pass `trestle_root` as an **absolute** path, so the command runs in the workspace
+   (compliance-trestle-mcp 1.0.0+)
+2. Check `.trestle/` exists there — `trestle_init` mode `local` creates it
+3. A `trestle_root` that does not exist is reported as
+   `Given directory ... is not in a valid trestle root directory`, which names the path, so read
+   that before suspecting the file
+4. On a pre-1.0.0 server the parameter cannot help: start the server in the workspace and omit it
 
 ## Completion Criteria
 
@@ -146,5 +156,5 @@ Error: Cache get failure for catalogs/...: [Errno 2] No such file or directory
 - [ ] href in profile is project-relative path
 - [ ] Profile's `include-controls` specifies desired controls only
 - [ ] Confirmed md operations without reading catalog.json directly
-- [ ] All MCP calls executed without `trestle_root` parameter
+- [ ] Every MCP call ran in the workspace — `trestle_root` absolute, or omitted with the server started there
 - [ ] (Optional) `<id>-initial` branch created and committed (if using Git workflow)

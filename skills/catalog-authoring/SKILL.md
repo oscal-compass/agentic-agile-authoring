@@ -39,7 +39,7 @@ editing does.
 - Must reference actual files (no guessing)
 - Do not read catalog.json directly → operate after splitting into md
 - **Must use trestle MCP** (do not use trestle CLI)
-- **Do NOT use `trestle_root` parameter** - omit it from all MCP calls
+- **Make sure every MCP call runs in the workspace** - pass `trestle_root` as an absolute path, or omit it when the server was started there (see [best-practices.md](best-practices.md))
 - **Use profile-based control selection** - edit profile's `include-controls` to specify desired controls, not custom markdown files
 - Output in English (other languages allowed when specified by user)
 - When completing CSV, confirm with the user before proceeding to the next step — when a human is
@@ -58,7 +58,7 @@ See [editing.md](editing.md) for detailed instructions.
 ## Rules
 
 - Always use trestle MCP tools, never CLI commands
-- **Never use `trestle_root` parameter** - omit it from all MCP tool calls
+- **`trestle_root` decides the working directory** - pass it absolute, or omit it when the server already runs in the workspace; never pass a relative path
 - **Use profile-based control selection** - edit profile's `include-controls` to specify desired controls instead of creating custom markdown files
 - Confirm CSV content with user before parameter reflection — when a human is in the loop
   (see [Running with no human in the loop](#running-with-no-human-in-the-loop))

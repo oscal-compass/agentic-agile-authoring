@@ -51,7 +51,7 @@ Support custom catalog operations using NIST OSCAL catalogs and profiles, from p
 ### Rules
 
 - Always use trestle MCP tools, never CLI commands
-- Never use `trestle_root` parameter — omit it from all MCP tool calls
+- `trestle_root` decides the working directory — pass it absolute, or omit it when the server already runs in the workspace
 - Use profile-based control selection — edit profile's `include-controls` to specify desired controls
 - Confirm CSV content with user before parameter reflection — when a human is in the loop
 - After markdown conversion, never read `catalog.json` directly
