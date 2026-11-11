@@ -72,7 +72,7 @@ dependencies:
       command: uvx
       args:
         - --from
-        - git+https://github.com/oscal-compass/compliance-trestle-mcp.git
+        - compliance-trestle-mcp>=1.0.0
         - trestle-mcp
 ```
 
@@ -240,7 +240,7 @@ demos/<demo-name>/
 ```yaml
 ---
 name: catalog-to-assessment
-skills: [catalog-authoring, component-definition, assessment]
+skills: [catalog-authoring, component-definition-authoring, assessments-authoring]
 ---
 ```
 

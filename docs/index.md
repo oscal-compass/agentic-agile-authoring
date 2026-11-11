@@ -58,8 +58,8 @@ See the [Skills reference](skills.md).
 | Skill | Description |
 |-------|-------------|
 | `catalog-authoring` | Import NIST OSCAL assets, edit parameters, generate CSV templates, deploy Markdown catalogs |
-| `component-definition` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` |
-| `assessment` | Evaluate control compliance from component definitions and validation scan results |
+| `component-definition-authoring` | Map abstract controls to component-specific rules and validation checks; generate `component-definition.json` |
+| `assessments-authoring` | Evaluate control compliance from component definitions and validation scan results |
 | `poam-authoring` | Author an OSCAL POA&M from an assessment's failed findings — remediation plan, milestones, POC, due date |
 | `compliance-catalog` | Convert a compliance-document PDF (law, regulation, standard) into a validated OSCAL Catalog |
 | `compliance-mapping` | Map controls between two OSCAL Catalogs into an OSCAL Mapping Collection + browsable HTML report |

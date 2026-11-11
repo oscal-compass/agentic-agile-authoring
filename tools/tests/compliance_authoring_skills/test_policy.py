@@ -45,24 +45,24 @@ def test_default_source_root_dev_fallback(monkeypatch):
 
 def test_resolve_selection_default_is_all(source_repo):
     assert policy.resolve_selection(source_repo) == [
-        "assessment",
+        "assessments-authoring",
         "catalog-authoring",
-        "component-definition",
+        "component-definition-authoring",
     ]
 
 
 def test_resolve_selection_demo(source_repo):
     assert policy.resolve_selection(source_repo, demo="catalog-to-assessment") == [
         "catalog-authoring",
-        "component-definition",
-        "assessment",
+        "component-definition-authoring",
+        "assessments-authoring",
     ]
 
 
 def test_resolve_selection_exclude(source_repo):
-    assert policy.resolve_selection(source_repo, exclude=["assessment"]) == [
+    assert policy.resolve_selection(source_repo, exclude=["assessments-authoring"]) == [
         "catalog-authoring",
-        "component-definition",
+        "component-definition-authoring",
     ]
 
 
@@ -86,22 +86,22 @@ def test_validate_manifest_ok(source_repo):
 
 
 def test_validate_manifest_missing_apm_yml(source_repo):
-    (source_repo / "skills" / "assessment" / "apm.yml").unlink()
+    (source_repo / "skills" / "assessments-authoring" / "apm.yml").unlink()
     with pytest.raises(policy.PolicyError, match="missing apm.yml"):
-        policy.validate_skill_manifest(source_repo / "skills" / "assessment")
+        policy.validate_skill_manifest(source_repo / "skills" / "assessments-authoring")
 
 
 def test_validate_manifest_missing_version(source_repo):
-    d = source_repo / "skills" / "assessment"
-    (d / "apm.yml").write_text("name: assessment\n", encoding="utf-8")
+    d = source_repo / "skills" / "assessments-authoring"
+    (d / "apm.yml").write_text("name: assessments-authoring\n", encoding="utf-8")
     with pytest.raises(policy.PolicyError, match="required field 'version'"):
         policy.validate_skill_manifest(d)
 
 
 def test_validate_manifest_rejects_target_field(source_repo):
-    d = source_repo / "skills" / "assessment"
+    d = source_repo / "skills" / "assessments-authoring"
     (d / "apm.yml").write_text(
-        'name: assessment\nversion: "1.0.0"\ntarget: claude\n', encoding="utf-8"
+        'name: assessments-authoring\nversion: "1.0.0"\ntarget: claude\n', encoding="utf-8"
     )
     with pytest.raises(policy.PolicyError, match="must not declare 'target"):
         policy.validate_skill_manifest(d)

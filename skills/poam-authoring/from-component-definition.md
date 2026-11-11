@@ -15,7 +15,7 @@ check comes back satisfied.
 
 ## Step 1 — Locate the component-definition
 
-A trestle-style `component-definition.json` (exactly what the `component-definition` skill
+A trestle-style `component-definition.json` (exactly what the `component-definition-authoring` skill
 produces). It has `component-definition.components[]`, each with:
 
 - a **type**: `service` (implements controls) or `validation` (checks that rules are enforced);
@@ -223,5 +223,5 @@ component's scope *and* its static content are traceable once, on the local-defi
 - To preview it, use [poam-preview.md](poam-preview.md).
 
 > **Why pre-define?** It closes the ecosystem loop `component-definition → POA&M → assessment`: the
-> same rule/check model the `component-definition` skill authored becomes the POA&M's weakness list,
+> same rule/check model the `component-definition-authoring` skill authored becomes the POA&M's weakness list,
 > and the assessment only needs to *reference* those pre-existing items — never invent new ones.

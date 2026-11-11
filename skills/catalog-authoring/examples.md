@@ -41,8 +41,9 @@ output: md_profile
 MCP tool: trestle_author_profile_resolve
 name: nist_low
 output: catalog_resolved
-set-parameters: true
-bracket-format: "."
+show_values: true
+bracket_format: "[.]"
+value_not_assigned_prefix: "ORGANISATION TO DEFINE —"
 
 MCP tool: trestle_author_catalog_generate
 name: catalog_resolved
@@ -68,25 +69,30 @@ File: `tmp/ac-1_params.csv`
 ### Step 2: Confirm with User
 Display CSV content and ask for confirmation before proceeding.
 
-### Step 3: Update Markdown
-Edit `md_profile/ac/ac-1.md` to replace parameter placeholders with values:
-```
-Original: "Review and update the access control policy {{ insert: param, ac-01_odp.01 }}."
-Updated: "Review and update the access control policy annually."
+### Step 3: Set the values in the markdown header
+Edit the `x-trestle-set-params` header of `md_profile/ac/ac-1.md` — not the prose. The moustache
+in the statement stays as generated; `profile-assemble --set-parameters` reads the header.
+```yaml
+x-trestle-set-params:
+  ac-01_odp.01:
+    profile-values:
+      - annually
+    profile-param-value-origin: Organization Security Policy v1.0
 ```
 
 ### Step 4: Regenerate Profile and Catalog
 ```
 MCP tool: trestle_author_profile_assemble
-markdown: md_profile
-output: nist_low
-set-parameters: true
+markdown_dir: md_profile
+output_profile: nist_low
+set_parameters: true
 
 MCP tool: trestle_author_profile_resolve
 name: nist_low
 output: catalog_resolved
-set-parameters: true
-bracket-format: "."
+show_values: true
+bracket_format: "[.]"
+value_not_assigned_prefix: "ORGANISATION TO DEFINE —"
 
 MCP tool: trestle_author_catalog_generate
 name: catalog_resolved

@@ -28,7 +28,7 @@ Draft the first half, then ask the user for the second half. Do not invent remed
 
 ## Inputs (four paths)
 
-- **A) Assessment result → POA&M (default).** An `assessment` skill markdown table, or an OSCAL
+- **A) Assessment result → POA&M (default).** An `assessments-authoring` skill markdown table, or an OSCAL
   `assessment-results.json`. Only its **failed / non-compliant findings** become POA&M items. If no
   assessment result is available, take a list of weaknesses directly from the user.
 - **B) FedRAMP POA&M `.xlsx` → POA&M.** The user already has a FedRAMP-format POA&M spreadsheet
@@ -37,7 +37,7 @@ Draft the first half, then ask the user for the second half. Do not invent remed
   [xlsx-to-oscal-poam.md](xlsx-to-oscal-poam.md). This path is control-centric (Controls required by
   the FedRAMP template) and less common; most users take path A.
 - **C) Component-definition → pre-defined POA&M (+ optional assessment linking).** A
-  `component-definition.json` (from the `component-definition` skill) declares, per component, the
+  `component-definition.json` (from the `component-definition-authoring` skill) declares, per component, the
   **rules/checks** mapped to controls. Because each check is a testable assertion, the full weakness
   catalog is known *before* assessment: **pre-define** one poam-item per rule/check with remediation
   authored up front, filling `local-definitions` from the component-definition

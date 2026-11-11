@@ -21,8 +21,11 @@
 # library/CLI in an isolated venv, and the MCP is a runtime convenience — SKILL.md still prefers the
 # MCP tools when present and falls back to the venv trestle when absent or failing (0 tools).
 #
-# compliance-trestle-mcp >=0.2.0 ships `trestle_task_xlsx_to_oscal_poam` + `trestle_validate` and
-# self-caps `mcp<2` (so no `--with mcp<2` workaround). `registry: false` is REQUIRED for a
+# compliance-trestle-mcp >=1.0.0 ships `trestle_task_xlsx_to_oscal_poam` + `trestle_validate`,
+# self-caps `mcp<2` (so no `--with mcp<2` workaround), and is the first release whose wrapper runs
+# the trestle subprocess inside the absolute `--trestle-root` -- which xlsx-to-oscal-poam.md needs,
+# since it passes `trestle_root`. Under the old >=0.2.0 floor that parameter was a flag and nothing
+# more. `registry: false` is REQUIRED for a
 # self-defined server — without it APM does a registry lookup and the install fails. Do NOT add a
 # `target:` field — APM rejects unknown target tokens at parse time.
 name: poam-authoring
@@ -36,5 +39,5 @@ dependencies:
       command: uvx
       args:
         - "--from"
-        - "compliance-trestle-mcp>=0.2.0"
+        - "compliance-trestle-mcp>=1.0.0"
         - "trestle-mcp"

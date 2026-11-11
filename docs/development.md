@@ -56,7 +56,7 @@ dependencies:
       registry: false
       transport: stdio
       command: uvx
-      args: ["--from", "git+https://github.com/oscal-compass/compliance-trestle-mcp.git", "trestle-mcp"]
+      args: ["--from", "compliance-trestle-mcp>=1.0.0", "trestle-mcp"]
 ```
 
 Do **not** add a `target:` field to a skill's `apm.yml` (an unknown target token is the one thing
@@ -92,7 +92,7 @@ What the wrapper owns (everything else is APM's — resolution, deployment, lock
 ```bash
 compliance-authoring-skills install --demo catalog-to-assessment --target claude
 compliance-authoring-skills install --exclude git-workflow --target opencode
-compliance-authoring-skills uninstall --skill assessment --target claude
+compliance-authoring-skills uninstall --skill assessments-authoring --target claude
 ```
 
 Testing strategy: the bespoke surface (selection/policy, MyHarness deployer) is unit-tested; the

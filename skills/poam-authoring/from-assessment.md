@@ -8,7 +8,7 @@ step turns those findings into draft weakness rows; the user fills in the remedi
 
 The assessment result may be:
 
-- The **`assessment` skill's markdown table** (columns include Control ID, Rule/Check, Findings,
+- The **`assessments-authoring` skill's markdown table** (columns include Control ID, Rule/Check, Findings,
   **Status**). This is the common case today.
 - An OSCAL **`assessment-results.json`** (findings with `target` status, observations, risks).
 
@@ -70,7 +70,7 @@ and rely on `check_id`/`cve` as the anchor (common for scanner findings).
    `check_id`/rule to the control id(s).
 3. **A trestle-style `component-definition.json`**, if available — its control-implementations map
    each rule (`Rule_Id`) to the control id(s) it satisfies; match the finding's rule/check to a
-   rule there and read off the control(s). (This is exactly what the `component-definition` skill
+   rule there and read off the control(s). (This is exactly what the `component-definition-authoring` skill
    produces, so it plugs straight in.)
 4. **A `catalog`**, if available — use it to normalize / confirm the control ids resolved above.
 5. Otherwise **ask the user**, or leave `controls` empty.

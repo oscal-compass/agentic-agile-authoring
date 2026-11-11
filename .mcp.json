@@ -4,9 +4,7 @@
 			"command": "uvx",
 			"args": [
 				"--from",
-				"git+https://github.com/oscal-compass/compliance-trestle-mcp.git",
-				"--with",
-				"mcp<2",
+				"compliance-trestle-mcp>=1.0.0",
 				"trestle-mcp"
 			]
 		}

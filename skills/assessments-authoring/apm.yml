@@ -16,5 +16,5 @@
 # wrapper (tools/); ignored by Claude Code / OpenCode, which read only SKILL.md. This skill needs
 # no MCP server, so it omits `dependencies.mcp`. Do NOT add a `target:` field — APM rejects
 # unknown target tokens at parse time.
-name: assessment
+name: assessments-authoring
 version: "1.0.0"

@@ -28,7 +28,11 @@ Row 3+: Data rows (component rules and mappings)
 
 ## Unified CSV Schema (Service + Validation Components)
 
-When combining service and validation components in one CSV, use this exact column order:
+When combining service and validation components in one CSV, these are the columns to carry.
+trestle looks each one up **by name** in the header row (`_CsvMgr.get_col_index()` strips leading
+`$` and title-cases before comparing), so the order below is a convention for readability, not a
+requirement — adding the parameter columns in the middle, as the demo's CSV does, converts
+cleanly:
 
 ```
 $$Component_Title
@@ -57,11 +61,11 @@ Service components **implement** controls (firewall, OS, middleware, Kubernetes 
 | `$$Component_Title` | YES | Component name (e.g., "Kubernetes Platform") |
 | `$$Component_Description` | YES | What the component does |
 | `$$Component_Type` | YES | Literal string: `service` |
-| `$$Control_Id_List` | YES | Control ID (e.g., `AC-2`, `AC-3`) |
+| `$$Control_Id_List` | YES | Space-separated control IDs (e.g., `cm-2 si-7`). **If this is empty the whole row is skipped without an error** |
 | `$$Rule_Id` | YES | Unique rule identifier (e.g., `K8S-AC-2.1`) |
 | `$$Rule_Description` | YES | How this rule implements the control |
-| `$$Profile_Source` | YES | Control family or source (e.g., `AC-2`, `Account Management`) |
-| `$$Profile_Description` | YES | Control title/description |
+| `$$Profile_Source` | YES | A profile reference trestle can resolve: `profiles/<name>/profile.json` or an `https://` URL of a profile. Not a control family, not a free-text label |
+| `$$Profile_Description` | YES | Free text describing that profile; becomes the `control-implementation` description |
 | `$$Namespace` | YES | Valid URL with scheme (e.g., `https://kubernetes.io`) |
 | `$Check_Id` | NO | Leave **empty string** `""` |
 | `$Check_Description` | NO | Leave **empty string** `""` |
@@ -83,7 +87,13 @@ Validation components **verify** that service rules are enforced (scanner, audit
 | `$$Namespace` | YES | Valid URL with scheme (e.g., `https://kyverno.io`) |
 | `$Check_Id` | YES | Unique check ID (e.g., `KYVERNO-AC-2.1`) |
 | `$Check_Description` | YES | What this check validates |
-| `$Target_Component` | NO | Leave **empty string** `""` (or service component name) |
+| `$Target_Component` | NO, but fill it | The service component this check verifies (e.g., `MyApp`) |
+
+`$Target_Component` is optional to trestle but worth filling in. For a validation row the rule key
+is `(component title, type, rule id, check id, target component)`, so leaving it empty drops one
+discriminator: two checks that agree on the first four collide and the run fails with
+`row "N" contains duplicate Rule_Id "..."`. It is also what links the check back to the component
+it verifies, so an empty value loses that link in the assembled component definition.
 
 ## Python CSV Construction Template
 
@@ -106,8 +116,9 @@ data = [
     
     # Service component rows
     ['Kubernetes Platform', 'Kubernetes container orchestration...', 'service',
-     'AC-2', 'K8S-AC-2.1', 'RBAC policies enforce role-based access control...',
-     'AC-2', 'Account Management', 'https://kubernetes.io',
+     'ac-2', 'K8S-AC-2.1', 'RBAC policies enforce role-based access control...',
+     'profiles/myprofile/profile.json', 'NIST SP 800-53 Rev 5 selection for this cluster',
+     'https://kubernetes.io',
      '', '', 'Kubernetes Platform'],
     
     # Validation component rows
@@ -149,9 +160,12 @@ for i, row in enumerate(rows[1:], 1):
 if all_valid:
     print("✓ All rows have correct column count")
 
+# Resolve columns by name, the way trestle does — never by a hardcoded index
+col = {h.lstrip('$'): i for i, h in enumerate(rows[0])}
+
 # Check 2: Namespace URLs are valid
 for i, row in enumerate(rows[2:], 2):  # Skip header and description
-    namespace = row[8]  # Column index 8 is $$Namespace
+    namespace = row[col['Namespace']]
     if namespace and not namespace.startswith(('http://', 'https://')):
         print(f"❌ Row {i+1}: Invalid namespace URL: '{namespace}'")
         all_valid = False
@@ -159,23 +173,20 @@ for i, row in enumerate(rows[2:], 2):  # Skip header and description
 if all_valid:
     print("✓ All namespace URLs are valid")
 
-# Check 3: Required columns are not empty
+# Check 3: Required columns are not empty (trestle's own two lists)
+SERVICE_REQUIRED = ['Component_Title', 'Component_Description', 'Component_Type', 'Rule_Id',
+                    'Rule_Description', 'Profile_Source', 'Profile_Description',
+                    'Control_Id_List', 'Namespace']
+VALIDATION_REQUIRED = ['Component_Title', 'Component_Description', 'Component_Type', 'Rule_Id',
+                       'Namespace', 'Check_Id', 'Check_Description']
+
 for i, row in enumerate(rows[2:], 2):  # Skip header and description
-    component_type = row[2]  # Column index 2 is $$Component_Type
-    
-    if component_type == 'service':
-        required_cols = [0, 1, 2, 3, 4, 5, 6, 7, 8]  # Indices for required columns
-        for col_idx in required_cols:
-            if not row[col_idx]:
-                print(f"❌ Row {i+1}: Required column {col_idx} is empty")
-                all_valid = False
-    
-    elif component_type == 'validation':
-        required_cols = [0, 1, 2, 4, 8, 9, 10]  # Indices for validation required columns
-        for col_idx in required_cols:
-            if not row[col_idx]:
-                print(f"❌ Row {i+1}: Required column {col_idx} is empty")
-                all_valid = False
+    component_type = row[col['Component_Type']]
+    names = VALIDATION_REQUIRED if component_type == 'validation' else SERVICE_REQUIRED
+    for name in names:
+        if not row[col[name]]:
+            print(f"❌ Row {i+1}: Required column {name} is empty")
+            all_valid = False
 
 if all_valid:
     print("✓ All required columns have values")
@@ -260,20 +271,37 @@ data = [
 
 **Why:** trestle validates that `$$Namespace` is a valid URL with scheme (http:// or https://).
 
-### Mistake 5: Wrong Column Order
+### Mistake 5: Misspelled Column Names
 ❌ **WRONG:**
 ```python
-# Reordering columns from the unified schema
-['$$Component_Title', '$$Component_Type', '$$Component_Description', ...]
+# Names trestle does not know
+['$$Component_Title', '$$Component_Desc', '$$Type', '$$Controls', ...]
 ```
 
 ✅ **CORRECT:**
 ```python
-# Exact order from unified schema
-['$$Component_Title', '$$Component_Description', '$$Component_Type', ...]
+# The names trestle looks for; order is free
+['$$Component_Title', '$$Component_Description', '$$Component_Type', '$$Control_Id_List', ...]
 ```
 
-**Why:** trestle reads columns by index position, not by header name. Column order must match exactly.
+**Why:** trestle resolves each column by header name, not by position — so reordering is safe and
+case does not matter (`$Check_ID` matches, because the header is title-cased before matching), but
+spelling does. *Which* failure a misspelling produces depends on the list the column is on, and the
+three outcomes want different things from you (checked against trestle 5.2.0):
+
+- **A required name** — `$$Component_Description` written as `$$Component_Desc` — is caught at the
+  header: `Missing columns: [...]`. `_verify()` checks the nine service-required names and stops
+  before any row is read.
+- **`$Check_Id` and `$Check_Description` are not on that list**, so a misspelling gets past the
+  header check and fails per row instead: the first validation row raises `RuntimeError: row "4"
+  missing value for "Check_Id"`. The row-level check uses the *validation* required list, and
+  `get_row_value()` answers `''` for a column it cannot find. **The message names a cell, but the
+  cell is fine — the header is what is wrong**, so check the spelling before you go looking for an
+  empty value.
+- **Silent only on a service row.** Put a check column on a service row — the shape this file tells
+  you not to write — and there is no validation row to trip the row check: `$CheckId` is title-cased
+  to `Checkid` and lands as an extra property on the rule set. The conversion succeeds, the
+  component has props `Checkid`, `Check_Description` and no `Check_Id`, and nothing says so.
 
 ## Real-World Example: Kubernetes AC Component
 
@@ -293,13 +321,15 @@ data = [
     
     # Service rows (13 rows)
     ['Kubernetes Platform', 'Kubernetes container orchestration platform', 'service',
-     'AC-2', 'K8S-AC-2.1', 'RBAC policies enforce role-based access control',
-     'AC-2', 'Account Management', 'https://kubernetes.io',
+     'ac-2', 'K8S-AC-2.1', 'RBAC policies enforce role-based access control',
+     'profiles/myprofile/profile.json', 'NIST SP 800-53 Rev 5 selection for this cluster',
+     'https://kubernetes.io',
      '', '', 'Kubernetes Platform'],
     
     ['Kubernetes Platform', 'Kubernetes container orchestration platform', 'service',
-     'AC-3', 'K8S-AC-3.1', 'Network policies restrict traffic between pods',
-     'AC-3', 'Access Enforcement', 'https://kubernetes.io',
+     'ac-3', 'K8S-AC-3.1', 'Network policies restrict traffic between pods',
+     'profiles/myprofile/profile.json', 'NIST SP 800-53 Rev 5 selection for this cluster',
+     'https://kubernetes.io',
      '', '', 'Kubernetes Platform'],
     
     # ... more service rows ...
@@ -337,8 +367,10 @@ print(f"✓ All rows have {len(rows[0])} columns")
 3. **Write CSV using `csv.writer()`** (never manual text)
 4. **Verify column counts and URLs** programmatically
 5. **Generate markdown preview** to show mappings to user
-6. **User approves** markdown content
-7. **Invoke trestle csv-to-oscal-cd** (conversion should succeed if CSV is correct)
+6. **User approves** markdown content — skip this when no human is in the loop (see SKILL.md,
+   *Running with no human in the loop*); the preview is still written as the record
+7. **Invoke trestle csv-to-oscal-cd** (conversion should succeed if CSV is correct) and read the
+   returned string back: failure is reported in it, not raised
 
 ## Troubleshooting
 
@@ -366,8 +398,9 @@ If csv-to-oscal conversion fails:
 
 3. **Verify namespace URLs:**
    ```python
+   col = {h.lstrip('$'): i for i, h in enumerate(rows[0])}
    for i, row in enumerate(rows[2:], 2):
-       namespace = row[8]
+       namespace = row[col['Namespace']]
        if not namespace.startswith(('http://', 'https://')):
            print(f"Row {i+1}: Invalid namespace: {namespace}")
    ```
@@ -375,8 +408,14 @@ If csv-to-oscal conversion fails:
 4. **Check for empty required columns:**
    ```python
    for i, row in enumerate(rows[2:], 2):
-       if not row[0] or not row[1] or not row[8]:  # Title, Description, Namespace
-           print(f"Row {i+1}: Missing required column")
+       for name in ('Component_Title', 'Component_Description', 'Namespace'):
+           if not row[col[name]]:
+               print(f"Row {i+1}: Missing required column {name}")
    ```
+
+5. **Check that no service row lost its control list.** An empty `$$Control_Id_List` on a service
+   row makes trestle skip the row with no error at all, so the rule goes missing from the output
+   while the conversion still reports success. Count the rules in
+   `component-definition.json` against the rows you wrote.
 
 If all checks pass but conversion still fails, the issue is likely in the trestle tool itself, not the CSV.
