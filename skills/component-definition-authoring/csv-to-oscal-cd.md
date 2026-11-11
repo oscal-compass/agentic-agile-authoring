@@ -154,10 +154,13 @@ makes the `--trestle-root` value absolute and runs the subprocess *inside* that 
 `trestle_root` and `profiles/<name>/profile.json` resolves against wherever the client started the
 server, which is the project root far more often than it is the workspace.
 
-One thing to know about that mechanism: the wrapper uses the path only if the directory exists. A
-root with a typo in it is skipped without a word, and resolution falls back to the server's start
-directory. So when a `$$Profile_Source` that is certainly present cannot be found, check the root
-you passed before you start editing the CSV.
+A `trestle_root` that does not exist fails loudly rather than quietly. The wrapper declines to use
+a missing directory as the working directory, but `--trestle-root` still goes to trestle, which
+rejects it before the task starts: `Given directory /x/ws is not in a valid trestle root
+directory`, naming the path you passed. That is the point of the check — `_working_directory`'s
+docstring says so — because the alternative is `FileNotFoundError` from the subprocess, which
+reads like a missing trestle binary rather than a mistyped path. So a root that is wrong tells you
+it is wrong; it never shows up as a `$$Profile_Source` that cannot be found.
 
 ### `validate_controls` — pass `"on"`, do not take the default
 
