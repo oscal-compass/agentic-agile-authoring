@@ -284,12 +284,24 @@ data = [
 ['$$Component_Title', '$$Component_Description', '$$Component_Type', '$$Control_Id_List', ...]
 ```
 
-**Why:** trestle resolves each column by header name, not by position — so reordering is safe,
-but a name it does not recognise is not an error either. A missing *required* name fails the
-conversion with `Missing columns: [...]`; a misspelled optional name is silently turned into an
-extra property on the rule set. `$Check_ID` is fine (the header is title-cased before matching,
-so case does not matter), but `$CheckId` normalises to `Checkid`, and a CSV whose check column is
-named that converts successfully into a component definition with no checks in it.
+**Why:** trestle resolves each column by header name, not by position — so reordering is safe and
+case does not matter (`$Check_ID` matches, because the header is title-cased before matching), but
+spelling does. *Which* failure a misspelling produces depends on the list the column is on, and the
+three outcomes want different things from you (checked against trestle 5.2.0):
+
+- **A required name** — `$$Component_Description` written as `$$Component_Desc` — is caught at the
+  header: `Missing columns: [...]`. `_verify()` checks the nine service-required names and stops
+  before any row is read.
+- **`$Check_Id` and `$Check_Description` are not on that list**, so a misspelling gets past the
+  header check and fails per row instead: the first validation row raises `RuntimeError: row "4"
+  missing value for "Check_Id"`. The row-level check uses the *validation* required list, and
+  `get_row_value()` answers `''` for a column it cannot find. **The message names a cell, but the
+  cell is fine — the header is what is wrong**, so check the spelling before you go looking for an
+  empty value.
+- **Silent only on a service row.** Put a check column on a service row — the shape this file tells
+  you not to write — and there is no validation row to trip the row check: `$CheckId` is title-cased
+  to `Checkid` and lands as an extra property on the rule set. The conversion succeeds, the
+  component has props `Checkid`, `Check_Description` and no `Check_Id`, and nothing says so.
 
 ## Real-World Example: Kubernetes AC Component
 

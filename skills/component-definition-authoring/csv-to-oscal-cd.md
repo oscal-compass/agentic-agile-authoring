@@ -223,7 +223,11 @@ and expect:
 - `Unresolved controls: [...]` — `validate_controls="on"` rejected those control ids. Fix the row
   or widen the profile; do not turn validation off.
 - `Missing columns: [...]` — a required header name is absent or misspelled.
-- `row "N" missing value for "X"` — a required cell is empty on that row.
+- `row "N" missing value for "X"` — a required cell is empty on that row, **or the `X` column is
+  misspelled or absent from the header**. `get_row_value()` answers `''` for a column it cannot
+  find, and `$Check_Id` / `$Check_Description` are not among the names the header check looks at,
+  so a misspelling of those two surfaces here rather than as `Missing columns`. Read the header
+  before hunting for an empty cell.
 - `row "N" contains duplicate Rule_Id "..."` — two rows share component title, component type,
   rule id, check id and target component.
 - `Command timed out after 600 seconds` — the MCP wrapper caps the trestle subprocess, and this
