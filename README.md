@@ -146,7 +146,7 @@ uninstall, and a demo video:
 - **[`demos/catalog-to-assessment/`](demos/catalog-to-assessment/README.md)** — the full authoring
   lifecycle end-to-end: tailor a NIST SP 800-53 catalog, map its controls to a Kubernetes
   component, and generate an assessment result (`catalog-authoring → component-definition-authoring →
-  assessment`).
+  assessments-authoring`).
 - **[`demos/poam-authoring/`](demos/poam-authoring/README.md)** — author a valid OSCAL Plan of
   Action and Milestones, in three scenarios: `01-component-definition` (pre-define from a
   component-definition, then link an assessment — also shows the tasks-bearing, reference-driven
