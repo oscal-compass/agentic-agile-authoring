@@ -56,7 +56,7 @@ dependencies:
       registry: false
       transport: stdio
       command: uvx
-      args: ["--from", "git+https://github.com/oscal-compass/compliance-trestle-mcp.git", "trestle-mcp"]
+      args: ["--from", "compliance-trestle-mcp>=1.0.0", "trestle-mcp"]
 ```
 
 Do **not** add a `target:` field to a skill's `apm.yml` (an unknown target token is the one thing

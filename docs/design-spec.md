@@ -72,7 +72,7 @@ dependencies:
       command: uvx
       args:
         - --from
-        - git+https://github.com/oscal-compass/compliance-trestle-mcp.git
+        - compliance-trestle-mcp>=1.0.0
         - trestle-mcp
 ```
 

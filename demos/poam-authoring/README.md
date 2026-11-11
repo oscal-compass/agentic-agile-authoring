@@ -55,7 +55,7 @@ uvx \
 ```
 
 This copies `poam-authoring` into the harness's native skill dir **and wires the `trestle` MCP
-server** (`compliance-trestle-mcp` >= 0.2.0, declared in the skill's `apm.yml`) into the harness's
+server** (`compliance-trestle-mcp` >= 1.0.0, declared in the skill's `apm.yml`) into the harness's
 native MCP config. The MCP is not strictly required — the skill builds and validates the POA&M with
 the `trestle` library/CLI inside an isolated env (`uv` or a venv; never a global install), preferring
 the MCP tools when they're present and falling back to the venv when they're not. Open the target

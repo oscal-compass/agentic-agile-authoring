@@ -28,10 +28,11 @@ dependencies:
       command: uvx
       args:
         - "--from"
-        - "git+https://github.com/oscal-compass/compliance-trestle-mcp.git"
-        # Workaround: pin mcp<2 at launch. mcp 2.0.0 removed mcp.server.fastmcp, which upstream
-        # trestle-mcp still imports, so an unpinned resolve crashes on import. Drop this once the
-        # upstream repo caps mcp<2 (fixed in the YANA fork; PR pending oscal-compass).
-        - "--with"
-        - "mcp<2"
+        # Lower bound 1.0.0: that release made the wrapper run the trestle subprocess inside the
+        # absolute `--trestle-root`, which is what these skills rely on to resolve a
+        # workspace-relative path. Before it, `trestle_root` was passed as a flag and nothing more.
+        # A released floor rather than the git default branch, so an install is a version someone
+        # published. No `--with mcp<2` needed: 1.0.0 declares mcp>=1.10.0,<2.0.0 itself (checked on
+        # PyPI and on upstream main; a resolve lands on mcp 1.30.0).
+        - "compliance-trestle-mcp>=1.0.0"
         - "trestle-mcp"
