@@ -106,7 +106,7 @@ def load_excluded_units(output_dir: str) -> tuple[dict, dict]:
         return {}, {}
 
     groups_raw = data.get("_groups", {}) if isinstance(data.get("_groups"), dict) else {}
-    controls = {k: v for k, v in data.items() if k != "_groups"}
+    controls = {k: v for k, v in data.items() if k not in ("_groups", "_sections")}
     return controls, groups_raw
 
 
@@ -259,6 +259,28 @@ def assemble_catalog(groups: list[dict], output_path: str, *, catalog_config: di
                 ],
                 "props": props,
             }
+            if control.get("controls"):
+                sub_controls = []
+                for sub in control["controls"]:
+                    if sub["id"] in excluded_controls:
+                        excluded_control_count += 1
+                        continue
+                    sub_props = [{"name": "label", "value": sub["label"]}]
+                    sub_oscal = {
+                        "id": sub["id"],
+                        "title": sub["title"],
+                        "parts": [
+                            {
+                                "id": f"{sub['id']}_stmt",
+                                "name": "statement",
+                                "prose": sub["prose"],
+                            }
+                        ],
+                        "props": sub_props,
+                    }
+                    sub_controls.append(sub_oscal)
+                if sub_controls:
+                    oscal_control["controls"] = sub_controls
             oscal_group["controls"].append(oscal_control)
 
         # Deliberately DO NOT silently drop empty groups here — Rule 2

@@ -454,7 +454,7 @@ def _load_excluded_units(output_dir: Path) -> tuple[dict[str, Any], dict[str, An
     if not isinstance(data, dict):
         return {}, {}
     groups = data.get("_groups", {}) if isinstance(data.get("_groups"), dict) else {}
-    controls = {k: v for k, v in data.items() if k != "_groups"}
+    controls = {k: v for k, v in data.items() if k not in ("_groups", "_sections")}
     return controls, groups
 
 

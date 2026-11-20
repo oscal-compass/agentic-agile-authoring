@@ -20,7 +20,7 @@ This script validates a catalog.json against all quality rules.
 Copy and customize for each PDF document.
 
 Usage:
-    python validate_<name>.py <catalog.json> [--merged <merged.txt>] [--reference <ref_catalog.json>] [--excluded <excluded_units.json>]
+    python validate_<name>.py <catalog.json> [--merged <merged.txt>] [--reference <ref_catalog.json>] [--excluded <excluded_units.json>] [--seed <seed_catalog.json>]
 
 Exit codes:
     0 - All checks passed (may have warnings)
@@ -48,6 +48,14 @@ Validation Rules (all mandatory):
              SPEC compliance-catalog §7.5)
     Rule 13: CONFIG completeness (required_groups must not be empty)
     Rule 14: No prose contamination (page numbers, headers, footers in prose)
+    Rule 18: Seed conformance: every group/control ID of the previous-version
+             catalog, at any depth, exists with the same parent (ERROR; only
+             with --seed or a seed_catalog.json next to catalog.json)
+    Rule 19: Oversized control prose, likely merged controls (WARNING; ERROR
+             if CONFIG["max_control_prose_chars"] is set)
+    Rule 20: PDF footnote-number artifacts such as '43F43F43F' in prose (ERROR)
+    Rule 21: Stretches of merged.txt absent from the catalog (WARNING; ranges
+             listed under `_sections` in excluded_units.json are INFO)
 
 ITERATIVE FIX LOOP:
     This script is designed to be run repeatedly until all errors are fixed.
@@ -198,6 +206,47 @@ finally:
 # ===== Fix guidance for each rule =====
 # These are printed when errors are found to guide generate.py modifications
 FIX_GUIDANCE = {
+    "Rule 18": """
+    FIX in generate.py → parse_structure() / generate_control_id()
+    - A seed catalog (previous version) was supplied; every seed group and control ID
+      (at EVERY depth, including nested enhancements) must exist in the new catalog,
+      with the same parent/child nesting.
+    - Missing nested IDs usually mean enhancements were flattened into top-level
+      controls or merged into their parent. Re-enable PATTERNS["nested_control"] and emit
+      children under their parent control's `controls`.
+    - Do NOT rename seed IDs. Do NOT set skip_rule_10_sequential_gaps to hide missing IDs.
+    - If a seed ID genuinely has no counterpart in the new PDF, list it in
+      excluded_units.json with a specific reason (authored once, in Phase 2).
+    """,
+    "Rule 19": """
+    FIX in generate.py → parse_structure() (control boundary detection)
+    - A control whose prose is far longer than the median almost always means several
+      controls (or a whole section) were merged into one.
+    - Rule 19 is only an ERROR when CONFIG["max_control_prose_chars"] is set; otherwise a WARNING.
+    - Look in merged.txt around the oversized control for headings that start new controls
+      (e.g. NIST-style 'AC-2(1)' enhancements) and add them to PATTERNS["section"] /
+      PATTERNS["nested_control"].
+    """,
+    "Rule 21": """
+    FIX in generate.py → parse_structure() / PATTERNS, OR excluded_units.json `_sections`
+    - Rule 21 is a WARNING. It lists stretches of merged.txt that are absent from catalog.json.
+    - If the stretch is normative (requirements the document imposes), extract it: add a group
+      pattern for its heading shape (e.g. 'Policy Area N', 'Section N', 'Part N') and make
+      each numbered subsection a control. Extraction must not depend on the heading looking
+      like the document's main control headings.
+    - If it is NOT normative (front matter, definitions, sample forms, appendices of examples),
+      record it in excluded_units.json under `_sections` with start_heading / end_heading and a
+      specific one-sentence reason. Do not hide it in skip_* flags.
+    """,
+    "Rule 20": """
+    FIX in generate.py → text cleanup (where page headers/footers are stripped from prose)
+    - Superscript footnote numbers extracted from the PDF appear as a number repeated
+      three times followed by F each time, e.g. '43F43F43F'. They are PDF extraction
+      noise, not policy text.
+    - Remove them from prose before writing parts: re.sub(r'(?<!\\d)(\\d{1,3})F\\1F\\1F(?!\\w)', '', text)
+      and collapse the blank line they leave behind.
+    - Do not whitelist them in prose_contamination_patterns; strip them.
+    """,
     "Rule 1": """
     FIX in generate.py → generate_control_id() or generate_group_id()
     - Add parent context to IDs: "{group_id}-{control_num}" not just "{control_num}"
@@ -1879,12 +1928,219 @@ def run_trestle_validate(catalog_path: Path, result: ValidationResult):
         result.add_warning("Rule 16", f"Could not run trestle validate: {e}")
 
 
+def _walk_controls(catalog: dict):
+    """Yield (control, parent_id_or_None, group_id) for every control at every depth."""
+    def rec(ctrls, parent_id, group_id):
+        for c in ctrls or []:
+            yield c, parent_id, group_id
+            yield from rec(c.get("controls"), c.get("id"), group_id)
+    cat = catalog.get("catalog", catalog)
+    yield from rec(cat.get("controls"), None, None)
+    for g in cat.get("groups") or []:
+        yield from rec(g.get("controls"), None, g.get("id"))
+
+
+def check_rule_18_seed_conformance(catalog: dict, seed_catalog: dict | None, result: ValidationResult,
+                                   excluded_controls: dict | None = None,
+                                   excluded_groups: dict | None = None):
+    """Rule 18: Every seed group/control ID (at every depth) must exist with the same nesting.
+
+    Only runs when a seed (previous-version catalog) is supplied via --seed. New IDs not in
+    the seed are allowed (a new version may add controls). Seed IDs listed in
+    excluded_units.json are accepted as intentionally absent.
+    """
+    if not seed_catalog:
+        return
+    excluded_controls = excluded_controls or {}
+    excluded_groups = excluded_groups or {}
+    new_cat = catalog.get("catalog", catalog)
+    seed_cat = seed_catalog.get("catalog", seed_catalog)
+
+    new_groups = {g.get("id") for g in new_cat.get("groups") or []}
+    for g in seed_cat.get("groups") or []:
+        gid = g.get("id")
+        if gid not in new_groups and gid not in excluded_groups:
+            result.add_error("Rule 18", f"Seed group '{gid}' ({g.get('title', '')[:50]}) missing from catalog")
+
+    new_parent = {c.get("id"): parent for c, parent, _ in _walk_controls(catalog)}
+    missing = []
+    moved = []
+    for c, parent, _gid in _walk_controls(seed_catalog):
+        cid = c.get("id")
+        if cid in excluded_controls:
+            continue
+        if cid not in new_parent:
+            missing.append(cid)
+        elif new_parent[cid] != parent:
+            moved.append((cid, parent, new_parent[cid]))
+    if missing:
+        result.add_error("Rule 18", f"{len(missing)} seed control ID(s) missing at any depth "
+                                    f"(first 10: {missing[:10]})")
+    if moved:
+        result.add_error("Rule 18", f"{len(moved)} seed control(s) have a different parent than in the seed "
+                                    f"(first 5 as id, seed parent, new parent: {moved[:5]})")
+
+
+def _prose_len(ctrl: dict) -> int:
+    def part_len(p):
+        return len(p.get("prose") or "") + sum(part_len(x) for x in p.get("parts") or [])
+    return sum(part_len(p) for p in ctrl.get("parts") or [])
+
+
+def check_rule_19_oversized_controls(catalog: dict, result: ValidationResult):
+    """Rule 19: Flag controls whose prose is a large outlier (likely several merged controls).
+
+    Backward compatible: if CONFIG["max_control_prose_chars"] is NOT set, outliers are reported
+    as WARNINGS only (pass/fail is unchanged from earlier skill versions). If it IS set, any
+    control above max(that value, 15 x median) is an ERROR.
+    """
+    sizes = [(c.get("id"), _prose_len(c)) for c, _p, _g in _walk_controls(catalog)]
+    if len(sizes) < 5:
+        return
+    ordered = sorted(n for _i, n in sizes)
+    median = ordered[len(ordered) // 2] or 1
+    configured = CONFIG.get("max_control_prose_chars")
+    limit = max(configured if configured else 30000, 15 * median)
+    report = result.add_error if configured else result.add_warning
+    for cid, n in sorted(sizes, key=lambda t: -t[1]):
+        if n > limit:
+            report("Rule 19", f"{cid}: prose is {n} chars (> {limit}; median {median}) - "
+                              f"likely several controls merged into one")
+
+
+_FOOTNOTE_MARKER_RE = re.compile(r"(?<!\d)(\d{1,3})F\1F\1F(?!\w)")
+
+
+def check_rule_20_footnote_markers(catalog: dict, result: ValidationResult):
+    """Rule 20: PDF footnote-number extraction artifacts (e.g. '43F43F43F') must not be in prose."""
+    def scan(part: dict, cid: str):
+        m = _FOOTNOTE_MARKER_RE.findall(part.get("prose") or "")
+        if m:
+            result.add_error("Rule 20", f"{cid}: {len(m)} footnote marker artifact(s) in prose, "
+                                        f"e.g. '{m[0]}F{m[0]}F{m[0]}F'")
+        for sub in part.get("parts") or []:
+            scan(sub, cid)
+    for c, _p, _g in _walk_controls(catalog):
+        for part in c.get("parts") or []:
+            scan(part, c.get("id"))
+
+
+def check_rule_21_merged_text_coverage(catalog: dict, merged_path: Path | None,
+                                       excluded_sections: dict | None, result: ValidationResult):
+    """Rule 21: Report long stretches of merged.txt body text that appear nowhere in the catalog.
+
+    Heading-format independent (Rule 12 only recognises Part/Schedule/Chapter/Annex headings).
+    WARNING only, so it never changes pass/fail of earlier skill versions. A stretch is reported
+    when >= 25 consecutive body lines (>= 40 chars, TOC dot-leader lines ignored) are uncovered.
+
+    Intentional omissions are recorded in excluded_units.json under `_sections`:
+
+        "_sections": {
+          "front-matter": {"reason": "...", "end_heading": "1 INTRODUCTION"},
+          "intro-and-roles": {"reason": "...", "start_heading": "1 INTRODUCTION",
+                              "end_heading": "5.1 Policy Area 1"}
+        }
+
+    start_heading / end_heading are the exact beginnings of heading lines in merged.txt
+    (start omitted = start of file; end omitted = end of file; end is exclusive). Uncovered lines
+    inside a recorded range are reported as INFO with the recorded reason.
+    """
+    if not merged_path or not merged_path.exists():
+        return
+    try:
+        lines = merged_path.read_text(encoding="utf-8").split("\n")
+    except Exception as e:
+        result.add_warning("Rule 21", f"Could not read merged.txt: {e}")
+        return
+
+    def norm(t: str) -> str:
+        return re.sub(r"[^a-z0-9]", "", t.lower())
+
+    chunks: list[str] = []
+    def collect(node: dict):
+        chunks.append(node.get("title") or "")
+        for part in node.get("parts") or []:
+            def rec(pt):
+                chunks.append(pt.get("prose") or "")
+                for sub in pt.get("parts") or []:
+                    rec(sub)
+            rec(part)
+        for key in ("controls", "groups"):
+            for child in node.get(key) or []:
+                collect(child)
+    collect(catalog.get("catalog", catalog))
+    blob = norm(" ".join(chunks).replace("\\n", " "))
+
+    def find_heading(h: str, after: int = 0) -> int | None:
+        for i in range(after, len(lines)):
+            if lines[i].strip().startswith(h) and "...." not in lines[i]:
+                return i
+        return None
+
+    ranges = []  # (start_idx, end_idx_exclusive, name, reason)
+    for name, entry in (excluded_sections or {}).items():
+        if not isinstance(entry, dict):
+            continue
+        sh, eh = entry.get("start_heading"), entry.get("end_heading")
+        start = 0 if not sh else find_heading(sh)
+        if start is None:
+            result.add_warning("Rule 21", f"_sections['{name}']: start_heading not found in merged.txt: {sh!r}")
+            continue
+        end = len(lines) if not eh else find_heading(eh, start + 1)
+        if end is None:
+            result.add_warning("Rule 21", f"_sections['{name}']: end_heading not found in merged.txt: {eh!r}")
+            continue
+        ranges.append((start, end, name, entry.get("reason", "")))
+
+    def acknowledged(i: int):
+        for st, en, nm, rs in ranges:
+            if st <= i < en:
+                return nm, rs
+        return None
+
+    # uncovered body lines
+    unc = []  # (idx, ack)
+    for i, raw in enumerate(lines):
+        l = raw.strip()
+        if len(l) < 40 or "...." in l or re.search(r"(\.{2,}\s*[A-Za-z]?-?\d{0,4}|\s\.\d{1,4}|\s\.{2,}\s*[A-Z]-\d+)\s*$", l):
+            continue   # too short, or a table-of-contents line (dot leaders, possibly truncated)
+        if norm(l) not in blob:
+            unc.append((i, acknowledged(i)))
+
+    def runs(items):
+        out, cur = [], []
+        for idx, ack in items:
+            if cur and idx - cur[-1] > 60:   # break when 60+ lines pass without an uncovered body line
+                out.append(cur); cur = []
+            cur.append(idx)
+        if cur:
+            out.append(cur)
+        return out
+
+    min_run = 25
+    ack_count: dict[str, int] = {}
+    for idx, ack in unc:
+        if ack:
+            ack_count[ack[0]] = ack_count.get(ack[0], 0) + 1
+    for nm, n in ack_count.items():
+        reason = next(rs for _s, _e, name, rs in ranges if name == nm)
+        result.add_info("Rule 21", f"'{nm}': {n} merged.txt body lines intentionally not in catalog - {reason}")
+
+    for r in runs([(i, a) for i, a in unc if not a]):
+        if len(r) >= min_run:
+            first = lines[r[0]].strip()[:70]
+            result.add_warning("Rule 21", f"merged.txt lines {r[0]+1}-{r[-1]+1}: {len(r)} body lines not found in catalog "
+                                          f"(starts: {first!r}). Extract this section, or record it in "
+                                          f"excluded_units.json under _sections with a reason")
+
+
 def validate_catalog(
     catalog_path: Path,
     merged_path: Path | None = None,
     ref_path: Path | None = None,
     excluded_path: Path | None = None,
     skip_trestle: bool = False,
+    seed_path: Path | None = None,
 ) -> ValidationResult:
     """Run all validation checks on a catalog."""
     result = ValidationResult()
@@ -1912,6 +2168,15 @@ def validate_catalog(
         except Exception as e:
             result.add_warning("File", f"Could not load reference catalog: {e}")
 
+    # Load seed catalog (previous version) if provided (Rule 18)
+    seed_catalog = None
+    if seed_path and seed_path.exists():
+        try:
+            with open(seed_path, "r", encoding="utf-8") as f:
+                seed_catalog = json.load(f)
+        except Exception as e:
+            result.add_error("Rule 18", f"Could not load seed catalog {seed_path}: {e}")
+
     # Load excluded_units.json if provided (SPEC §7.5). The file has two
     # sections:
     #   - top-level keys (any key other than `_groups`) = control IDs to
@@ -1923,6 +2188,7 @@ def validate_catalog(
     # case, not an error: most documents have none.
     excluded_controls: dict = {}
     excluded_groups: dict = {}
+    excluded_sections: dict = {}
     if excluded_path and excluded_path.exists():
         try:
             with open(excluded_path, "r", encoding="utf-8") as f:
@@ -1931,7 +2197,9 @@ def validate_catalog(
                 _groups_section = loaded.get("_groups", {})
                 if isinstance(_groups_section, dict):
                     excluded_groups = _groups_section
-                excluded_controls = {k: v for k, v in loaded.items() if k != "_groups"}
+                excluded_controls = {k: v for k, v in loaded.items() if k not in ("_groups", "_sections")}
+                if isinstance(loaded.get("_sections"), dict):
+                    excluded_sections = loaded["_sections"]
             else:
                 result.add_warning("File", f"excluded_units.json is not a JSON object, ignoring: {excluded_path}")
         except Exception as e:
@@ -1949,6 +2217,12 @@ def validate_catalog(
     check_rule_9_oscal_compliance(catalog, result)
     check_rule_10_sequential_gaps(catalog, result, excluded_controls)
     check_rule_11_control_count(catalog, ref_catalog, result, excluded_groups)
+
+    # Rule 18: seed conformance (only when --seed is given); Rule 19: oversized controls
+    check_rule_18_seed_conformance(catalog, seed_catalog, result, excluded_controls, excluded_groups)
+    check_rule_19_oversized_controls(catalog, result)
+    check_rule_20_footnote_markers(catalog, result)
+    check_rule_21_merged_text_coverage(catalog, merged_path, excluded_sections, result)
 
     # Rule 12: Compare against merged.txt if provided
     check_rule_12_merged_text_comparison(catalog, merged_path, result, excluded_groups)
@@ -1990,6 +2264,10 @@ Validation Rules:
   Rule 9:  OSCAL format compliance (ERROR)
   Rule 10: Sequential gaps (WARNING; per-ID downgrade via excluded_units.json)
   Rule 11: Control count comparison (WARNING)
+  Rule 18: Seed conformance - IDs at every depth + nesting (ERROR; needs --seed)
+  Rule 19: Oversized control prose outlier (WARNING; ERROR if CONFIG['max_control_prose_chars'] set)
+  Rule 21: Stretches of merged.txt not in catalog and not recorded under _sections (WARNING)
+  Rule 20: Footnote-number extraction artifacts like '43F43F43F' in prose (ERROR)
   Rule 12: Merged.txt group comparison (ERROR; per-group downgrade via
            excluded_units.json _groups)
   Rule 13: CONFIG completeness (ERROR)
@@ -2002,6 +2280,7 @@ Validation Rules:
     parser.add_argument("--merged", type=Path, help="Path to merged.txt (for group comparison)")
     parser.add_argument("--reference", type=Path, help="Path to reference catalog.json")
     parser.add_argument("--excluded", type=Path, help="Path to excluded_units.json (non-requirement control IDs, see SPEC §7.5)")
+    parser.add_argument("--seed", type=Path, help="Path to previous-version catalog.json; enables Rule 18 seed conformance")
     parser.add_argument("--skip-trestle", action="store_true", help="Skip trestle validate command")
 
     args = parser.parse_args()
@@ -2031,9 +2310,19 @@ Validation Rules:
             excluded_path = candidate
             print(f"Auto-detected excluded_units.json: {excluded_path}")
 
+    # Auto-detect seed_catalog.json (previous-version catalog) next to catalog.json, so
+    # Rule 18 runs in every fix-loop iteration without the subagents passing --seed.
+    seed_path = args.seed
+    if not seed_path:
+        candidate = args.catalog.parent / "seed_catalog.json"
+        if candidate.is_file():
+            seed_path = candidate
+            print(f"Auto-detected seed_catalog.json: {seed_path}")
+
     result = validate_catalog(
         args.catalog, merged_path, args.reference, excluded_path,
         skip_trestle=args.skip_trestle,
+        seed_path=seed_path,
     )
     print_results(result, args.catalog)
 

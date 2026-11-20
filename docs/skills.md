@@ -175,7 +175,7 @@ Draft the first half, then ask the user for the second half. Never invent remedi
 
 Convert a compliance-document PDF (law, regulation, industry standard) into a validated OSCAL
 Catalog JSON, through an iterative loop between a **deterministic extraction script**
-(`generate.py`) and a **comprehensive validator** (`validate.py`, 17 rules + trestle). Use it to
+(`generate.py`) and a **comprehensive validator** (`validate.py`, 21 rules + trestle). Use it to
 ingest a new framework into the OSCAL ecosystem, or to regenerate a catalog from a revised PDF while
 keeping control IDs stable.
 
@@ -186,6 +186,9 @@ keeping control IDs stable.
   `pages/` are written.
 - `reference_catalog` (optional): an existing catalog to merge metadata from when maintaining
   multiple versions of the same document.
+- `seed_catalog` (optional): the previous version's catalog. Fixes the structure: every group and
+  control ID at every depth (including nested enhancements) must be reproduced with the same parent
+  (Rule 18). Prose still comes from the new PDF.
 
 ### What counts as a control
 

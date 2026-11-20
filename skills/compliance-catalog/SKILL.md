@@ -13,7 +13,7 @@ Convert a compliance document PDF into a validated OSCAL Catalog JSON through an
 ┌─ Catalog Agent (loop control, CONFIG edits, gap judgments) ────────────┐
 │  ┌─ Deterministic Extraction Pipeline (scripts/) ────────────────────┐ │
 │  │ PDF → text extract → structure parse → OSCAL emit                 │ │
-│  │       → postprocess → validate (17 rules + trestle)               │ │
+│  │       → postprocess → validate (21 rules + trestle)               │ │
 │  └───────────────────────────────────────────────────────────────────┘ │
 └────────────────────────────────────────────────────────────────────────┘
 
@@ -40,6 +40,7 @@ Use this skill when asked to convert a compliance document PDF (law, regulation,
 - `input_pdf` (required): Path to the source PDF file.
 - `output_dir` (required): Directory to write `generate.py`, `validate.py`, `catalog.json`, `merged.txt`, and `pages/`.
 - `reference_catalog` (optional): Path to an existing OSCAL Catalog to merge metadata from (parties, props, published date, remarks, title, version). Useful when maintaining multiple versions of the same document.
+- `seed_catalog` (optional): Path to the previous version's OSCAL Catalog. Unlike `reference_catalog` (metadata only), the seed fixes the **structure**: every group and control ID at every depth (including nested enhancements) must be reproduced with the same parent. Prose always comes from the new PDF. Enables Rule 18. Copy it to `$OUT/seed_catalog.json`; `validate.py` auto-detects it there.
 
 ## Setup
 
@@ -262,6 +263,9 @@ callout further down).
 ```bash
 # Step 1: Build the authoring prompt (small, path-referenced, ~10 KB).
 python3 $SKILL_DIR/scripts/build_author_prompt.py $OUT <input_pdf>
+# With a seed catalog (previous version), also:
+#   cp <seed_catalog> $OUT/seed_catalog.json
+#   ... build_author_prompt.py $OUT <input_pdf> --seed-catalog $OUT/seed_catalog.json
 # → writes $OUT/_author_prompt.txt
 
 # Step 2: Spawn the author subagent via your harness's native subagent
@@ -360,6 +364,7 @@ The Phase 2 author subagent read the whole PDF to write `generate.py`, so by the
 
 Requirements on this file:
 
+- **Optional `_sections` key: whole numbered sections of the document that are intentionally not in the catalog** (front matter, definitions, sample forms, appendices of examples). Each entry is `{"reason": "...", "start_heading": "...", "end_heading": "..."}`, where the headings are line prefixes in `merged.txt` (omit `start_heading` for file start, omit `end_heading` for file end; the end is exclusive). Rule 21 reports the lines inside the range as INFO with this reason instead of as a coverage warning. `_sections` is metadata, never a control ID. Every top-level numbered section of the document must be either a group in the catalog or a `_sections` entry; see "Section coverage" in the Phase 2 authoring prompt.
 - **Top-level keys must be real control IDs, `_groups` keys must be real group IDs, both as they appeared in the FIRST `generate.py` run's `catalog.json`.** The subagent cross-checks every key against that first-pass output — an ID that never existed is a bug in this file, not a valid entry.
 - **`_groups` entries must include `merged_txt_header`**, the exact heading string that `merged.txt` contains for that group (typical forms: "Chapter I", "Part 1", "Schedule 2"). Rule 12 uses this to accept the resulting group-level gap; a wrong or missing header string leaves Rule 12 firing.
 - **Every value needs a specific, one-line reason**, not a placeholder. "Not a requirement" alone is not acceptable; "Defines terms used elsewhere; states no obligation" is.
@@ -377,7 +382,7 @@ try:
     ex = json.load(open(f"{out}/excluded_units.json"))
 except FileNotFoundError:
     ex = {}
-excluded_controls = {k for k in ex if k != "_groups"}
+excluded_controls = {k for k in ex if k not in ("_groups", "_sections")}
 excluded_groups = set(ex.get("_groups", {}).keys()) if isinstance(ex.get("_groups"), dict) else set()
 c = json.load(open(f"{out}/catalog.json"))["catalog"]
 control_ids = {ctrl["id"] for g in c.get("groups", []) for ctrl in g.get("controls", [])}
@@ -1177,6 +1182,7 @@ The template already handles the common cases. If you're stuck on an uncommon ca
 ## Notes
 
 - `generate.py` and `validate.py` are treated as artifacts, not throwaway scripts. Keep them alongside `catalog.json` — the next revision of the same document can start from these.
+- Rules 18-21 are additions to the original 17: **Rule 18** (seed conformance, ERROR, runs only when `seed_catalog.json` or `--seed` is present: every seed ID at any depth must exist with the same parent), **Rule 19** (oversized control prose, WARNING unless `CONFIG["max_control_prose_chars"]` is set), **Rule 20** (PDF footnote-number artifacts such as `43F43F43F` in prose, ERROR), **Rule 21** (stretches of `merged.txt` of 25 or more consecutive lines absent from the catalog, WARNING; ranges recorded under `_sections` are INFO). Without a seed, merged.txt or `_sections`, existing runs behave as before.
 - The skill produces `merged.txt` and `pages/` as debug outputs. `merged.txt` is also the input to Rule 12 (auto-detect missing groups), so always pass `--merged` to validate.py.
 - The `_author_prompt.txt`, `_author_agent.jsonl`, `_validate_${ITER}.txt`, `_fix_prompt_${ITER}.txt`, and `_fix_agent_${ITER}.jsonl` files under `<output_dir>` are the audit trail of subagent runs. They are useful for post-mortem debugging if a run fails, and can be deleted after a successful completion.
 - All PDF text extraction and OSCAL structuring is done by deterministic Python (`generate.py` + `postprocess_catalog.py`). All semantic judgment (structure interpretation, CONFIG tuning, regex authoring, gap classification) is done by subagents, one per phase or iteration. The main agent orchestrates but does not judge.
