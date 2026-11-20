@@ -221,6 +221,44 @@ Rewriting `PATTERNS["chapter"]`, `PATTERNS["section"]`,
 IS the intended work of Phase 2. Do not skip it out of caution — that
 is not hallucination, that is what makes the extraction fit this PDF.
 
+## Section coverage — every top-level section is a group, or is recorded as intentionally omitted
+
+Documents often mix heading shapes. A standard may have NIST-style families
+(`5.5 ACCESS CONTROL (AC)` with `AC-2 TITLE` controls) AND ordinary policy sections
+(`5.11 Policy Area 11: Formal Audits` with `5.11.1 ...` subsections). Writing patterns for
+only the dominant shape silently drops the rest: the text lands in no group and no
+validator that only looks at the dominant heading shape will notice.
+
+Before finishing Step 4, list EVERY top-level numbered section of the document (use the
+table of contents and `grep -n` on merged.txt) and make sure each one is handled in one of
+two ways:
+
+1. It contains requirements (it says what an implementer SHALL / MUST / is required to do):
+   it becomes a group, and EVERY numbered subsection at EVERY depth (5.11, 5.11.1, 5.11.1.1,
+   ...) becomes its own control, with the section's own introductory paragraph kept as a control
+   too. Do not stop at the first subsection level. This must hold even
+   when its heading shape differs from the main control headings. A section whose heading
+   matches no pattern must NOT cause `parse_structure()` to discard the text that follows it.
+2. It is descriptive only (cover page, tables of contents, introduction, definitions,
+   sample forms, reference appendices): record it in `excluded_units.json` under
+   `_sections`, with a specific one-sentence reason:
+
+       "_sections": {
+         "front-matter": {"reason": "cover page, revision history, tables of contents/figures/priorities", "end_heading": "1 INTRODUCTION"},
+         "appendices":   {"reason": "...", "start_heading": "APPENDICES"}
+       }
+
+   Front matter (cover, tables of contents, lists of figures/priorities) is in merged.txt too,
+   so record it as above; Rule 21 otherwise reports it.
+
+   `start_heading` / `end_heading` are the beginnings of heading lines as they appear in
+   merged.txt (start omitted = start of file, end omitted = end of file, end is exclusive).
+   `load_excluded_units()` ignores this key, so it has no effect on extraction.
+
+validate.py Rule 21 reports any long stretch of merged.txt that is in neither the catalog
+nor a `_sections` entry. When in doubt about whether a section is normative, extract it:
+an unneeded group is a cheap review item, a silently dropped requirement is not.
+
 ## Anti-patterns you must NOT add to CONFIG (they will destroy the extraction)
 
 Past runs have failed because subagents added seemingly-innocent filter
@@ -663,7 +701,7 @@ Chapter I entirely and keep Rule 12 happy is to list it under
        ex = json.load(open('{output_dir}/excluded_units.json'))
        control_ids = {{ctrl['id'] for g in c.get('groups', []) for ctrl in g.get('controls', [])}}
        group_ids = {{g['id'] for g in c.get('groups', [])}}
-       excluded_controls = {{k for k in ex if k != '_groups'}}
+       excluded_controls = {{k for k in ex if k not in ('_groups', '_sections')}}
        excluded_groups = set(ex.get('_groups', {{}}).keys()) if isinstance(ex.get('_groups'), dict) else set()
        leaked_controls = control_ids & excluded_controls
        leaked_groups = group_ids & excluded_groups
@@ -830,18 +868,29 @@ def _render_seed_catalog_block(seed_path: str, max_controls_to_dump: int = 60) -
     cat = data.get("catalog", data)
     groups = cat.get("groups", []) or []
     all_controls: list[dict] = []
+
+    def _collect(g, c, depth, parent_id=None):
+        # Include nested controls (e.g. NIST-style enhancements such as AC-2(1))
+        # so the seed summary reflects the real hierarchy, not just depth 0.
+        all_controls.append({
+            "group_id": g.get("id"),
+            "group_title": g.get("title"),
+            "control_id": c.get("id"),
+            "control_title": c.get("title"),
+            "depth": depth,
+            "parent_id": parent_id,
+            "prose_len": sum(
+                len(part.get("prose") or "")
+                for part in (c.get("parts") or [])
+            ),
+        })
+        for sub in (c.get("controls") or []):
+            _collect(g, sub, depth + 1, c.get("id"))
+
     for g in groups:
         for c in (g.get("controls") or []):
-            all_controls.append({
-                "group_id": g.get("id"),
-                "group_title": g.get("title"),
-                "control_id": c.get("id"),
-                "control_title": c.get("title"),
-                "prose_len": sum(
-                    len(part.get("prose") or "")
-                    for part in (c.get("parts") or [])
-                ),
-            })
+            _collect(g, c, 0)
+    nested_count = sum(1 for c in all_controls if c["depth"] > 0)
 
     lines: list[str] = []
     lines.append("## Seed catalog (structure to inherit)")
@@ -898,7 +947,19 @@ def _render_seed_catalog_block(seed_path: str, max_controls_to_dump: int = 60) -
     lines.append(
         f"### Seed summary: {len(groups)} group(s), "
         f"{len(all_controls)} control(s)"
+        + (f" ({len(all_controls) - nested_count} top-level + {nested_count} nested)"
+           if nested_count else "")
     )
+    if nested_count:
+        lines.append("")
+        lines.append(
+            "**The seed is HIERARCHICAL.** Nested controls (enhancements) are "
+            "children of their parent control (`controls` inside a control), "
+            "not siblings in the group. Your generate.py MUST reproduce this "
+            "nesting and the nested IDs (for example `parent-id-N`), and the "
+            "validator's seed-conformance rule (Rule 18) fails the catalog if "
+            "any seed ID is missing at any depth."
+        )
     lines.append("")
 
     if groups:
@@ -918,8 +979,10 @@ def _render_seed_catalog_block(seed_path: str, max_controls_to_dump: int = 60) -
         for c in all_controls[:max_controls_to_dump]:
             ctitle = (c["control_title"] or "").replace("\n", " ").strip()
             ctitle_short = (ctitle[:80] + "…") if len(ctitle) > 80 else ctitle
+            indent = "  " * c["depth"]
+            nest = f", child of `{c['parent_id']}`" if c["parent_id"] else ""
             lines.append(
-                f"- `{c['control_id']}` (group `{c['group_id']}`, "
+                f"{indent}- `{c['control_id']}` (group `{c['group_id']}`{nest}, "
                 f"prose_len={c['prose_len']}) — {ctitle_short}"
             )
         if len(all_controls) > max_controls_to_dump:
